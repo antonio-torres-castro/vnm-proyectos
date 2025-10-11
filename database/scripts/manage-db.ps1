@@ -28,32 +28,39 @@ function Show-Help {
 function Test-Dependencies {
     Write-Host "Verificando dependencias del backend..." -ForegroundColor Cyan
     try {
-        $checkScript = @'
+        # Definimos el script Python en una sola línea, para evitar errores de comillas o saltos de línea
+        $checkScript = @"
 import sys
-dependencies = [
-    'fastapi', 'sqlalchemy', 'psycopg2', 'jose', 'passlib', 
-    'email_validator', 'pydantic', 'uvicorn'
-]
-missing = []
-for dep in dependencies:
+deps=["fastapi","sqlalchemy","psycopg2","jose","passlib","email_validator","pydantic","uvicorn"]
+missing=[]
+for d in deps:
     try:
-        __import__(dep)
+        __import__(d)
     except ImportError:
-        missing.append(dep)
+        missing.append(d)
+print("OK" if not missing else "MISSING:" + ",".join(missing))
+"@
 
-if missing:
-    print("MISSING:" + ",".join(missing))
-else:
-    print("OK")
-'@
-        
-        $result = docker exec monitoreo_backend python -c $checkScript
+        # Guardar el script en un archivo temporal dentro del contenedor (más robusto que -c)
+        $tempFile = "/tmp/check_deps.py"
+
+        # Copiamos el script al contenedor Docker
+        $checkScript | Set-Content -Encoding utf8 check_deps.py
+        docker cp check_deps.py monitoreo_backend:$tempFile | Out-Null
+
+        # Ejecutamos el script dentro del contenedor
+        $result = docker exec monitoreo_backend python $tempFile
+
+        # Eliminamos el archivo temporal local
+        Remove-Item check_deps.py -ErrorAction SilentlyContinue
+
         return $result
     }
     catch {
-        return "ERROR:$($_.Exception.Message)"
+        return "ERROR: $($_.Exception.Message)"
     }
 }
+
 
 function Install-Dependencies {
     Write-Host "Instalando/Actualizando dependencias..." -ForegroundColor Yellow
