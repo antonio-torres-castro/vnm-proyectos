@@ -1,29 +1,29 @@
--- Crear esquema y tablas de seguridad
+-- Crear esquema y tablas de seguridad (idempotente)
 CREATE SCHEMA IF NOT EXISTS seguridad;
 
 -- Tabla: Estados
-CREATE TABLE seguridad.estados (
+CREATE TABLE IF NOT EXISTS seguridad.estados (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     descripcion VARCHAR(250)
 );
 
 -- Tabla: Permisos
-CREATE TABLE seguridad.permisos (
+CREATE TABLE IF NOT EXISTS seguridad.permisos (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     descripcion VARCHAR(250)
 );
 
 -- Tabla: Rol
-CREATE TABLE seguridad.rol (
+CREATE TABLE IF NOT EXISTS seguridad.rol (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     descripcion VARCHAR(250)
 );
 
 -- Tabla: Rol_Permisos
-CREATE TABLE seguridad.rol_permisos (
+CREATE TABLE IF NOT EXISTS seguridad.rol_permisos (
     permiso_id INT NOT NULL,
     rol_id INT NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -33,7 +33,7 @@ CREATE TABLE seguridad.rol_permisos (
 );
 
 -- Tabla: Menu_Grupo
-CREATE TABLE seguridad.menu_grupo (
+CREATE TABLE IF NOT EXISTS seguridad.menu_grupo (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(150) NOT NULL,
     descripcion VARCHAR(300),
@@ -46,7 +46,7 @@ CREATE TABLE seguridad.menu_grupo (
 );
 
 -- Tabla: Menu
-CREATE TABLE seguridad.menu (
+CREATE TABLE IF NOT EXISTS seguridad.menu (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(150) NOT NULL,
     descripcion VARCHAR(300),
@@ -61,7 +61,7 @@ CREATE TABLE seguridad.menu (
 );
 
 -- Tabla: Rol_Menu
-CREATE TABLE seguridad.rol_menu (
+CREATE TABLE IF NOT EXISTS seguridad.rol_menu (
     menu_id INT NOT NULL,
     rol_id INT NOT NULL,
     estado_tipo_id INT,
@@ -71,7 +71,7 @@ CREATE TABLE seguridad.rol_menu (
 );
 
 -- Tabla: Usuario
-CREATE TABLE seguridad.usuario (
+CREATE TABLE IF NOT EXISTS seguridad.usuario (
     id SERIAL PRIMARY KEY,
     rol_id INT,
     email VARCHAR(150) UNIQUE NOT NULL,
@@ -85,7 +85,7 @@ CREATE TABLE seguridad.usuario (
 );
 
 -- Tabla: Usuario_Historia
-CREATE TABLE seguridad.usuario_historia (
+CREATE TABLE IF NOT EXISTS seguridad.usuario_historia (
     id SERIAL PRIMARY KEY,
     rol_id INT,
     email VARCHAR(150),
@@ -96,13 +96,26 @@ CREATE TABLE seguridad.usuario_historia (
     usuario_id INT
 );
 
--- Índices
-CREATE INDEX idx_usuario_email ON seguridad.usuario (email);
-
-CREATE INDEX idx_menu_grupo_estado ON seguridad.menu_grupo (estado_id);
-
-CREATE INDEX idx_menu_estado ON seguridad.menu (estado_id);
-
-CREATE INDEX idx_rol_permisos_estado ON seguridad.rol_permisos (estado_id);
-
-CREATE INDEX idx_usuario_estado ON seguridad.usuario (estado_id);
+-- Índices (idempotentes)
+DO $$ 
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_usuario_email') THEN
+        CREATE INDEX idx_usuario_email ON seguridad.usuario (email);
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_menu_grupo_estado') THEN
+        CREATE INDEX idx_menu_grupo_estado ON seguridad.menu_grupo (estado_id);
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_menu_estado') THEN
+        CREATE INDEX idx_menu_estado ON seguridad.menu (estado_id);
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_rol_permisos_estado') THEN
+        CREATE INDEX idx_rol_permisos_estado ON seguridad.rol_permisos (estado_id);
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_usuario_estado') THEN
+        CREATE INDEX idx_usuario_estado ON seguridad.usuario (estado_id);
+    END IF;
+END $$;

@@ -31,7 +31,7 @@ function Test-Dependencies {
         # Definimos el script Python en una sola línea, para evitar errores de comillas o saltos de línea
         $checkScript = @"
 import sys
-deps=["fastapi","sqlalchemy","psycopg2","jose","passlib","email_validator","pydantic","uvicorn"]
+deps=["fastapi","sqlalchemy","psycopg2","jose","passlib","email_validator","pydantic","uvicorn","python-multipart"]
 missing=[]
 for d in deps:
     try:
@@ -75,15 +75,16 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 pydantic[email]==2.5.0
 python-dotenv==1.0.0
-email-validator==2.1.0
+email-validator==2.0.0
+python-multipart==0.0.6
 "@
         
         # Actualizar el archivo requirements.txt en el contenedor
         $updatedRequirements | docker exec -i monitoreo_backend tee /app/requirements.txt > $null
         
-        # Instalar dependencias
-        docker exec monitoreo_backend pip install --upgrade pip
-        docker exec monitoreo_backend pip install --force-reinstall -r /app/requirements.txt
+        # Instalar dependencias suprimiendo warnings de root
+        docker exec monitoreo_backend pip install --root-user-action=ignore --upgrade pip
+        docker exec monitoreo_backend pip install --root-user-action=ignore --force-reinstall -r /app/requirements.txt
         
         Write-Host "Dependencias instaladas/actualizadas correctamente" -ForegroundColor Green
         return $true
