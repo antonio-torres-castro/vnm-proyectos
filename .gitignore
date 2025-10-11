@@ -1,0 +1,47 @@
+# Global project .gitignore
+
+# Docker
+docker-compose.override.yml
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Backup files
+*.bak
+*.backup
+
+# Documentation
+*.docx
+*.pdf
+
+# Pero mantener estos archivos importantes
+!docker-compose.yml
+!README.md
+!LICENSE
+!.gitignore
