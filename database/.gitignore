@@ -1,0 +1,48 @@
+# Database - PostgreSQL + Scripts
+
+# Database data directories (NO subir datos reales)
+pgdata/
+pgadmin-data/
+
+# Backup files (excepto scripts de ejemplo)
+*.backup
+*.sql.bak
+*.dump
+*.backup
+
+# Temporary database files
+*.pid
+*.lock
+
+# Log files
+*.log
+postgresql-*.log
+
+# Configuration files with sensitive data
+pgpass.conf
+*.conf
+*.config
+
+# Environment files with credentials
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Scripts temporales
+*.tmp
+*.temp
+
+# Pero SÍ incluir:
+!scripts/
+!init.sql
+!migrations/
+!schemas/
