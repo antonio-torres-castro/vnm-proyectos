@@ -1,5 +1,5 @@
 # Sistema de Gestión de Base de Datos - Monitoreo Red IP
-# Script principal con detección inteligente de dependencias
+# Script principal con detección inteligente y reparación automática
 
 param(
     [string]$command = "status"
@@ -11,12 +11,13 @@ function Show-Help {
     Write-Host "Uso: .\manage-db.ps1 <comando>`n" -ForegroundColor Yellow
     
     Write-Host "Comandos disponibles:" -ForegroundColor Green
-    Write-Host "  start           - Iniciar servicios con verificación inteligente" -ForegroundColor White
+    Write-Host "  start           - Iniciar servicios con verificación y reparación automática" -ForegroundColor White
     Write-Host "  safe-shutdown   - Apagar con backup y preservar dependencias" -ForegroundColor White
     Write-Host "  restart         - Reiniciar servicios" -ForegroundColor White
     Write-Host "  backup          - Crear backup manual" -ForegroundColor White
     Write-Host "  restore         - Restaurar último backup" -ForegroundColor White
-    Write-Host "  status          - Estado de servicios" -ForegroundColor White
+    Write-Host "  status          - Estado de servicios con info de dependencias" -ForegroundColor White
+    Write-Host "  repair-dependencies - Reparación completa de dependencias" -ForegroundColor White
     Write-Host "  list-backups    - Listar backups disponibles" -ForegroundColor White
     Write-Host "  logs            - Ver logs en tiempo real" -ForegroundColor White
     Write-Host "  setup-pgadmin   - Configurar PgAdmin persistente" -ForegroundColor White
@@ -25,11 +26,14 @@ function Show-Help {
 }
 
 function Test-Dependencies {
-    Write-Host "🔍 Verificando dependencias del backend..." -ForegroundColor Cyan
+    Write-Host "Verificando dependencias del backend..." -ForegroundColor Cyan
     try {
-        $checkScript = @"
+        $checkScript = @'
 import sys
-dependencies = ['fastapi', 'sqlalchemy', 'psycopg2', 'jose', 'passlib']
+dependencies = [
+    'fastapi', 'sqlalchemy', 'psycopg2', 'jose', 'passlib', 
+    'email_validator', 'pydantic', 'uvicorn'
+]
 missing = []
 for dep in dependencies:
     try:
@@ -38,34 +42,53 @@ for dep in dependencies:
         missing.append(dep)
 
 if missing:
-    print(f'MISSING:{",".join(missing)}')
+    print("MISSING:" + ",".join(missing))
 else:
-    print('OK')
-"@
+    print("OK")
+'@
         
         $result = docker exec monitoreo_backend python -c $checkScript
         return $result
     }
     catch {
-        return "ERROR:$_"
+        return "ERROR:$($_.Exception.Message)"
     }
 }
 
 function Install-Dependencies {
-    Write-Host "📦 Instalando dependencias..." -ForegroundColor Yellow
+    Write-Host "Instalando/Actualizando dependencias..." -ForegroundColor Yellow
     try {
+        # Actualizar requirements.txt en el contenedor primero
+        $updatedRequirements = @"
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+pydantic[email]==2.5.0
+python-dotenv==1.0.0
+email-validator==2.1.0
+"@
+        
+        # Actualizar el archivo requirements.txt en el contenedor
+        $updatedRequirements | docker exec -i monitoreo_backend tee /app/requirements.txt > $null
+        
+        # Instalar dependencias
         docker exec monitoreo_backend pip install --upgrade pip
-        docker exec monitoreo_backend pip install -r /app/requirements.txt
+        docker exec monitoreo_backend pip install --force-reinstall -r /app/requirements.txt
+        
+        Write-Host "Dependencias instaladas/actualizadas correctamente" -ForegroundColor Green
         return $true
     }
     catch {
-        Write-Host "❌ Error instalando dependencias: $_" -ForegroundColor Red
+        Write-Host "Error instalando dependencias: $($_.Exception.Message)" -ForegroundColor Red
         return $false
     }
 }
 
 function Test-AuthData {
-    Write-Host "🔍 Verificando datos de autenticación..." -ForegroundColor Cyan
+    Write-Host "Verificando datos de autenticación..." -ForegroundColor Cyan
     try {
         $userCount = docker exec monitoreo_postgres psql -U monitoreo_user -d monitoreo_dev -t -c "SELECT COUNT(*) FROM seguridad.usuario;" 2>$null
         if ($LASTEXITCODE -eq 0 -and $userCount -match '\d+') {
@@ -79,21 +102,34 @@ function Test-AuthData {
 }
 
 function Initialize-AuthData {
-    Write-Host "🗃️ Inicializando datos de autenticación..." -ForegroundColor Yellow
+    Write-Host "Inicializando datos de autenticación..." -ForegroundColor Yellow
     try {
-        $sqlFile = ".\database\init-data\01-autenticacion-data.sql"
-        if (Test-Path $sqlFile) {
-            Get-Content $sqlFile | docker exec -i monitoreo_postgres psql -U monitoreo_user -d monitoreo_dev
-            Write-Host "✅ Datos de autenticación inicializados" -ForegroundColor Green
-            return $true
-        }
-        else {
-            Write-Host "❌ Archivo de datos no encontrado: $sqlFile" -ForegroundColor Red
+        # Primero verificar que existen los archivos de inicialización
+        $schemaFile = ".\database\init-data\01-esquema-seguridad.sql"
+        $dataFile = ".\database\init-data\02-datos-autenticacion.sql"
+        
+        if (-not (Test-Path $schemaFile)) {
+            Write-Host "Archivo de esquema no encontrado: $schemaFile" -ForegroundColor Red
             return $false
         }
+        
+        if (-not (Test-Path $dataFile)) {
+            Write-Host "Archivo de datos no encontrado: $dataFile" -ForegroundColor Red
+            return $false
+        }
+        
+        # Ejecutar esquema primero, luego datos
+        Write-Host "Creando esquema de seguridad..." -ForegroundColor Cyan
+        Get-Content $schemaFile | docker exec -i monitoreo_postgres psql -U monitoreo_user -d monitoreo_dev
+        
+        Write-Host "Insertando datos iniciales..." -ForegroundColor Cyan
+        Get-Content $dataFile | docker exec -i monitoreo_postgres psql -U monitoreo_user -d monitoreo_dev
+        
+        Write-Host "Datos de autenticación inicializados" -ForegroundColor Green
+        return $true
     }
     catch {
-        Write-Host "❌ Error inicializando datos: $_" -ForegroundColor Red
+        Write-Host "Error inicializando datos: $($_.Exception.Message)" -ForegroundColor Red
         return $false
     }
 }
@@ -101,98 +137,102 @@ function Initialize-AuthData {
 # MENU PRINCIPAL
 switch ($command) {
     "start" {
-        Write-Host "🚀 Iniciando servicios con verificación inteligente..." -ForegroundColor Green
+        Write-Host "Iniciando servicios con verificación inteligente..." -ForegroundColor Green
         
         # Iniciar servicios
         docker-compose up -d
         
         # Esperar que servicios estén listos
-        Write-Host "⏳ Esperando que servicios estén listos..." -ForegroundColor Yellow
-        Start-Sleep -Seconds 15
+        Write-Host "Esperando que servicios estén listos..." -ForegroundColor Yellow
+        Start-Sleep -Seconds 20
         
-        # VERIFICACIÓN INTELIGENTE DE DEPENDENCIAS
+        # VERIFICACIÓN Y REPARACIÓN AUTOMÁTICA DE DEPENDENCIAS
+        Write-Host "Verificando estado de dependencias críticas..." -ForegroundColor Cyan
         $depsResult = Test-Dependencies
         if ($depsResult -eq "OK") {
-            Write-Host "✅ Todas las dependencias están instaladas" -ForegroundColor Green
-        }
-        elseif ($depsResult -like "MISSING:*") {
-            Write-Host "⚠️  Faltan dependencias: $($depsResult.Replace('MISSING:',''))" -ForegroundColor Yellow
-            if (Install-Dependencies) {
-                Write-Host "✅ Dependencias instaladas correctamente" -ForegroundColor Green
-            }
+            Write-Host "Todas las dependencias están instaladas" -ForegroundColor Green
         }
         else {
-            Write-Host "⚠️  No se pudo verificar dependencias, instalando preventivamente..." -ForegroundColor Yellow
-            Install-Dependencies
+            Write-Host "Problemas detectados: $depsResult" -ForegroundColor Yellow
+            Write-Host "Ejecutando reparación automática..." -ForegroundColor Cyan
+            if (Install-Dependencies) {
+                Write-Host "Reparación completada" -ForegroundColor Green
+                # Reiniciar backend con nuevas dependencias
+                docker-compose restart backend
+                Start-Sleep -Seconds 5
+            }
+            else {
+                Write-Host "No se pudo completar la reparación automática" -ForegroundColor Red
+            }
         }
         
         # VERIFICACIÓN INTELIGENTE DE DATOS DE AUTENTICACIÓN
         $userCount = Test-AuthData
         if ($userCount -gt 0) {
-            Write-Host "✅ Datos de autenticación existen ($userCount usuarios)" -ForegroundColor Green
+            Write-Host "Datos de autenticación existen ($userCount usuarios)" -ForegroundColor Green
         }
         else {
-            Write-Host "⚠️  No hay datos de autenticación, inicializando..." -ForegroundColor Yellow
+            Write-Host "No hay datos de autenticación, inicializando..." -ForegroundColor Yellow
             Initialize-AuthData
         }
         
-        Write-Host "`n🎉 Todos los servicios iniciados y configurados" -ForegroundColor Green
+        Write-Host "`nTodos los servicios iniciados y configurados" -ForegroundColor Green
         docker-compose ps
     }
     
     "safe-shutdown" {
-        Write-Host "🛑 Apagado seguro de servicios..." -ForegroundColor Yellow
+        Write-Host "Apagado seguro de servicios..." -ForegroundColor Yellow
         
         # Crear backup antes de apagar
-        Write-Host "💾 Creando backup de base de datos..." -ForegroundColor Cyan
+        Write-Host "Creando backup de base de datos..." -ForegroundColor Cyan
         $backupResult = .\scripts\backup-db.ps1
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "✅ Backup creado correctamente" -ForegroundColor Green
+            Write-Host "Backup creado correctamente" -ForegroundColor Green
         }
         else {
-            Write-Host "⚠️  Backup falló, pero continuando con apagado..." -ForegroundColor Yellow
+            Write-Host "Backup falló, pero continuando con apagado..." -ForegroundColor Yellow
         }
         
         # Detener servicios (las dependencias persisten en el volumen)
         docker-compose down
         
-        Write-Host "✅ Servicios apagados correctamente" -ForegroundColor Green
-        Write-Host "📦 Dependencias preservadas en volumen Docker" -ForegroundColor Cyan
-        Write-Host "💾 Backup de BD guardado en ./database/backups/" -ForegroundColor Cyan
+        Write-Host "Servicios apagados correctamente" -ForegroundColor Green
+        Write-Host "Dependencias preservadas en volumen Docker" -ForegroundColor Cyan
+        Write-Host "Backup de BD guardado en ./database/backups/" -ForegroundColor Cyan
     }
     
     "restart" {
-        Write-Host "🔄 Reiniciando servicios..." -ForegroundColor Yellow
+        Write-Host "Reiniciando servicios..." -ForegroundColor Yellow
         docker-compose restart
-        Write-Host "✅ Servicios reiniciados" -ForegroundColor Green
+        Write-Host "Servicios reiniciados" -ForegroundColor Green
     }
     
     "backup" {
-        Write-Host "💾 Creando backup manual..." -ForegroundColor Cyan
+        Write-Host "Creando backup manual..." -ForegroundColor Cyan
         .\scripts\backup-db.ps1
     }
     
     "restore" {
-        Write-Host "🔄 Restaurando último backup..." -ForegroundColor Cyan
+        Write-Host "Restaurando último backup..." -ForegroundColor Cyan
         .\scripts\restore-db.ps1
     }
     
     "status" {
-        Write-Host "📊 Estado de los servicios:" -ForegroundColor Cyan
+        Write-Host "Estado de los servicios:" -ForegroundColor Cyan
         docker-compose ps
         
         # Información adicional
-        Write-Host "`n🔍 Información adicional:" -ForegroundColor Cyan
+        Write-Host "`nInformación adicional:" -ForegroundColor Cyan
         try {
             $userCount = Test-AuthData
             Write-Host "   Usuarios en sistema: $userCount" -ForegroundColor White
             
             $depsResult = Test-Dependencies
             if ($depsResult -eq "OK") {
-                Write-Host "   Dependencias: ✅ Todas instaladas" -ForegroundColor Green
+                Write-Host "   Dependencias: Todas instaladas" -ForegroundColor Green
             }
             else {
-                Write-Host "   Dependencias: ⚠️  Verificar instalación" -ForegroundColor Yellow
+                Write-Host "   Dependencias: $depsResult" -ForegroundColor Yellow
             }
         }
         catch {
@@ -200,8 +240,20 @@ switch ($command) {
         }
     }
     
+    "repair-dependencies" {
+        Write-Host "Ejecutando reparación completa de dependencias..." -ForegroundColor Cyan
+        if (Install-Dependencies) {
+            Write-Host "Reparación completada - Reiniciando backend..." -ForegroundColor Green
+            docker-compose restart backend
+            Write-Host "Backend reiniciado con nuevas dependencias" -ForegroundColor Green
+        }
+        else {
+            Write-Host "Reparación falló" -ForegroundColor Red
+        }
+    }
+    
     "list-backups" {
-        Write-Host "📂 Backups disponibles:" -ForegroundColor Cyan
+        Write-Host "Backups disponibles:" -ForegroundColor Cyan
         if (Test-Path ".\database\backups") {
             Get-ChildItem ".\database\backups" -Filter "*.backup" | Sort-Object LastWriteTime -Descending | Format-Table Name, LastWriteTime, Length -AutoSize
         }
@@ -211,36 +263,36 @@ switch ($command) {
     }
     
     "logs" {
-        Write-Host "📋 Mostrando logs en tiempo real (Ctrl+C para salir)..." -ForegroundColor Cyan
+        Write-Host "Mostrando logs en tiempo real (Ctrl+C para salir)..." -ForegroundColor Cyan
         docker-compose logs -f
     }
     
     "setup-pgadmin" {
-        Write-Host "⚙️ Configurando PgAdmin persistente..." -ForegroundColor Cyan
+        Write-Host "Configurando PgAdmin persistente..." -ForegroundColor Cyan
         if (Test-Path ".\database\pgadmin-servers.json") {
-            Write-Host "✅ Configuración de PgAdmin ya existe" -ForegroundColor Green
+            Write-Host "Configuración de PgAdmin ya existe" -ForegroundColor Green
         }
         else {
-            Write-Host "❌ Archivo de configuración no encontrado" -ForegroundColor Red
+            Write-Host "Archivo de configuración no encontrado" -ForegroundColor Red
         }
     }
     
     "force-install-deps" {
-        Write-Host "🔨 Forzando reinstalación de dependencias..." -ForegroundColor Cyan
+        Write-Host "Forzando reinstalación de dependencias..." -ForegroundColor Cyan
         if (Install-Dependencies) {
-            Write-Host "✅ Dependencias reinstaladas forzosamente" -ForegroundColor Green
+            Write-Host "Dependencias reinstaladas forzosamente" -ForegroundColor Green
         }
     }
     
     "force-init-auth" {
-        Write-Host "🔨 Forzando reinicialización de datos de autenticación..." -ForegroundColor Cyan
+        Write-Host "Forzando reinicialización de datos de autenticación..." -ForegroundColor Cyan
         if (Initialize-AuthData) {
-            Write-Host "✅ Datos de autenticación reinicializados" -ForegroundColor Green
+            Write-Host "Datos de autenticación reinicializados" -ForegroundColor Green
         }
     }
     
     default {
-        Write-Host "❌ Comando '$command' no reconocido`n" -ForegroundColor Red
+        Write-Host "Comando '$command' no reconocido`n" -ForegroundColor Red
         Show-Help
     }
 }
