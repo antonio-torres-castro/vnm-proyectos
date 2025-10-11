@@ -1,0 +1,67 @@
+# 1. Navegar a scripts
+cd database\scripts
+
+# 2. Configurar backup automático (crea auto-backup.ps1 automáticamente)
+.\manage-db.ps1 setup-scheduled-task
+
+# 3. Usar normalmente
+.\manage-db.ps1 start
+.\manage-db.ps1 backup
+.\manage-db.ps1 safe-shutdown
+
+
+# Comandos de limpieza
+# Desde C:\vnm-proyectos
+
+# 1. Parar y eliminar todos los contenedores
+docker-compose down
+
+# 2. Eliminar TODAS las imágenes
+docker rmi -f $(docker images -q)
+
+# 3. Eliminar TODOS los volúmenes
+docker volume rm $(docker volume ls -q)
+
+# 4. Eliminar TODAS las redes no usadas
+docker network prune -f
+
+# 5. Limpiar sistema Docker
+docker system prune -af
+
+#Limpiar carpetass locales
+# Desde C:\vnm-proyectos
+
+# 1. Eliminar datos persistentes (¡CUIDADO! Esto borra todo)
+Remove-Item -Recurse -Force "database\pgdata" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "database\pgadmin-data" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "database\backups" -ErrorAction SilentlyContinue
+
+# 2. Recrear estructura limpia
+mkdir "database\pgdata", "database\pgadmin-data", "database\backups" -Force
+
+# 3. Verificar estructura
+tree /F database
+
+#Verificar docker esta limpio
+# Verificar que no queda nada
+docker ps -a
+docker images
+docker volume ls
+
+#Si el contenedor no esta en ejecucion:
+# Desde C:\vnm-proyectos\database\scripts
+
+# Opción A: Usar el comando start primero
+.\manage-db.ps1 start
+
+# Esperar 30 segundos
+Start-Sleep -Seconds 30
+
+# Luego configurar PgAdmin
+.\manage-db.ps1 setup-pgadmin
+
+# Verificar que todo funciona
+.\manage-db.ps1 status
+
+# Probar backup
+.\manage-db.ps1 backup

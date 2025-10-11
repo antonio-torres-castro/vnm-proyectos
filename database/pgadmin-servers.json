@@ -1,0 +1,15 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "monitoreo",
+            "Group": "Servidores Monitoreo",
+            "Host": "postgres",
+            "Port": 5432,
+            "MaintenanceDB": "monitoreo_dev",
+            "Username": "monitoreo_user",
+            "SSLMode": "prefer",
+            "PassFile": "/pgadmin4/pgpass",
+            "Comment": "Base de datos principal del sistema de monitoreo"
+        }
+    }
+}

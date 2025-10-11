@@ -1,0 +1,86 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: monitoreo_postgres
+    environment:
+      POSTGRES_USER: monitoreo_user
+      POSTGRES_PASSWORD: monitoreo_pass
+      POSTGRES_DB: monitoreo_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/backups:/backups
+      - ./database/scripts:/scripts
+    networks:
+      - monitoreo-network
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U monitoreo_user -d monitoreo_dev" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: monitoreo_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@monitoreo.cl
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8081:80"
+    volumes:
+      # PERSISTENCIA COMPLETA PARA PGADMIN
+      - ./database/pgadmin-data:/var/lib/pgadmin
+      - ./database/pgadmin-servers.json:/pgadmin4/servers.json
+      - ./database/pgadmin-pgpass:/pgadmin4/pgpass
+      - ./database/backups:/backups
+    depends_on:
+      - postgres
+    networks:
+      - monitoreo-network
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: monitoreo_backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://monitoreo_user:monitoreo_pass@postgres:5432/monitoreo_dev
+      JWT_SECRET_KEY: "dev_secret_key_change_in_production"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - monitoreo-network
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: monitoreo_frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - monitoreo-network
+    restart: always
+
+networks:
+  monitoreo-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local

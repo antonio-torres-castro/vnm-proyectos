@@ -1,0 +1,3 @@
+postgres:5432:monitoreo_dev:monitoreo_user:monitoreo_pass
+postgres:5432:postgres:monitoreo_user:monitoreo_pass
+*:5432:*:monitoreo_user:monitoreo_pass
