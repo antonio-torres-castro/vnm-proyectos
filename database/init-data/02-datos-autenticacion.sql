@@ -1,7 +1,6 @@
--- Datos iniciales para el sistema de autenticación y autorización
--- Este script se ejecuta automáticamente al iniciar los servicios
+-- Datos iniciales para el sistema de autenticación
 
--- Insertar estados básicos del sistema
+-- Insertar estados básicos
 INSERT INTO
     seguridad.estados (id, nombre, descripcion)
 VALUES (
@@ -54,7 +53,7 @@ VALUES (
         'Acceso básico de ejecución'
     ) ON CONFLICT (id) DO NOTHING;
 
--- Insertar permisos del sistema
+-- Insertar permisos
 INSERT INTO
     seguridad.permisos (id, nombre, descripcion)
 VALUES (
@@ -78,7 +77,7 @@ VALUES (
         'Permiso de exportación de datos'
     ) ON CONFLICT (id) DO NOTHING;
 
--- Asignar permisos a roles (Administrador tiene todos)
+-- Asignar permisos a roles
 INSERT INTO
     seguridad.rol_permisos (rol_id, permiso_id, estado_id)
 VALUES (1, 1, 1),
@@ -157,7 +156,7 @@ VALUES (
     (
         3,
         'Usuarios',
-        'Gestión de usuarios del sistema',
+        'Gestión de usuarios',
         '/usuarios',
         'users',
         1,
@@ -200,9 +199,3 @@ VALUES (
         1,
         NOW()
     ) ON CONFLICT (id) DO NOTHING;
-
--- Mensaje de confirmación
-DO $$ 
-BEGIN
-    RAISE NOTICE '✅ Datos de autenticación inicializados correctamente';
-END $$;
