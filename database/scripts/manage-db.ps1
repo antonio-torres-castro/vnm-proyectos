@@ -1,5 +1,6 @@
 # Sistema de Gestión de Base de Datos - Monitoreo Red IP
 # Script principal con detección inteligente y reparación automática
+# VERSIÓN CORREGIDA - Rutas de archivos arregladas
 
 param(
     [string]$command = "status"
@@ -113,8 +114,8 @@ function Initialize-AuthData {
     Write-Host "Inicializando datos de autenticación..." -ForegroundColor Yellow
     try {
         # Primero verificar que existen los archivos de inicialización
-        $schemaFile = ".\database\init-data\01-esquema-seguridad.sql"
-        $dataFile = ".\database\init-data\02-datos-autenticacion.sql"
+        $schemaFile = "..\init-data\01-esquema-seguridad.sql"
+        $dataFile = "..\init-data\02-datos-autenticacion.sql"
         
         if (-not (Test-Path $schemaFile)) {
             Write-Host "Archivo de esquema no encontrado: $schemaFile" -ForegroundColor Red
@@ -193,7 +194,7 @@ switch ($command) {
         
         # Crear backup antes de apagar
         Write-Host "Creando backup de base de datos..." -ForegroundColor Cyan
-        $backupResult = .\scripts\backup-db.ps1
+        $backupResult = .\backup-db.ps1
         if ($LASTEXITCODE -eq 0) {
             Write-Host "Backup creado correctamente" -ForegroundColor Green
         }
@@ -206,7 +207,7 @@ switch ($command) {
         
         Write-Host "Servicios apagados correctamente" -ForegroundColor Green
         Write-Host "Dependencias preservadas en volumen Docker" -ForegroundColor Cyan
-        Write-Host "Backup de BD guardado en ./database/backups/" -ForegroundColor Cyan
+        Write-Host "Backup de BD guardado en ../backups/" -ForegroundColor Cyan
     }
     
     "restart" {
@@ -217,12 +218,12 @@ switch ($command) {
     
     "backup" {
         Write-Host "Creando backup manual..." -ForegroundColor Cyan
-        .\scripts\backup-db.ps1
+        .\backup-db.ps1
     }
     
     "restore" {
         Write-Host "Restaurando último backup..." -ForegroundColor Cyan
-        .\scripts\restore-db.ps1
+        .\restore-db.ps1
     }
     
     "status" {
@@ -262,8 +263,8 @@ switch ($command) {
     
     "list-backups" {
         Write-Host "Backups disponibles:" -ForegroundColor Cyan
-        if (Test-Path ".\database\backups") {
-            Get-ChildItem ".\database\backups" -Filter "*.backup" | Sort-Object LastWriteTime -Descending | Format-Table Name, LastWriteTime, Length -AutoSize
+        if (Test-Path "..\backups") {
+            Get-ChildItem "..\backups" -Filter "*.backup" | Sort-Object LastWriteTime -Descending | Format-Table Name, LastWriteTime, Length -AutoSize
         }
         else {
             Write-Host "No hay backups disponibles" -ForegroundColor Yellow
@@ -277,7 +278,7 @@ switch ($command) {
     
     "setup-pgadmin" {
         Write-Host "Configurando PgAdmin persistente..." -ForegroundColor Cyan
-        if (Test-Path ".\database\pgadmin-servers.json") {
+        if (Test-Path "..\pgadmin-servers.json") {
             Write-Host "Configuración de PgAdmin ya existe" -ForegroundColor Green
         }
         else {
