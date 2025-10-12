@@ -65,3 +65,21 @@ Start-Sleep -Seconds 30
 
 # Probar backup
 .\manage-db.ps1 backup
+
+#Si pgAdmin no funciona (PermissionError):
+# Desde C:\vnm-proyectos\database\scripts
+
+# Opción A: Reparación automática (RECOMENDADO)
+.\manage-db.ps1 fix-pgadmin
+
+# Opción B: Limpieza completa (si Opción A no funciona)
+.\manage-db.ps1 clean-pgadmin
+
+# Verificar que pgAdmin funciona
+# Acceder a: http://localhost:8081
+# Email: admin@monitoreo.cl
+# Password: admin123
+
+# Comandos adicionales de pgAdmin:
+.\manage-db.ps1 setup-pgadmin   # Configurar servidores
+.\manage-db.ps1 logs           # Ver logs si hay problemas

@@ -21,6 +21,8 @@ function Show-Help {
     Write-Host "  list-backups    - Listar backups disponibles" -ForegroundColor White
     Write-Host "  logs            - Ver logs en tiempo real" -ForegroundColor White
     Write-Host "  setup-pgadmin   - Configurar PgAdmin persistente" -ForegroundColor White
+    Write-Host "  fix-pgadmin     - Solucionar problemas de permisos de pgAdmin" -ForegroundColor White
+    Write-Host "  clean-pgadmin   - Limpiar datos de pgAdmin y empezar de nuevo" -ForegroundColor White
     Write-Host "  force-install-deps - Forzar reinstalación de dependencias" -ForegroundColor White
     Write-Host "  force-init-auth - Forzar reinicialización datos auth" -ForegroundColor White
 }
@@ -138,6 +140,91 @@ function Initialize-AuthData {
     }
     catch {
         Write-Host "Error inicializando datos: $($_.Exception.Message)" -ForegroundColor Red
+        return $false
+    }
+}
+
+function Fix-PgAdmin {
+    Write-Host "Solucionando problemas de permisos de pgAdmin..." -ForegroundColor Yellow
+    try {
+        # Verificar si pgAdmin está corriendo
+        $pgadminRunning = docker ps --filter "name=monitoreo_pgadmin" --filter "status=running" --format "{{.Names}}"
+        
+        if ($pgadminRunning) {
+            Write-Host "Deteniendo contenedor pgAdmin..." -ForegroundColor Cyan
+            docker stop monitoreo_pgadmin
+            docker rm monitoreo_pgadmin
+        }
+        
+        # Si existe el directorio de bind mount local, respaldarlo y eliminarlo
+        $pgadminDataPath = "..\pgadmin-data"
+        if (Test-Path $pgadminDataPath) {
+            Write-Host "Respaldando configuración local de pgAdmin..." -ForegroundColor Cyan
+            $backupPath = "..\pgadmin-data-backup-$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+            Copy-Item -Recurse $pgadminDataPath $backupPath -ErrorAction SilentlyContinue
+            Write-Host "Backup creado en: $backupPath" -ForegroundColor Green
+            
+            Write-Host "Eliminando directorio problemático..." -ForegroundColor Cyan
+            Remove-Item -Recurse -Force $pgadminDataPath -ErrorAction SilentlyContinue
+        }
+        
+        # Reiniciar solo el servicio pgAdmin (ahora usará el volumen nombrado)
+        Write-Host "Reiniciando pgAdmin con volumen nombrado..." -ForegroundColor Cyan
+        docker-compose up -d pgadmin
+        
+        # Esperar a que pgAdmin esté listo
+        Write-Host "Esperando a que pgAdmin esté listo..." -ForegroundColor Yellow
+        Start-Sleep -Seconds 15
+        
+        # Verificar estado
+        $status = docker ps --filter "name=monitoreo_pgadmin" --format "{{.Status}}"
+        if ($status -match "Up") {
+            Write-Host "pgAdmin solucionado y funcionando correctamente" -ForegroundColor Green
+            Write-Host "Acceso: http://localhost:8081" -ForegroundColor Cyan
+            Write-Host "Email: admin@monitoreo.cl" -ForegroundColor Cyan
+            Write-Host "Password: admin123" -ForegroundColor Cyan
+        } else {
+            Write-Host "pgAdmin aún tiene problemas. Revisar logs: docker logs monitoreo_pgadmin" -ForegroundColor Red
+        }
+        
+        return $true
+    }
+    catch {
+        Write-Host "Error solucionando pgAdmin: $($_.Exception.Message)" -ForegroundColor Red
+        return $false
+    }
+}
+
+function Clean-PgAdmin {
+    Write-Host "Limpiando completamente pgAdmin..." -ForegroundColor Yellow
+    try {
+        # Detener y eliminar contenedor
+        Write-Host "Deteniendo contenedor pgAdmin..." -ForegroundColor Cyan
+        docker stop monitoreo_pgadmin -ErrorAction SilentlyContinue
+        docker rm monitoreo_pgadmin -ErrorAction SilentlyContinue
+        
+        # Eliminar volumen nombrado
+        Write-Host "Eliminando volumen de datos de pgAdmin..." -ForegroundColor Cyan
+        docker volume rm vnm-proyectos_pgadmin_data -ErrorAction SilentlyContinue
+        
+        # Eliminar directorio local si existe
+        $pgadminDataPath = "..\pgadmin-data"
+        if (Test-Path $pgadminDataPath) {
+            Write-Host "Eliminando directorio local..." -ForegroundColor Cyan
+            Remove-Item -Recurse -Force $pgadminDataPath -ErrorAction SilentlyContinue
+        }
+        
+        # Recrear pgAdmin limpio
+        Write-Host "Recreando pgAdmin limpio..." -ForegroundColor Cyan
+        docker-compose up -d pgadmin
+        
+        Write-Host "pgAdmin limpiado y recreado completamente" -ForegroundColor Green
+        Write-Host "Configuración inicial requerida en http://localhost:8081" -ForegroundColor Cyan
+        
+        return $true
+    }
+    catch {
+        Write-Host "Error limpiando pgAdmin: $($_.Exception.Message)" -ForegroundColor Red
         return $false
     }
 }
@@ -296,6 +383,24 @@ switch ($command) {
         Write-Host "Forzando reinicialización de datos de autenticación..." -ForegroundColor Cyan
         if (Initialize-AuthData) {
             Write-Host "Datos de autenticación reinicializados" -ForegroundColor Green
+        }
+    }
+    
+    "fix-pgadmin" {
+        Write-Host "Ejecutando reparación de pgAdmin..." -ForegroundColor Cyan
+        if (Fix-PgAdmin) {
+            Write-Host "Reparación de pgAdmin completada exitosamente" -ForegroundColor Green
+        } else {
+            Write-Host "La reparación de pgAdmin falló" -ForegroundColor Red
+        }
+    }
+    
+    "clean-pgadmin" {
+        Write-Host "Ejecutando limpieza completa de pgAdmin..." -ForegroundColor Cyan
+        if (Clean-PgAdmin) {
+            Write-Host "Limpieza de pgAdmin completada exitosamente" -ForegroundColor Green
+        } else {
+            Write-Host "La limpieza de pgAdmin falló" -ForegroundColor Red
         }
     }
     

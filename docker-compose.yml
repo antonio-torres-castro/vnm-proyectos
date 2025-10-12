@@ -31,7 +31,7 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - ./database/pgadmin-data:/var/lib/pgadmin
+      - pgadmin_data:/var/lib/pgadmin
       - ./database/pgadmin-servers.json:/pgadmin4/servers.json
       - ./database/pgadmin-pgpass:/pgadmin4/pgpass
       - ./database/backups:/backups
@@ -88,4 +88,6 @@ volumes:
   postgres_data:
     driver: local
   backend-python-packages:
+    driver: local
+  pgadmin_data:
     driver: local
