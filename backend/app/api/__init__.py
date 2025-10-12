@@ -1,6 +1,7 @@
 # backend/app/api/__init__.py
 from fastapi import APIRouter
 from app.api import auth, usuarios, roles, menus, permisos, estados
+from app.api import dispositivos, interfaces
 
 api_router = APIRouter()
 
@@ -13,3 +14,7 @@ api_router.include_router(roles.router, prefix="/roles", tags=["roles"])
 api_router.include_router(menus.router, prefix="/menus", tags=["menus"])
 api_router.include_router(permisos.router, prefix="/permisos", tags=["permisos"])
 api_router.include_router(estados.router, prefix="/estados", tags=["estados"])
+
+# Rutas del sistema de Monitoreo
+api_router.include_router(dispositivos.router, prefix="/monitoreo/dispositivos", tags=["monitoreo-dispositivos"])
+api_router.include_router(interfaces.router, prefix="/monitoreo/interfaces", tags=["monitoreo-interfaces"])

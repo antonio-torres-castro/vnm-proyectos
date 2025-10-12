@@ -25,6 +25,7 @@ function Show-Help {
     Write-Host "  clean-pgadmin   - Limpiar datos de pgAdmin y empezar de nuevo" -ForegroundColor White
     Write-Host "  force-install-deps - Forzar reinstalación de dependencias" -ForegroundColor White
     Write-Host "  force-init-auth - Forzar reinicialización datos auth" -ForegroundColor White
+    Write-Host "  init-monitoreo  - Crear tablas del esquema de monitoreo" -ForegroundColor White
 }
 
 function Test-Dependencies {
@@ -141,6 +142,49 @@ function Initialize-AuthData {
     catch {
         Write-Host "Error inicializando datos: $($_.Exception.Message)" -ForegroundColor Red
         return $false
+    }
+}
+
+function Initialize-MonitoreoData {
+    Write-Host "Inicializando tablas de monitoreo..." -ForegroundColor Yellow
+    try {
+        # Verificar que existe el archivo de creación de tablas
+        $monitoreoFile = "Tablas\CreacionTablasMonitoreo.sql"
+        
+        if (-not (Test-Path $monitoreoFile)) {
+            Write-Host "Archivo de tablas de monitoreo no encontrado: $monitoreoFile" -ForegroundColor Red
+            return $false
+        }
+        
+        # Ejecutar script de creación de tablas de monitoreo
+        Write-Host "Creando esquema y tablas de monitoreo..." -ForegroundColor Cyan
+        Get-Content $monitoreoFile | docker exec -i monitoreo_postgres psql -U monitoreo_user -d monitoreo_dev
+        
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "Tablas de monitoreo creadas exitosamente" -ForegroundColor Green
+            return $true
+        } else {
+            Write-Host "Error ejecutando script de monitoreo" -ForegroundColor Red
+            return $false
+        }
+    }
+    catch {
+        Write-Host "Error inicializando tablas de monitoreo: $($_.Exception.Message)" -ForegroundColor Red
+        return $false
+    }
+}
+
+function Test-MonitoreoData {
+    Write-Host "Verificando tablas de monitoreo..." -ForegroundColor Cyan
+    try {
+        $tableCount = docker exec monitoreo_postgres psql -U monitoreo_user -d monitoreo_dev -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='monitoreo';" 2>$null
+        if ($LASTEXITCODE -eq 0 -and $tableCount -match '\d+') {
+            return [int]$tableCount
+        }
+        return 0
+    }
+    catch {
+        return 0
     }
 }
 
@@ -269,6 +313,16 @@ switch ($command) {
         else {
             Write-Host "No hay datos de autenticación, inicializando..." -ForegroundColor Yellow
             Initialize-AuthData
+        }
+        
+        # VERIFICACIÓN INTELIGENTE DE TABLAS DE MONITOREO
+        $monitoreoTableCount = Test-MonitoreoData
+        if ($monitoreoTableCount -ge 4) {
+            Write-Host "Tablas de monitoreo existen ($monitoreoTableCount tablas)" -ForegroundColor Green
+        }
+        else {
+            Write-Host "Tablas de monitoreo no encontradas, inicializando..." -ForegroundColor Yellow
+            Initialize-MonitoreoData
         }
         
         Write-Host "`nTodos los servicios iniciados y configurados" -ForegroundColor Green
@@ -401,6 +455,15 @@ switch ($command) {
             Write-Host "Limpieza de pgAdmin completada exitosamente" -ForegroundColor Green
         } else {
             Write-Host "La limpieza de pgAdmin falló" -ForegroundColor Red
+        }
+    }
+    
+    "init-monitoreo" {
+        Write-Host "Inicializando tablas de monitoreo..." -ForegroundColor Cyan
+        if (Initialize-MonitoreoData) {
+            Write-Host "Tablas de monitoreo inicializadas exitosamente" -ForegroundColor Green
+        } else {
+            Write-Host "La inicialización de tablas de monitoreo falló" -ForegroundColor Red
         }
     }
     

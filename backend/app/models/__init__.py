@@ -10,9 +10,16 @@ from app.models.rol_permiso import RolPermiso
 from app.models.rol_menu import RolMenu
 from app.models.usuario_historia import UsuarioHistoria
 
+# Importar todos los modelos del sistema de Monitoreo
+from app.models.dispositivos import Dispositivos
+from app.models.interfaces import Interfaces
+from app.models.interface_historico import InterfaceHistorico
+from app.models.dispositivo_historico import DispositivoHistorico
+
 # Lista de todos los modelos para fácil acceso
 __all__ = [
     "Base",
+    # Modelos IAM
     "Estado",
     "Permiso", 
     "Rol",
@@ -21,5 +28,10 @@ __all__ = [
     "MenuGrupo",
     "RolPermiso",
     "RolMenu",
-    "UsuarioHistoria"
+    "UsuarioHistoria",
+    # Modelos Monitoreo
+    "Dispositivos",
+    "Interfaces", 
+    "InterfaceHistorico",
+    "DispositivoHistorico"
 ]

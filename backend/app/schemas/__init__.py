@@ -21,6 +21,27 @@ from app.schemas.usuario_historia import (
     UsuarioHistoriaBase, UsuarioHistoriaCreate, UsuarioHistoriaResponse, UsuarioHistoriaDetallada
 )
 
+# Schemas de Monitoreo
+from app.schemas.dispositivos import (
+    DispositivosBase, DispositivosResponse, DispositivosDetallado, 
+    DispositivosFiltros, DispositivosListResponse, DispositivosEstadisticas
+)
+from app.schemas.interfaces import (
+    InterfacesBase, InterfacesResponse, InterfacesDetallado,
+    InterfacesFiltros, InterfacesListResponse, InterfacesMetricas
+)
+from app.schemas.interface_historico import (
+    InterfaceHistoricoBase, InterfaceHistoricoResponse, InterfaceHistoricoDetallado,
+    InterfaceHistoricoFiltros, SerieTemporalRequest, SerieTemporalResponse,
+    InterfaceHistoricoAgregado, InterfaceTendencias, InterfaceHistoricoListResponse
+)
+from app.schemas.dispositivo_historico import (
+    DispositivoHistoricoBase, DispositivoHistoricoResponse, DispositivoHistoricoDetallado,
+    DispositivoHistoricoFiltros, DispositivoDisponibilidad, DispositivoEvento,
+    DispositivoUbicacion, DispositivoSerieEstado, DispositivoEstadisticasPeriodo,
+    DispositivoHistoricoListResponse
+)
+
 __all__ = [
     # Token
     "Token", "TokenData",
@@ -45,5 +66,24 @@ __all__ = [
     "RolMenuCreate", "RolMenuResponse",
     
     # Usuario Historia
-    "UsuarioHistoriaBase", "UsuarioHistoriaCreate", "UsuarioHistoriaResponse", "UsuarioHistoriaDetallada"
+    "UsuarioHistoriaBase", "UsuarioHistoriaCreate", "UsuarioHistoriaResponse", "UsuarioHistoriaDetallada",
+    
+    # Monitoreo - Dispositivos
+    "DispositivosBase", "DispositivosResponse", "DispositivosDetallado", 
+    "DispositivosFiltros", "DispositivosListResponse", "DispositivosEstadisticas",
+    
+    # Monitoreo - Interfaces
+    "InterfacesBase", "InterfacesResponse", "InterfacesDetallado",
+    "InterfacesFiltros", "InterfacesListResponse", "InterfacesMetricas",
+    
+    # Monitoreo - Interface Histórico
+    "InterfaceHistoricoBase", "InterfaceHistoricoResponse", "InterfaceHistoricoDetallado",
+    "InterfaceHistoricoFiltros", "SerieTemporalRequest", "SerieTemporalResponse",
+    "InterfaceHistoricoAgregado", "InterfaceTendencias", "InterfaceHistoricoListResponse",
+    
+    # Monitoreo - Dispositivo Histórico
+    "DispositivoHistoricoBase", "DispositivoHistoricoResponse", "DispositivoHistoricoDetallado",
+    "DispositivoHistoricoFiltros", "DispositivoDisponibilidad", "DispositivoEvento",
+    "DispositivoUbicacion", "DispositivoSerieEstado", "DispositivoEstadisticasPeriodo",
+    "DispositivoHistoricoListResponse"
 ]
