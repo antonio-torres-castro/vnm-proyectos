@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.core.database import Base
 
@@ -17,6 +18,7 @@ class Usuario(Base):
     fecha_modificacion = Column(DateTime, default=func.now(), onupdate=func.now())
     estado_id = Column(Integer, ForeignKey('seguridad.estados.id'))
 
-    # Comentar relaciones temporalmente para evitar problemas de importación
-    # rol = relationship("Rol")
-    # estado = relationship("Estado")
+    # Relaciones
+    rol = relationship("Rol", back_populates="usuarios")
+    estado = relationship("Estado", back_populates="usuarios")
+    historia = relationship("UsuarioHistoria", back_populates="usuario", foreign_keys="UsuarioHistoria.usuario_id")

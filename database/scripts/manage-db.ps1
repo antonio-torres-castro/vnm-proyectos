@@ -1,6 +1,5 @@
 # Sistema de Gestión de Base de Datos - Monitoreo Red IP
 # Script principal con detección inteligente y reparación automática
-# VERSIÓN CORREGIDA - Rutas de archivos arregladas
 
 param(
     [string]$command = "status"

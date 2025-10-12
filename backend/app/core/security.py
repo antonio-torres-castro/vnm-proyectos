@@ -1,11 +1,16 @@
 # backend/app/core/security.py
 from datetime import datetime, timedelta
 from typing import Any, Union
-from jose import jwt
+from jose import jwt, JWTError
 from passlib.context import CryptContext
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from sqlalchemy.orm import Session
 from app.core.config import settings
+from app.core.database import get_db
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+security = HTTPBearer()
 
 def create_access_token(subject: Union[str, Any], expires_delta: timedelta = None) -> str:
     if expires_delta:
@@ -30,5 +35,45 @@ def verify_token(token: str) -> Union[str, None]:
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         return payload.get("sub")
-    except jwt.JWTError:
+    except JWTError:
         return None
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+):
+    """Obtener usuario actual desde el token JWT"""
+    from app.models.usuario import Usuario
+    
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="No se pudieron validar las credenciales",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    try:
+        payload = jwt.decode(
+            credentials.credentials, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+        )
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    
+    user = db.query(Usuario).filter(Usuario.email == email).first()
+    if user is None:
+        raise credentials_exception
+    
+    # Verificar que el usuario esté activo
+    if user.estado_id != 1:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Usuario inactivo"
+        )
+    
+    return user
+
+def get_current_active_user(current_user = Depends(get_current_user)):
+    """Obtener usuario activo actual"""
+    return current_user

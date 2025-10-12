@@ -1,5 +1,6 @@
 # backend/app/models/menu.py
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.core.database import Base
 
@@ -16,6 +17,10 @@ class MenuGrupo(Base):
     estado_id = Column(Integer, ForeignKey('seguridad.estados.id'))
     fecha_creacion = Column(DateTime, default=func.now())
     fecha_modificacion = Column(DateTime, default=func.now(), onupdate=func.now())
+    
+    # Relaciones
+    menus = relationship("Menu", back_populates="grupo")
+    estado = relationship("Estado", back_populates="menu_grupos")
 
 class Menu(Base):
     __tablename__ = "menu"
@@ -32,3 +37,8 @@ class Menu(Base):
     estado_id = Column(Integer, ForeignKey('seguridad.estados.id'))
     fecha_creacion = Column(DateTime, default=func.now())
     fecha_modificacion = Column(DateTime, default=func.now(), onupdate=func.now())
+    
+    # Relaciones
+    grupo = relationship("MenuGrupo", back_populates="menus")
+    estado = relationship("Estado", back_populates="menus")
+    roles = relationship("RolMenu", back_populates="menu")
