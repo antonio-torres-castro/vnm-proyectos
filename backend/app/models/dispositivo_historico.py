@@ -15,12 +15,12 @@ class DispositivoHistorico(Base):
     id = Column(Integer, primary_key=True, index=True)
     devid = Column(Integer, ForeignKey('monitoreo.dispositivos.devid', ondelete='CASCADE'), nullable=False)
     timestamp = Column(TIMESTAMP(timezone=True), nullable=False)
-    
+
     # Datos históricos del dispositivo
     devstatus = Column(Integer)  # Estado del dispositivo en este timestamp
     latitud = Column(DECIMAL(10, 8))    # Geolocalización histórica
     longitud = Column(DECIMAL(11, 8))   # Geolocalización histórica
-    
+
     # Timestamp de auditoría
     created_at = Column(DateTime, default=func.now())
 

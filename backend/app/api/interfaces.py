@@ -32,7 +32,7 @@ async def get_interfaces(
     current_user: Usuario = Depends(get_current_user)
 ):
     """Obtener lista de interfaces con filtros y paginación"""
-    
+
     # Crear objeto de filtros
     filtros = InterfacesFiltros(
         devid=devid,
@@ -47,16 +47,16 @@ async def get_interfaces(
         speed_min=speed_min,
         speed_max=speed_max
     )
-    
+
     interfaces, total = InterfacesService.get_all(
-        db=db, 
-        skip=skip, 
+        db=db,
+        skip=skip,
         limit=limit,
         filtros=filtros
     )
-    
+
     total_paginas = (total + limit - 1) // limit
-    
+
     # Convertir a response detallado con información adicional
     interfaces_detalladas = []
     for interface in interfaces:
@@ -66,9 +66,9 @@ async def get_interfaces(
             interface_dict["dispositivo_nombre"] = interface.dispositivo.devname
             interface_dict["dispositivo_area"] = interface.dispositivo.area
             interface_dict["dispositivo_zona"] = interface.dispositivo.zona
-        
+
         interfaces_detalladas.append(InterfacesDetallado(**interface_dict))
-    
+
     return InterfacesListResponse(
         interfaces=interfaces_detalladas,
         total=total,
@@ -84,9 +84,9 @@ async def get_metricas_interfaces(
     current_user: Usuario = Depends(get_current_user)
 ):
     """Obtener métricas generales de interfaces"""
-    
+
     metricas = InterfacesService.get_metricas(db)
-    
+
     # Convertir top_utilizadas a formato detallado
     top_utilizadas_detalladas = []
     for interface in metricas["top_utilizadas"]:
@@ -96,9 +96,9 @@ async def get_metricas_interfaces(
             interface_dict["dispositivo_area"] = interface.dispositivo.area
             interface_dict["dispositivo_zona"] = interface.dispositivo.zona
         top_utilizadas_detalladas.append(InterfacesDetallado(**interface_dict))
-    
+
     metricas["top_utilizadas"] = top_utilizadas_detalladas
-    
+
     return InterfacesMetricas(**metricas)
 
 @router.get("/alta-utilizacion", response_model=InterfacesListResponse)
@@ -110,16 +110,16 @@ async def get_interfaces_alta_utilizacion(
     current_user: Usuario = Depends(get_current_user)
 ):
     """Obtener interfaces con alta utilización"""
-    
+
     interfaces, total = InterfacesService.get_high_utilization(
         db=db,
         threshold=threshold,
         skip=skip,
         limit=limit
     )
-    
+
     total_paginas = (total + limit - 1) // limit
-    
+
     interfaces_detalladas = []
     for interface in interfaces:
         interface_dict = interface.__dict__.copy()
@@ -128,7 +128,7 @@ async def get_interfaces_alta_utilizacion(
             interface_dict["dispositivo_area"] = interface.dispositivo.area
             interface_dict["dispositivo_zona"] = interface.dispositivo.zona
         interfaces_detalladas.append(InterfacesDetallado(**interface_dict))
-    
+
     return InterfacesListResponse(
         interfaces=interfaces_detalladas,
         total=total,
@@ -145,15 +145,15 @@ async def get_interfaces_con_errores(
     current_user: Usuario = Depends(get_current_user)
 ):
     """Obtener interfaces con errores"""
-    
+
     interfaces, total = InterfacesService.get_with_errors(
         db=db,
         skip=skip,
         limit=limit
     )
-    
+
     total_paginas = (total + limit - 1) // limit
-    
+
     interfaces_detalladas = []
     for interface in interfaces:
         interface_dict = interface.__dict__.copy()
@@ -162,7 +162,7 @@ async def get_interfaces_con_errores(
             interface_dict["dispositivo_area"] = interface.dispositivo.area
             interface_dict["dispositivo_zona"] = interface.dispositivo.zona
         interfaces_detalladas.append(InterfacesDetallado(**interface_dict))
-    
+
     return InterfacesListResponse(
         interfaces=interfaces_detalladas,
         total=total,
@@ -180,16 +180,16 @@ async def buscar_interfaces(
     current_user: Usuario = Depends(get_current_user)
 ):
     """Buscar interfaces por término general"""
-    
+
     interfaces, total = InterfacesService.buscar(
         db=db,
         termino=q,
         skip=skip,
         limit=limit
     )
-    
+
     total_paginas = (total + limit - 1) // limit
-    
+
     interfaces_detalladas = []
     for interface in interfaces:
         interface_dict = interface.__dict__.copy()
@@ -198,7 +198,7 @@ async def buscar_interfaces(
             interface_dict["dispositivo_area"] = interface.dispositivo.area
             interface_dict["dispositivo_zona"] = interface.dispositivo.zona
         interfaces_detalladas.append(InterfacesDetallado(**interface_dict))
-    
+
     return InterfacesListResponse(
         interfaces=interfaces_detalladas,
         total=total,
@@ -213,9 +213,9 @@ async def get_estadisticas_por_zona(
     current_user: Usuario = Depends(get_current_user)
 ):
     """Obtener estadísticas de interfaces agrupadas por zona"""
-    
+
     estadisticas = InterfacesService.get_estadisticas_por_zona(db)
-    
+
     return estadisticas
 
 @router.get("/por-velocidad", response_model=InterfacesListResponse)
@@ -228,13 +228,13 @@ async def get_interfaces_por_velocidad(
     current_user: Usuario = Depends(get_current_user)
 ):
     """Obtener interfaces por rango de velocidad"""
-    
+
     if speed_min > speed_max:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="La velocidad mínima no puede ser mayor que la máxima"
         )
-    
+
     interfaces, total = InterfacesService.get_by_speed_range(
         db=db,
         speed_min=speed_min,
@@ -242,9 +242,9 @@ async def get_interfaces_por_velocidad(
         skip=skip,
         limit=limit
     )
-    
+
     total_paginas = (total + limit - 1) // limit
-    
+
     interfaces_detalladas = []
     for interface in interfaces:
         interface_dict = interface.__dict__.copy()
@@ -253,7 +253,7 @@ async def get_interfaces_por_velocidad(
             interface_dict["dispositivo_area"] = interface.dispositivo.area
             interface_dict["dispositivo_zona"] = interface.dispositivo.zona
         interfaces_detalladas.append(InterfacesDetallado(**interface_dict))
-    
+
     return InterfacesListResponse(
         interfaces=interfaces_detalladas,
         total=total,
@@ -269,21 +269,21 @@ async def get_interface(
     current_user: Usuario = Depends(get_current_user)
 ):
     """Obtener interface específica por ID"""
-    
+
     interface = InterfacesService.get_by_id(db, interface_id)
-    
+
     if not interface:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Interface no encontrada"
         )
-    
+
     interface_dict = interface.__dict__.copy()
     if interface.dispositivo:
         interface_dict["dispositivo_nombre"] = interface.dispositivo.devname
         interface_dict["dispositivo_area"] = interface.dispositivo.area
         interface_dict["dispositivo_zona"] = interface.dispositivo.zona
-    
+
     return InterfacesDetallado(**interface_dict)
 
 @router.get("/dispositivo/{devid}", response_model=InterfacesListResponse)
@@ -295,16 +295,16 @@ async def get_interfaces_por_dispositivo(
     current_user: Usuario = Depends(get_current_user)
 ):
     """Obtener interfaces de un dispositivo específico"""
-    
+
     interfaces, total = InterfacesService.get_by_dispositivo(
         db=db,
         devid=devid,
         skip=skip,
         limit=limit
     )
-    
+
     total_paginas = (total + limit - 1) // limit
-    
+
     interfaces_detalladas = []
     for interface in interfaces:
         interface_dict = interface.__dict__.copy()
@@ -313,7 +313,7 @@ async def get_interfaces_por_dispositivo(
             interface_dict["dispositivo_area"] = interface.dispositivo.area
             interface_dict["dispositivo_zona"] = interface.dispositivo.zona
         interfaces_detalladas.append(InterfacesDetallado(**interface_dict))
-    
+
     return InterfacesListResponse(
         interfaces=interfaces_detalladas,
         total=total,

@@ -159,7 +159,7 @@ async def reorder_menus(
     current_user: Usuario = Depends(get_current_user)
 ):
     """Reordenar menús
-    
+
     Body: [{"id": 1, "orden": 1}, {"id": 2, "orden": 2}, ...]
     """
     success = MenuService.reorder_menus(db, menu_orders)
@@ -168,7 +168,7 @@ async def reorder_menus(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Error reordenando menús"
         )
-    
+
     return {"message": "Menús reordenados correctamente"}
 
 @router.post("/grupos/reorder")
@@ -178,7 +178,7 @@ async def reorder_grupos(
     current_user: Usuario = Depends(get_current_user)
 ):
     """Reordenar grupos de menú
-    
+
     Body: [{"id": 1, "orden": 1}, {"id": 2, "orden": 2}, ...]
     """
     success = MenuService.reorder_grupos(db, grupo_orders)
@@ -187,5 +187,5 @@ async def reorder_grupos(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Error reordenando grupos"
         )
-    
+
     return {"message": "Grupos reordenados correctamente"}

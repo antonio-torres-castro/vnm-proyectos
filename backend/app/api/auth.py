@@ -4,7 +4,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.core.security import verify_password, create_access_token, get_password_hash, verify_token
+from app.core.security import (
+    verify_password,
+    create_access_token,
+    get_password_hash,
+    verify_token,
+)
 from app.core.config import settings
 from app.schemas.token import Token
 from app.schemas.usuario import UsuarioLogin, UsuarioResponse
@@ -13,10 +18,10 @@ from app.models import Estado, Rol
 
 router = APIRouter()
 
+
 @router.post("/login", response_model=Token)
 async def login(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    db: Session = Depends(get_db)
+    form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ):
     # Buscar usuario por email
     usuario = db.query(Usuario).filter(Usuario.email == form_data.username).first()
@@ -41,16 +46,11 @@ async def login(
         subject=usuario.email, expires_delta=access_token_expires
     )
 
-    return {
-        "access_token": access_token,
-        "token_type": "bearer"
-    }
+    return {"access_token": access_token, "token_type": "bearer"}
+
 
 @router.post("/login-form", response_model=Token)
-async def login_form(
-    usuario_data: UsuarioLogin,
-    db: Session = Depends(get_db)
-):
+async def login_form(usuario_data: UsuarioLogin, db: Session = Depends(get_db)):
     # Versión alternativa que recibe JSON en lugar de form-data
     usuario = db.query(Usuario).filter(Usuario.email == usuario_data.email).first()
 
@@ -71,10 +71,8 @@ async def login_form(
         subject=usuario.email, expires_delta=access_token_expires
     )
 
-    return {
-        "access_token": access_token,
-        "token_type": "bearer"
-    }
+    return {"access_token": access_token, "token_type": "bearer"}
+
 
 @router.get("/verify-token")
 async def verify_token_endpoint(token: str):
@@ -98,7 +96,7 @@ async def fix_admin_password(db: Session = Depends(get_db)):
         return {
             "error": "Usuario administrador no encontrado",
             "message": "Ejecuta primero los scripts SQL de inicialización de la base de datos",
-            "sql_path": "database/init-data/02-datos-autenticacion.sql"
+            "sql_path": "database/init-data/02-datos-autenticacion.sql",
         }
 
     # Verificar hash actual
@@ -116,7 +114,7 @@ async def fix_admin_password(db: Session = Depends(get_db)):
             "message": "El hash de contraseña ya está correcto",
             "email": admin_email,
             "password_works": True,
-            "current_hash": current_hash
+            "current_hash": current_hash,
         }
 
     # Actualizar con el hash correcto
@@ -136,8 +134,9 @@ async def fix_admin_password(db: Session = Depends(get_db)):
         "old_hash": current_hash,
         "new_hash": new_hash,
         "verification_successful": verification_result,
-        "warning": "El hash placeholder del SQL ha sido reemplazado por un hash real"
+        "warning": "El hash placeholder del SQL ha sido reemplazado por un hash real",
     }
+
 
 @router.post("/debug-password")
 async def debug_password(email: str, password: str, db: Session = Depends(get_db)):
@@ -164,5 +163,5 @@ async def debug_password(email: str, password: str, db: Session = Depends(get_db
         "password_valid": password_valid,
         "stored_hash": usuario.clave_hash,
         "new_hash_for_comparison": new_hash,
-        "hash_matches": usuario.clave_hash == new_hash
+        "hash_matches": usuario.clave_hash == new_hash,
     }

@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
+
 class UsuarioHistoriaBase(BaseModel):
     usuario_id: int
     rol_id: Optional[int] = None
@@ -14,8 +15,10 @@ class UsuarioHistoriaBase(BaseModel):
     ip_address: Optional[str] = None
     user_agent: Optional[str] = None
 
+
 class UsuarioHistoriaCreate(UsuarioHistoriaBase):
     clave_hash: Optional[str] = None  # Solo para auditoría, sin mostrar
+
 
 class UsuarioHistoriaResponse(BaseModel):
     id: int
@@ -32,6 +35,7 @@ class UsuarioHistoriaResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
 
 # Schema extendido con información relacionada
 class UsuarioHistoriaDetallada(UsuarioHistoriaResponse):

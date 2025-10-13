@@ -21,7 +21,7 @@ __all__ = [
     "Base",
     # Modelos IAM
     "Estado",
-    "Permiso", 
+    "Permiso",
     "Rol",
     "Usuario",
     "Menu",
@@ -31,7 +31,7 @@ __all__ = [
     "UsuarioHistoria",
     # Modelos Monitoreo
     "Dispositivos",
-    "Interfaces", 
+    "Interfaces",
     "InterfaceHistorico",
-    "DispositivoHistorico"
+    "DispositivoHistorico",
 ]
