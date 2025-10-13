@@ -1,8 +1,3 @@
-Perfecto! Voy a revisar los .gitignore en el repositorio y crear un README.md completo. Luego analizaré la estructura actual y te daré recomendaciones para comenzar.
-
-## 📖 **README.md COMPLETO PARA EL PROYECTO**
-
-```markdown
 # 🌐 Sistema Web de Monitoreo de Red IP
 
 ## 📋 Descripción del Proyecto
@@ -208,6 +203,36 @@ PgAdmin:
 - **Diseño:** Responsive (mobile-first)
 - **Paginación:** 100 registros por página en tablas
 
+## 🐞 Debugging y Desarrollo
+
+### Configuración de VS Code
+El proyecto incluye configuraciones completas de debugging para VS Code con Docker:
+
+#### 🚀 Instalación Automática
+```bash
+# Windows
+.\setup-vscode-debug.ps1
+
+# Linux/Mac
+bash setup-vscode-debug.sh
+```
+
+#### 📁 Configuraciones Disponibles
+- **🚀 Full Stack Debug** - Debuggea backend + frontend simultáneamente
+- **🐍 Backend Debug** - FastAPI en Docker (puerto 5678)
+- **⚛️ Frontend Debug** - React en Chrome (puerto 3000)
+- **🧪 Tests Debug** - Ejecución de tests con debugging
+
+#### 📖 Documentación Completa
+- <filepath>vscode-config/README_CONFIGURACION_DEBUG.md</filepath> - Guía detallada
+- <filepath>DEBUG_SETUP.md</filepath> - Setup completo paso a paso
+
+### Fix del Login del Administrador
+```bash
+# Arreglar password del admin (admin@monitoreo.cl / admin123)
+curl -X POST http://localhost:8000/api/v1/auth/fix-admin-password
+```
+
 ## 🔐 Seguridad
 
 - Autenticación JWT con expiración de 9 horas
@@ -228,36 +253,5 @@ Este proyecto es de uso interno para monitoreo de redes.
 ---
 
 **Estado del Proyecto:** 🟢 **Desarrollo Activo**  
-**Última Actualización:** Octubre 2024  
+**Última Actualización:** Octubre 2025  
 **Próximo Hito:** Sprint 1 - Autenticación y Estructura Base
-```
-
-## 🔍 **ANÁLISIS DEL REPOSITORIO ACTUAL**
-
-He revisado el repositorio y veo que tienes:
-
-### ✅ **LO QUE YA ESTÁ CONFIGURADO:**
-- Estructura de carpetas organizada
-- `.gitignore` para cada proyecto ✅
-- Contenedores Docker funcionando
-- Scripts de automatización (`manage-db.ps1`)
-- Servicios respondiendo en localhost
-
-### 🎯 **RECOMENDACIÓN SOBRE ENTORNOS VIRTUALES:**
-
-**NO es necesario crear entornos virtuales separados** porque:
-
-1. **✅ Los contenedores Docker ya están funcionando**
-2. **✅ Cada servicio tiene su propio ambiente aislado**
-3. **✅ El desarrollo se hará DENTRO de los contenedores**
-4. **✅ Ya tienes la persistencia y configuración lista**
-
-### 🚀 **PLAN DE INICIO INMEDIATO:**
-
-**Vamos a comenzar con el SPRINT 1 según el plan:**
-
-#### **FASE 1: Configuración de Desarrollo Dentro de Contenedores**
-
-1. **Backend FastAPI** - Desarrollar dentro del contenedor
-2. **Frontend React** - Desarrollo con hot-reload en contenedor  
-3. **Base de Datos** - Ya funciona con datos de ejemplo

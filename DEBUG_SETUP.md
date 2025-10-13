@@ -1,6 +1,6 @@
-# Configuración de Debugging para VS Code con Docker
+# 🐞 Configuración de Debugging para VS Code con Docker
 
-Esta guía te ayudará a configurar el debugging en VS Code para el proyecto VNM Monitoreo ejecutándose en contenedores Docker en Windows.
+Esta guía te ayudará a configurar el debugging completo en VS Code para el proyecto VNM Monitoreo ejecutándose en contenedores Docker en Windows.
 
 ## 📋 Prerequisitos
 
@@ -10,12 +10,15 @@ Esta guía te ayudará a configurar el debugging en VS Code para el proyecto VNM
 
 ## 🔧 Extensiones Requeridas
 
+Las extensiones se instalarán automáticamente al abrir el proyecto. Revisa los archivos `.vscode/extensions.json` en cada carpeta.
+
 ### Para Backend (Python/FastAPI):
 - Python
-- Pylance
+- Pylance  
 - Docker
 - Remote - Containers
 - Thunder Client (para testing de APIs)
+- autopep8 (formateador)
 
 ### Para Frontend (React/TypeScript):
 - Prettier - Code formatter
@@ -23,31 +26,128 @@ Esta guía te ayudará a configurar el debugging en VS Code para el proyecto VNM
 - Auto Rename Tag
 - Debugger for Chrome
 - React Extension Pack
+- TypeScript Importer
 
 ## 🚀 Configuración Paso a Paso
 
-### 1. Iniciar el Proyecto con Debugging
+### 1. Abrir el Proyecto en VS Code
 
 ```bash
-# Desde la raíz del proyecto
-docker-compose -f docker-compose.debug.yml up --build
+# Abrir desde la raíz del proyecto
+code vnm-proyectos/
 ```
 
-### 2. Debugging del Backend (Python/FastAPI)
+### 2. Opciones de Debugging Disponibles
 
-#### Opción A: Debugging Automático (Recomendado)
-1. El backend ya está configurado para esperar conexión del debugger
-2. En VS Code, abre la carpeta `backend`
-3. Ve a **Run and Debug** (Ctrl+Shift+D)
-4. Selecciona **"Python: FastAPI Docker Attach"**
-5. Presiona **F5** o haz click en **"Start Debugging"**
+#### 🎯 **Opción 1: Full Stack Debug (Recomendado)**
+- **Configuración**: `🚀 Full Stack: Debug Both`
+- **Descripción**: Debuggea backend y frontend simultáneamente
+- **Pasos**:
+  1. Ve a **Run and Debug** (Ctrl+Shift+D)
+  2. Selecciona **"🚀 Full Stack: Debug Both"**
+  3. Presiona **F5** - esto iniciará ambos debuggers
 
-#### Opción B: Debugging Manual
-1. Conectar VS Code al contenedor:
-   ```bash
-   docker exec -it vnm_backend_debug bash
-   ```
-2. En VS Code, usar **"Remote-Containers: Attach to Running Container"**
+#### 🐍 **Opción 2: Solo Backend**
+- **Configuración**: `🐍 Backend: FastAPI Docker Debug`
+- **Descripción**: Debuggea solo el backend FastAPI en Docker
+- **Puerto de debugging**: 5678
+
+#### ⚛️ **Opción 3: Solo Frontend**
+- **Configuración**: `⚛️ Frontend: React Chrome Debug`
+- **Descripción**: Debuggea solo el frontend React en Chrome
+- **URL**: http://localhost:3000
+
+### 3. Iniciar el Entorno de Debugging
+
+#### Método A: Usando Tasks de VS Code (Recomendado)
+1. **Ctrl+Shift+P** → **"Tasks: Run Task"**
+2. Seleccionar **"Docker: Start Debug Environment"**
+3. Esperar a que todos los contenedores se inicien
+
+#### Método B: Terminal Manual
+```bash
+# Desde la raíz del proyecto
+docker-compose -f docker-compose.debug.yml up --build -d
+```
+
+### 4. Solucionar el Problema de Login
+
+Antes de debuggear, necesitas arreglar el password del administrador:
+
+#### Paso 1: Verificar que los servicios estén ejecutándose
+```bash
+docker-compose -f docker-compose.debug.yml ps
+```
+
+#### Paso 2: Ejecutar el fix del password
+**Opción A: Usando VS Code Task**
+1. **Ctrl+Shift+P** → **"Tasks: Run Task"**
+2. Seleccionar **"Fix Admin Password"**
+
+**Opción B: Terminal Manual**
+```bash
+curl -X POST http://localhost:8000/api/v1/auth/fix-admin-password \
+  -H "accept: application/json" \
+  -H "Content-Type: application/json"
+```
+
+#### Paso 3: Probar el login
+```bash
+curl -X POST http://localhost:8000/api/v1/auth/login \
+  -H "accept: application/json" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=&username=admin@monitoreo.cl&password=admin123&scope=&client_id=&client_secret="
+```
+
+### 5. Configuración de VS Code
+
+#### ⚠️ Configuraciones Disponibles en `vscode-config/`
+Las configuraciones de debugging están disponibles en la carpeta visible `vscode-config/` debido a que las carpetas `.vscode` no son visibles en la interfaz web.
+
+#### 🚀 Instalación Automática (Recomendado)
+
+**Windows:**
+```powershell
+.\setup-vscode-debug.ps1
+```
+
+**Linux/Mac:**
+```bash
+bash setup-vscode-debug.sh
+```
+
+#### 📋 Instalación Manual
+Si los scripts no funcionan:
+```bash
+# Crear las carpetas
+mkdir -p .vscode backend/.vscode frontend/.vscode
+
+# Copiar configuraciones
+cp vscode-config/root/* .vscode/
+cp vscode-config/backend/* backend/.vscode/
+cp vscode-config/frontend/* frontend/.vscode/
+```
+
+#### 📁 Configuraciones Incluidas
+
+**📍 Raíz del Proyecto** (`vscode-config/root/` → `.vscode/`)
+- **`launch.json`** - 7 configuraciones de debugging
+- **`tasks.json`** - 13 tareas automatizadas  
+- **`settings.json`** - Configuraciones del workspace
+- **`extensions.json`** - Extensiones recomendadas
+
+**🐍 Backend** (`vscode-config/backend/` → `backend/.vscode/`)
+- **`launch.json`** - 4 configuraciones Python/FastAPI
+- **`settings.json`** - Configuraciones Python
+- **`extensions.json`** - Extensiones backend
+
+**⚛️ Frontend** (`vscode-config/frontend/` → `frontend/.vscode/`)
+- **`launch.json`** - 5 configuraciones React/Chrome
+- **`settings.json`** - Configuraciones React/TypeScript
+- **`extensions.json`** - Extensiones frontend
+
+#### 📖 Documentación Completa
+Revisa <filepath>vscode-config/README_CONFIGURACION_DEBUG.md</filepath> para instrucciones detalladas.
 3. Seleccionar el contenedor `vnm_backend_debug`
 
 #### Configuración de Breakpoints:

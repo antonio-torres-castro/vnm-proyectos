@@ -1,0 +1,33 @@
+{
+    "recommendations": [
+        // JavaScript/TypeScript
+        "ms-vscode.vscode-typescript-next",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        
+        // React
+        "ms-edgedevtools.vscode-edge-devtools",
+        "burkeholland.simple-react-snippets",
+        "dsznajder.es7-react-js-snippets",
+        "formulahendry.auto-rename-tag",
+        
+        // CSS/Styling
+        "bradlc.vscode-tailwindcss",
+        "ms-vscode.vscode-css-peek",
+        "zignd.html-css-class-completion",
+        
+        // Development
+        "ms-azuretools.vscode-docker",
+        "rangav.vscode-thunder-client",
+        "humao.rest-client",
+        
+        // General
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "eamodio.gitlens",
+        "ms-vscode.vscode-markdown",
+        "yzhang.markdown-all-in-one",
+        "streetsidesoftware.code-spell-checker",
+        "pkief.material-icon-theme"
+    ]
+}

@@ -1,0 +1,374 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Docker: Start Debug Environment",
+            "type": "shell",
+            "command": "docker-compose",
+            "args": [
+                "-f",
+                "docker-compose.debug.yml",
+                "up",
+                "--build"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Inicia el entorno completo de debugging con Docker"
+        },
+        {
+            "label": "Docker: Stop Debug Environment",
+            "type": "shell",
+            "command": "docker-compose",
+            "args": [
+                "-f",
+                "docker-compose.debug.yml",
+                "down"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Detiene el entorno de debugging"
+        },
+        {
+            "label": "Start Backend Debug Container",
+            "type": "shell",
+            "command": "docker-compose",
+            "args": [
+                "-f",
+                "docker-compose.debug.yml",
+                "up",
+                "-d",
+                "backend"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Inicia solo el contenedor del backend en modo debug"
+        },
+        {
+            "label": "Start Frontend Dev Server",
+            "type": "shell",
+            "command": "docker-compose",
+            "args": [
+                "-f",
+                "docker-compose.debug.yml",
+                "up",
+                "-d",
+                "frontend"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Inicia solo el contenedor del frontend en modo desarrollo"
+        },
+        {
+            "label": "Backend: Install Dependencies",
+            "type": "shell",
+            "command": "pip",
+            "args": [
+                "install",
+                "-r",
+                "requirements.txt"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Instala dependencias de Python"
+        },
+        {
+            "label": "Frontend: Install Dependencies",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "install"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Instala dependencias de Node.js"
+        },
+        {
+            "label": "Backend: Run Tests",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "-m",
+                "pytest",
+                "tests/",
+                "-v"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/backend"
+            },
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Ejecuta tests del backend"
+        },
+        {
+            "label": "Frontend: Run Tests",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "test"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Ejecuta tests del frontend"
+        },
+        {
+            "label": "Database: View Logs",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "logs",
+                "-f",
+                "vnm_postgres_debug"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Muestra logs de la base de datos"
+        },
+        {
+            "label": "Backend: View Logs",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "logs",
+                "-f",
+                "vnm_backend_debug"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Muestra logs del backend"
+        },
+        {
+            "label": "Frontend: View Logs",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "logs",
+                "-f",
+                "vnm_frontend_debug"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Muestra logs del frontend"
+        },
+        {
+            "label": "Fix Admin Password",
+            "type": "shell",
+            "command": "curl.exe",
+            "args": [
+                "-X",
+                "POST",
+                "http://localhost:8000/api/v1/auth/fix-admin-password",
+                "-H",
+                "accept: application/json",
+                "-H",
+                "Content-Type: application/json"
+            ],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Ejecuta el endpoint para corregir el password del administrador"
+        },
+        {
+            "label": "Debug: Test Login API",
+            "type": "shell",
+            "command": "curl.exe",
+            "args": [
+                "-X",
+                "POST",
+                "http://localhost:8000/api/v1/auth/debug-password",
+                "-H",
+                "accept: application/json",
+                "-H",
+                "Content-Type: application/x-www-form-urlencoded",
+                "-d",
+                "email=admin@monitoreo.cl&password=admin123"
+            ],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Prueba la autenticación con el endpoint de debug"
+        },
+        {
+            "label": "Docker: Clean Debug Environment",
+            "type": "shell",
+            "command": "docker-compose",
+            "args": [
+                "-f",
+                "docker-compose.debug.yml",
+                "down",
+                "--volumes",
+                "--remove-orphans"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Limpia completamente el entorno de debug (contenedores, volúmenes, redes)"
+        },
+        {
+            "label": "Docker: Restart Debug Environment",
+            "type": "shell",
+            "command": "docker-compose",
+            "args": [
+                "-f",
+                "docker-compose.debug.yml",
+                "restart"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Reinicia todos los servicios del entorno de debug"
+        },
+        {
+            "label": "Docker: Show Container Status",
+            "type": "shell",
+            "command": "docker-compose",
+            "args": [
+                "-f",
+                "docker-compose.debug.yml",
+                "ps"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Muestra el estado actual de todos los contenedores"
+        },
+        {
+            "label": "Docker: Stop All Containers (Safe)",
+            "type": "shell",
+            "command": "docker-compose",
+            "args": [
+                "-f",
+                "docker-compose.debug.yml",
+                "stop"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Detiene todos los contenedores de forma segura (sin eliminarlos)"
+        },
+        {
+            "label": "Debug: Full Environment Setup",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Docker: Start Debug Environment",
+                "Fix Admin Password"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Secuencia completa: inicia entorno y configura password de admin"
+        }
+    ]
+}
