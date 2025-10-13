@@ -1,9 +1,9 @@
 #!/usr/bin/env pwsh
-# Script de configuración para debugging en VS Code - Windows PowerShell
+# Script de configuracion para debugging en VS Code - Windows PowerShell
 
 Write-Host "Configurando entorno de debugging de VS Code..." -ForegroundColor Green
 
-# Función para crear directorio si no existe
+# Funcion para crear directorio si no existe
 function Create-Directory-If-Not-Exists($path) {
     if (!(Test-Path -Path $path)) {
         New-Item -ItemType Directory -Path $path -Force | Out-Null
@@ -11,7 +11,7 @@ function Create-Directory-If-Not-Exists($path) {
     }
 }
 
-# Función para copiar archivos con verificación
+# Funcion para copiar archivos con verificacion
 function Copy-With-Verification($source, $destination) {
     if (Test-Path -Path $source) {
         Copy-Item -Path $source -Destination $destination -Force
@@ -25,7 +25,7 @@ try {
     # Verificar que estamos en el directorio correcto
     if (!(Test-Path -Path "vscode-config")) {
         Write-Host "Error: Directorio 'vscode-config' no encontrado" -ForegroundColor Red
-        Write-Host "Asegúrate de ejecutar este script desde la raíz del proyecto vnm-proyectos" -ForegroundColor Red
+        Write-Host "Asegurate de ejecutar este script desde la raiz del proyecto vnm-proyectos" -ForegroundColor Red
         exit 1
     }
 
@@ -35,8 +35,8 @@ try {
     Create-Directory-If-Not-Exists "backend\.vscode"
     Create-Directory-If-Not-Exists "frontend\.vscode"
 
-    # Copiar configuraciones del directorio raíz
-    Write-Host "Copiando configuraciones del directorio raíz..." -ForegroundColor Cyan
+    # Copiar configuraciones del directorio raiz
+    Write-Host "Copiando configuraciones del directorio raiz..." -ForegroundColor Cyan
     Copy-With-Verification "vscode-config\root\launch.json" ".vscode\launch.json"
     Copy-With-Verification "vscode-config\root\tasks.json" ".vscode\tasks.json"
     Copy-With-Verification "vscode-config\root\extensions.json" ".vscode\extensions.json"
@@ -53,15 +53,15 @@ try {
     Copy-With-Verification "vscode-config\frontend\extensions.json" "frontend\.vscode\extensions.json"
 
     Write-Host ""
-    Write-Host "¡Configuración completada exitosamente!" -ForegroundColor Green
+    Write-Host "Configuracion completada exitosamente!" -ForegroundColor Green
     Write-Host ""
-    Write-Host "Próximos pasos:" -ForegroundColor Yellow
+    Write-Host "Proximos pasos:" -ForegroundColor Yellow
     Write-Host "1. Abrir VS Code: code ." -ForegroundColor White
     Write-Host "2. Instalar extensiones recomendadas cuando VS Code lo sugiera" -ForegroundColor White
     Write-Host "3. Ejecutar task 'Debug: Full Environment Setup' para iniciar todo" -ForegroundColor White
     Write-Host ""
 
 } catch {
-    Write-Host "Error durante la configuración: $_" -ForegroundColor Red
+    Write-Host "Error durante la configuracion: $_" -ForegroundColor Red
     exit 1
 }
