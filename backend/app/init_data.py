@@ -64,7 +64,7 @@ def init_estados(db: Session):
         {"id": 3, "nombre": "Inactivo", "descripcion": "Registro inactivo en el sistema"},
         {"id": 4, "nombre": "Eliminado", "descripcion": "Registro eliminado logicamente en el sistema"},
         {"id": 5, "nombre": "Iniciado", "descripcion": "Proceso o Vigencia en ambito del modulo respectivo a iniciado"},
-        {"id": 6, "nombre": "Terminado", "descripcion": "Proceso o Vigencia en ambito del modulo respectivo a iniciado"},
+        {"id": 6, "nombre": "Terminado", "descripcion": "Proceso o Vigencia en ambito del modulo respectivo a terminado"},
         {"id": 7, "nombre": "Rechazado", "descripcion": "Proceso o Tarea en ambito del modulo respectivo rechazada"},
         {"id": 8, "nombre": "Aprobado", "descripcion": "Proceso o Tarea en ambito del modulo respectivo aprobada"}
     ]
