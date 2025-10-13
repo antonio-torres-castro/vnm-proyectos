@@ -6,15 +6,17 @@ IMPORTANTE: Las tablas primitivas (estados, permisos, rol) se poblan
 si ya tienen registros.
 """
 
-from sqlalchemy.orm import Session
-from app.core.database import SessionLocal, engine, Base
-# Imports específicos para evitar F403/F401
-from app.models import Estado, Rol, Usuario, Permiso
+import logging
+from datetime import datetime
+
 # Import para asegurar que todas las tablas se creen
 import app.models  # noqa: F401
+from app.core.database import Base, SessionLocal, engine
 from app.core.security import get_password_hash
-from datetime import datetime
-import logging
+
+# Imports específicos para evitar F403/F401
+from app.models import Estado, Permiso, Rol, Usuario
+from sqlalchemy.orm import Session
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -71,23 +73,14 @@ def init_estados(db: Session):
     # Verificar que la tabla esté vacía
     if db.query(Estado).count() > 0:
         logger.warning(
-            "Tabla estados ya contiene registros - "
-            "no se puede poblar desde código"
+            "Tabla estados ya contiene registros - " "no se puede poblar desde código"
         )
         return
     # creado, activo, inactivo, eliminado, iniciado, terminado,
     # rechazado, aprobado
     estados_basicos = [
-        {
-            "id": 1,
-            "nombre": "Creado",
-            "descripcion": "Registro creado en el sistema"
-        },
-        {
-            "id": 2,
-            "nombre": "Activo",
-            "descripcion": "Registro activo en el sistema"
-        },
+        {"id": 1, "nombre": "Creado", "descripcion": "Registro creado en el sistema"},
+        {"id": 2, "nombre": "Activo", "descripcion": "Registro activo en el sistema"},
         {
             "id": 3,
             "nombre": "Inactivo",
@@ -102,32 +95,28 @@ def init_estados(db: Session):
             "id": 5,
             "nombre": "Iniciado",
             "descripcion": (
-                "Proceso o Vigencia en ambito del modulo "
-                "respectivo a iniciado"
+                "Proceso o Vigencia en ambito del modulo " "respectivo a iniciado"
             ),
         },
         {
             "id": 6,
             "nombre": "Terminado",
             "descripcion": (
-                "Proceso o Vigencia en ambito del modulo "
-                "respectivo a terminado"
+                "Proceso o Vigencia en ambito del modulo " "respectivo a terminado"
             ),
         },
         {
             "id": 7,
             "nombre": "Rechazado",
             "descripcion": (
-                "Proceso o Tarea en ambito del modulo "
-                "respectivo rechazada"
+                "Proceso o Tarea en ambito del modulo " "respectivo rechazada"
             ),
         },
         {
             "id": 8,
             "nombre": "Aprobado",
             "descripcion": (
-                "Proceso o Tarea en ambito del modulo "
-                "respectivo aprobada"
+                "Proceso o Tarea en ambito del modulo " "respectivo aprobada"
             ),
         },
     ]
@@ -190,14 +179,11 @@ def init_permisos(db: Session):
     # Verificar que la tabla esté vacía
     if db.query(Permiso).count() > 0:
         logger.warning(
-            "Tabla permisos ya contiene registros - "
-            "no se puede poblar desde código"
+            "Tabla permisos ya contiene registros - " "no se puede poblar desde código"
         )
         return
 
-    logger.info(
-        "Tabla permisos vacía - debe ser poblada por script SQL directo"
-    )
+    logger.info("Tabla permisos vacía - debe ser poblada por script SQL directo")
 
 
 def init_admin_user(db: Session):
@@ -211,9 +197,7 @@ def init_admin_user(db: Session):
     admin_password = "admin123"
 
     # Verificar si ya existe
-    usuario_existente = db.query(Usuario).filter(
-        Usuario.email == admin_email
-    ).first()
+    usuario_existente = db.query(Usuario).filter(Usuario.email == admin_email).first()
     if usuario_existente:
         logger.info(f"Usuario administrador ya existe: {admin_email}")
         return
@@ -224,15 +208,13 @@ def init_admin_user(db: Session):
 
     if not rol_admin:
         logger.error(
-            "No se puede crear usuario administrador: "
-            "rol con ID 1 no existe"
+            "No se puede crear usuario administrador: " "rol con ID 1 no existe"
         )
         return
 
     if not estado_activo:
         logger.error(
-            "No se puede crear usuario administrador: "
-            "estado con ID 1 no existe"
+            "No se puede crear usuario administrador: " "estado con ID 1 no existe"
         )
         return
 

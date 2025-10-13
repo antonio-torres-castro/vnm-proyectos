@@ -1,8 +1,9 @@
 # backend/app/schemas/interfaces.py
-from pydantic import BaseModel, validator
 from datetime import datetime
-from typing import Optional, List
 from decimal import Decimal
+from typing import List, Optional
+
+from pydantic import BaseModel, validator
 
 
 class InterfacesBase(BaseModel):

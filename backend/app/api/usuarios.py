@@ -1,20 +1,21 @@
 # backend/app/api/usuarios.py
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, status, Query, Request
-from sqlalchemy.orm import Session
+
 from app.core.database import get_db
-from app.core.security import verify_token, get_current_user
-from app.services.usuario_service import UsuarioService
+from app.core.security import get_current_user, verify_token
+from app.models import Usuario
 from app.schemas.usuario import (
-    UsuarioCreate,
-    UsuarioUpdate,
     UsuarioChangePassword,
-    UsuarioResponse,
+    UsuarioCreate,
     UsuarioDetallado,
     UsuarioListResponse,
+    UsuarioResponse,
+    UsuarioUpdate,
 )
 from app.schemas.usuario_historia import UsuarioHistoriaResponse
-from app.models import Usuario
+from app.services.usuario_service import UsuarioService
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 
@@ -71,7 +72,7 @@ async def get_usuario(
     usuario_detallado = UsuarioDetallado(
         **usuario.__dict__,
         rol_nombre=usuario.rol.nombre if usuario.rol else None,
-        estado_nombre=usuario.estado.nombre if usuario.estado else None
+        estado_nombre=usuario.estado.nombre if usuario.estado else None,
     )
 
     return usuario_detallado

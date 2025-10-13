@@ -1,9 +1,10 @@
 # backend/app/schemas/dispositivos.py
-from pydantic import BaseModel, validator
 from datetime import datetime
-from typing import Optional, List
 from decimal import Decimal
 from ipaddress import IPv4Address
+from typing import List, Optional
+
+from pydantic import BaseModel, validator
 
 
 class DispositivosBase(BaseModel):

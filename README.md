@@ -227,12 +227,6 @@ bash setup-vscode-debug.sh
 - <filepath>vscode-config/README_CONFIGURACION_DEBUG.md</filepath> - Guía detallada
 - <filepath>DEBUG_SETUP.md</filepath> - Setup completo paso a paso
 
-### Fix del Login del Administrador
-```bash
-# Arreglar password del admin (admin@monitoreo.cl / admin123)
-curl -X POST http://localhost:8000/api/v1/auth/fix-admin-password
-```
-
 ## 🔐 Seguridad
 
 - Autenticación JWT con expiración de 9 horas

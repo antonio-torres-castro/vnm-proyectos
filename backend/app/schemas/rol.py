@@ -1,7 +1,8 @@
 # backend/app/schemas/rol.py
-from pydantic import BaseModel
-from typing import Optional, List, TYPE_CHECKING
 from datetime import datetime
+from typing import TYPE_CHECKING, List, Optional
+
+from pydantic import BaseModel
 
 if TYPE_CHECKING:
     from app.schemas.permiso import PermisoResponse

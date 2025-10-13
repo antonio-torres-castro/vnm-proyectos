@@ -1,10 +1,11 @@
 # backend/app/services/rol_service.py
-from typing import Optional, List
-from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import and_
-from app.models import Rol, RolPermiso, RolMenu, Permiso, Menu
-from app.schemas.rol import RolCreate, RolUpdate, RolPermisoCreate
+from typing import List, Optional
+
+from app.models import Menu, Permiso, Rol, RolMenu, RolPermiso
 from app.schemas.menu import RolMenuCreate
+from app.schemas.rol import RolCreate, RolPermisoCreate, RolUpdate
+from sqlalchemy import and_
+from sqlalchemy.orm import Session, joinedload
 
 
 class RolService:

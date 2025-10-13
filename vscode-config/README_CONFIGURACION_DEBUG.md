@@ -110,10 +110,6 @@ cp vscode-config/frontend/* frontend/.vscode/
 - **Start Backend Debug Container** - Solo backend
 - **Start Frontend Dev Server** - Solo frontend
 
-### Login Fix
-- **Fix Admin Password** - ⭐ **Soluciona el problema de login**
-- **Debug: Test Login API** - Prueba la autenticación
-
 ### Development
 - **Install Dependencies** - Backend y frontend
 - **Run Tests** - Backend y frontend
@@ -168,17 +164,6 @@ VS Code te sugerirá instalar las extensiones recomendadas automáticamente.
 docker-compose -f docker-compose.debug.yml up -d
 ```
 
-### 4. Solucionar Problema de Login ⭐
-```bash
-# Via Task de VS Code
-Ctrl+Shift+P → Tasks: Run Task → Fix Admin Password
-
-# O via terminal
-curl -X POST http://localhost:8000/api/v1/auth/fix-admin-password \
-  -H "accept: application/json" \
-  -H "Content-Type: application/json"
-```
-
 ## 🔍 Verificación
 
 Después de la instalación, verifica que existan estos archivos:
@@ -194,7 +179,9 @@ Después de la instalación, verifica que existan estos archivos:
 ## 🆘 Resolución de Problemas
 
 ### Problema: Admin no puede hacer login
-**Solución**: Ejecutar task `Fix Admin Password` o el curl command mostrado arriba
+**Solución**: Usar las credenciales correctas:
+- Email: `admin@monitoreo.cl`
+- Password: `admin123`
 
 ### Problema: Debugging no conecta
 **Verificar**:

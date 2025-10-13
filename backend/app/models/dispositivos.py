@@ -1,8 +1,8 @@
-from sqlalchemy import Column, Integer, String, DateTime, DECIMAL, TIMESTAMP
+from app.core.database import Base
+from sqlalchemy import DECIMAL, TIMESTAMP, Column, DateTime, Integer, String
+from sqlalchemy.dialects.postgresql import INET
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from sqlalchemy.dialects.postgresql import INET
-from app.core.database import Base
 
 
 class Dispositivos(Base):

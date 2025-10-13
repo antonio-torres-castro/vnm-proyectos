@@ -1,7 +1,8 @@
 # backend/app/schemas/usuario.py
-from pydantic import BaseModel, EmailStr, validator
 from datetime import datetime
 from typing import Optional
+
+from pydantic import BaseModel, EmailStr, validator
 
 
 class UsuarioBase(BaseModel):

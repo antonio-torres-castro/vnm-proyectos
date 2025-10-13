@@ -1,17 +1,22 @@
 # backend/app/api/interfaces.py
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.orm import Session
+
 from app.core.database import get_db
 from app.core.security import get_current_user
-from app.services.interfaces_service import InterfacesService
-from app.schemas.interfaces import (
-    InterfacesResponse, InterfacesDetallado, InterfacesListResponse,
-    InterfacesFiltros, InterfacesMetricas
-)
 from app.models import Usuario
+from app.schemas.interfaces import (
+    InterfacesDetallado,
+    InterfacesFiltros,
+    InterfacesListResponse,
+    InterfacesMetricas,
+    InterfacesResponse,
+)
+from app.services.interfaces_service import InterfacesService
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.orm import Session
 
 router = APIRouter()
+
 
 @router.get("/", response_model=InterfacesListResponse)
 async def get_interfaces(
@@ -20,16 +25,24 @@ async def get_interfaces(
     devid: Optional[int] = Query(None, description="Filtrar por ID de dispositivo"),
     zona: Optional[str] = Query(None, description="Filtrar por zona"),
     area: Optional[str] = Query(None, description="Filtrar por área"),
-    ifstatus: Optional[int] = Query(None, description="Filtrar por estado de interface"),
-    ifgraficar: Optional[int] = Query(None, description="Filtrar por monitoreo (0=No, 1=Sí)"),
+    ifstatus: Optional[int] = Query(
+        None, description="Filtrar por estado de interface"
+    ),
+    ifgraficar: Optional[int] = Query(
+        None, description="Filtrar por monitoreo (0=No, 1=Sí)"
+    ),
     solo_activas: bool = Query(False, description="Solo interfaces activas (UP)"),
     solo_monitoreadas: bool = Query(False, description="Solo interfaces monitoreadas"),
-    utilization_min: Optional[float] = Query(None, ge=0, le=100, description="Utilización mínima (%)"),
-    utilization_max: Optional[float] = Query(None, ge=0, le=100, description="Utilización máxima (%)"),
+    utilization_min: Optional[float] = Query(
+        None, ge=0, le=100, description="Utilización mínima (%)"
+    ),
+    utilization_max: Optional[float] = Query(
+        None, ge=0, le=100, description="Utilización máxima (%)"
+    ),
     speed_min: Optional[int] = Query(None, ge=0, description="Velocidad mínima (Mbps)"),
     speed_max: Optional[int] = Query(None, ge=0, description="Velocidad máxima (Mbps)"),
     db: Session = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(get_current_user),
 ):
     """Obtener lista de interfaces con filtros y paginación"""
 
@@ -45,14 +58,11 @@ async def get_interfaces(
         utilization_min=utilization_min,
         utilization_max=utilization_max,
         speed_min=speed_min,
-        speed_max=speed_max
+        speed_max=speed_max,
     )
 
     interfaces, total = InterfacesService.get_all(
-        db=db,
-        skip=skip,
-        limit=limit,
-        filtros=filtros
+        db=db, skip=skip, limit=limit, filtros=filtros
     )
 
     total_paginas = (total + limit - 1) // limit
@@ -75,13 +85,13 @@ async def get_interfaces(
         pagina=(skip // limit) + 1,
         por_pagina=limit,
         total_paginas=total_paginas,
-        filtros_aplicados=filtros
+        filtros_aplicados=filtros,
     )
+
 
 @router.get("/metricas", response_model=InterfacesMetricas)
 async def get_metricas_interfaces(
-    db: Session = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    db: Session = Depends(get_db), current_user: Usuario = Depends(get_current_user)
 ):
     """Obtener métricas generales de interfaces"""
 
@@ -101,21 +111,21 @@ async def get_metricas_interfaces(
 
     return InterfacesMetricas(**metricas)
 
+
 @router.get("/alta-utilizacion", response_model=InterfacesListResponse)
 async def get_interfaces_alta_utilizacion(
-    threshold: float = Query(80.0, ge=0, le=100, description="Umbral de utilización (%)"),
+    threshold: float = Query(
+        80.0, ge=0, le=100, description="Umbral de utilización (%)"
+    ),
     skip: int = Query(0, ge=0, description="Registros a omitir"),
     limit: int = Query(50, ge=1, le=100, description="Máximo registros por página"),
     db: Session = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(get_current_user),
 ):
     """Obtener interfaces con alta utilización"""
 
     interfaces, total = InterfacesService.get_high_utilization(
-        db=db,
-        threshold=threshold,
-        skip=skip,
-        limit=limit
+        db=db, threshold=threshold, skip=skip, limit=limit
     )
 
     total_paginas = (total + limit - 1) // limit
@@ -134,23 +144,20 @@ async def get_interfaces_alta_utilizacion(
         total=total,
         pagina=(skip // limit) + 1,
         por_pagina=limit,
-        total_paginas=total_paginas
+        total_paginas=total_paginas,
     )
+
 
 @router.get("/con-errores", response_model=InterfacesListResponse)
 async def get_interfaces_con_errores(
     skip: int = Query(0, ge=0, description="Registros a omitir"),
     limit: int = Query(50, ge=1, le=100, description="Máximo registros por página"),
     db: Session = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(get_current_user),
 ):
     """Obtener interfaces con errores"""
 
-    interfaces, total = InterfacesService.get_with_errors(
-        db=db,
-        skip=skip,
-        limit=limit
-    )
+    interfaces, total = InterfacesService.get_with_errors(db=db, skip=skip, limit=limit)
 
     total_paginas = (total + limit - 1) // limit
 
@@ -168,8 +175,9 @@ async def get_interfaces_con_errores(
         total=total,
         pagina=(skip // limit) + 1,
         por_pagina=limit,
-        total_paginas=total_paginas
+        total_paginas=total_paginas,
     )
+
 
 @router.get("/buscar", response_model=InterfacesListResponse)
 async def buscar_interfaces(
@@ -177,15 +185,12 @@ async def buscar_interfaces(
     skip: int = Query(0, ge=0, description="Registros a omitir"),
     limit: int = Query(50, ge=1, le=100, description="Máximo registros por página"),
     db: Session = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(get_current_user),
 ):
     """Buscar interfaces por término general"""
 
     interfaces, total = InterfacesService.buscar(
-        db=db,
-        termino=q,
-        skip=skip,
-        limit=limit
+        db=db, termino=q, skip=skip, limit=limit
     )
 
     total_paginas = (total + limit - 1) // limit
@@ -204,19 +209,20 @@ async def buscar_interfaces(
         total=total,
         pagina=(skip // limit) + 1,
         por_pagina=limit,
-        total_paginas=total_paginas
+        total_paginas=total_paginas,
     )
+
 
 @router.get("/estadisticas-zona")
 async def get_estadisticas_por_zona(
-    db: Session = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    db: Session = Depends(get_db), current_user: Usuario = Depends(get_current_user)
 ):
     """Obtener estadísticas de interfaces agrupadas por zona"""
 
     estadisticas = InterfacesService.get_estadisticas_por_zona(db)
 
     return estadisticas
+
 
 @router.get("/por-velocidad", response_model=InterfacesListResponse)
 async def get_interfaces_por_velocidad(
@@ -225,22 +231,18 @@ async def get_interfaces_por_velocidad(
     skip: int = Query(0, ge=0, description="Registros a omitir"),
     limit: int = Query(50, ge=1, le=100, description="Máximo registros por página"),
     db: Session = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(get_current_user),
 ):
     """Obtener interfaces por rango de velocidad"""
 
     if speed_min > speed_max:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="La velocidad mínima no puede ser mayor que la máxima"
+            detail="La velocidad mínima no puede ser mayor que la máxima",
         )
 
     interfaces, total = InterfacesService.get_by_speed_range(
-        db=db,
-        speed_min=speed_min,
-        speed_max=speed_max,
-        skip=skip,
-        limit=limit
+        db=db, speed_min=speed_min, speed_max=speed_max, skip=skip, limit=limit
     )
 
     total_paginas = (total + limit - 1) // limit
@@ -259,14 +261,15 @@ async def get_interfaces_por_velocidad(
         total=total,
         pagina=(skip // limit) + 1,
         por_pagina=limit,
-        total_paginas=total_paginas
+        total_paginas=total_paginas,
     )
+
 
 @router.get("/{interface_id}", response_model=InterfacesDetallado)
 async def get_interface(
     interface_id: int,
     db: Session = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(get_current_user),
 ):
     """Obtener interface específica por ID"""
 
@@ -274,8 +277,7 @@ async def get_interface(
 
     if not interface:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Interface no encontrada"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Interface no encontrada"
         )
 
     interface_dict = interface.__dict__.copy()
@@ -286,21 +288,19 @@ async def get_interface(
 
     return InterfacesDetallado(**interface_dict)
 
+
 @router.get("/dispositivo/{devid}", response_model=InterfacesListResponse)
 async def get_interfaces_por_dispositivo(
     devid: int,
     skip: int = Query(0, ge=0, description="Registros a omitir"),
     limit: int = Query(50, ge=1, le=100, description="Máximo registros por página"),
     db: Session = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user)
+    current_user: Usuario = Depends(get_current_user),
 ):
     """Obtener interfaces de un dispositivo específico"""
 
     interfaces, total = InterfacesService.get_by_dispositivo(
-        db=db,
-        devid=devid,
-        skip=skip,
-        limit=limit
+        db=db, devid=devid, skip=skip, limit=limit
     )
 
     total_paginas = (total + limit - 1) // limit
@@ -319,5 +319,5 @@ async def get_interfaces_por_dispositivo(
         total=total,
         pagina=(skip // limit) + 1,
         por_pagina=limit,
-        total_paginas=total_paginas
+        total_paginas=total_paginas,
     )

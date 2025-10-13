@@ -1,7 +1,15 @@
 # backend/app/api/__init__.py
+from app.api import (
+    auth,
+    dispositivos,
+    estados,
+    interfaces,
+    menus,
+    permisos,
+    roles,
+    usuarios,
+)
 from fastapi import APIRouter
-from app.api import auth, usuarios, roles, menus, permisos, estados
-from app.api import dispositivos, interfaces
 
 api_router = APIRouter()
 

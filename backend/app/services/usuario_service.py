@@ -1,12 +1,13 @@
 # backend/app/services/usuario_service.py
-from typing import Optional, List
-from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import or_, and_
-from app.models import Usuario, UsuarioHistoria, Rol, Estado
-from app.schemas.usuario import UsuarioCreate, UsuarioUpdate, UsuarioChangePassword
-from app.schemas.usuario_historia import UsuarioHistoriaCreate
-from app.core.security import get_password_hash, verify_password
 from datetime import datetime
+from typing import List, Optional
+
+from app.core.security import get_password_hash, verify_password
+from app.models import Estado, Rol, Usuario, UsuarioHistoria
+from app.schemas.usuario import UsuarioChangePassword, UsuarioCreate, UsuarioUpdate
+from app.schemas.usuario_historia import UsuarioHistoriaCreate
+from sqlalchemy import and_, or_
+from sqlalchemy.orm import Session, joinedload
 
 
 class UsuarioService:

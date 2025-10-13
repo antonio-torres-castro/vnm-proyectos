@@ -1,10 +1,11 @@
 # backend/app/services/dispositivos_service.py
-from typing import List, Tuple, Optional, Dict, Any
-from sqlalchemy.orm import Session
-from sqlalchemy import func, desc, asc, and_, or_
+from typing import Any, Dict, List, Optional, Tuple
+
 from app.models.dispositivos import Dispositivos
 from app.models.interfaces import Interfaces
 from app.schemas.dispositivos import DispositivosFiltros
+from sqlalchemy import and_, asc, desc, func, or_
+from sqlalchemy.orm import Session
 
 
 class DispositivosService:

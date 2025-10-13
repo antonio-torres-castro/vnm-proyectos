@@ -1,7 +1,7 @@
 # backend/app/models/rol.py
+from app.core.database import Base
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
-from app.core.database import Base
 
 
 class Rol(Base):

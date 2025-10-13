@@ -1,22 +1,22 @@
 # backend/app/api/roles.py
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+
 from app.core.database import get_db
 from app.core.security import get_current_user
-from app.services.rol_service import RolService
+from app.models import Usuario
+from app.schemas.menu import MenuResponse, RolMenuCreate, RolMenuResponse
+from app.schemas.permiso import PermisoResponse
 from app.schemas.rol import (
-    RolCreate,
-    RolUpdate,
-    RolResponse,
     RolConPermisos,
+    RolCreate,
     RolPermisoCreate,
     RolPermisoResponse,
+    RolResponse,
+    RolUpdate,
 )
-from app.schemas.menu import RolMenuCreate, RolMenuResponse
-from app.schemas.permiso import PermisoResponse
-from app.schemas.menu import MenuResponse
-from app.models import Usuario
+from app.services.rol_service import RolService
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 

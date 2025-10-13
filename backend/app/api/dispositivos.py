@@ -1,18 +1,19 @@
 # backend/app/api/dispositivos.py
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.orm import Session
+
 from app.core.database import get_db
 from app.core.security import get_current_user
-from app.services.dispositivos_service import DispositivosService
-from app.schemas.dispositivos import (
-    DispositivosResponse,
-    DispositivosDetallado,
-    DispositivosListResponse,
-    DispositivosFiltros,
-    DispositivosEstadisticas,
-)
 from app.models import Usuario
+from app.schemas.dispositivos import (
+    DispositivosDetallado,
+    DispositivosEstadisticas,
+    DispositivosFiltros,
+    DispositivosListResponse,
+    DispositivosResponse,
+)
+from app.services.dispositivos_service import DispositivosService
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 

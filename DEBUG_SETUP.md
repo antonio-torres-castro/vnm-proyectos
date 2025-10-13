@@ -70,35 +70,6 @@ code vnm-proyectos/
 docker-compose -f docker-compose.debug.yml up --build -d
 ```
 
-### 4. Solucionar el Problema de Login
-
-Antes de debuggear, necesitas arreglar el password del administrador:
-
-#### Paso 1: Verificar que los servicios estén ejecutándose
-```bash
-docker-compose -f docker-compose.debug.yml ps
-```
-
-#### Paso 2: Ejecutar el fix del password
-**Opción A: Usando VS Code Task**
-1. **Ctrl+Shift+P** → **"Tasks: Run Task"**
-2. Seleccionar **"Fix Admin Password"**
-
-**Opción B: Terminal Manual**
-```bash
-curl -X POST http://localhost:8000/api/v1/auth/fix-admin-password \
-  -H "accept: application/json" \
-  -H "Content-Type: application/json"
-```
-
-#### Paso 3: Probar el login
-```bash
-curl -X POST http://localhost:8000/api/v1/auth/login \
-  -H "accept: application/json" \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=&username=admin@monitoreo.cl&password=admin123&scope=&client_id=&client_secret="
-```
-
 ### 5. Configuración de VS Code
 
 #### ⚠️ Configuraciones Disponibles en `vscode-config/`
@@ -174,18 +145,6 @@ Revisa <filepath>vscode-config/README_CONFIGURACION_DEBUG.md</filepath> para ins
 - Hot reload funciona con los breakpoints activos
 
 ## 🐛 Debugging de Problemas Específicos
-
-### Problema de Autenticación (Contraseñas)
-
-Si tienes problemas con login, usa el endpoint de debug:
-
-```bash
-curl -X 'POST' \
-  'http://localhost:8000/api/v1/auth/debug-password' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/x-www-form-urlencoded' \
-  -d 'email=admin@monitoreo.cl&password=admin123'
-```
 
 ### Verificar Logs en Tiempo Real:
 

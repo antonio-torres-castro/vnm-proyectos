@@ -3,8 +3,9 @@
 Script de inicio para el backend con soporte de debugging opcional
 """
 import os
-import sys
 import subprocess
+import sys
+
 # typing imports removidos - no utilizados
 
 
