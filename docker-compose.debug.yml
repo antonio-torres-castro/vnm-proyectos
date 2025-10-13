@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  postgres:
+    image: postgres:15
+    container_name: vnm_postgres_debug
+    environment:
+      POSTGRES_DB: monitoreo_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_debug:/var/lib/postgresql/data
+      - ./backend/sql:/docker-entrypoint-initdb.d
+    networks:
+      - vnm_network_debug
+    restart: unless-stopped
+
+  # Backend FastAPI con debugging
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: vnm_backend_debug
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres123@postgres:5432/monitoreo_db
+      - SECRET_KEY=your-secret-key-here-change-in-production
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - ALGORITHM=HS256
+      - ENABLE_DEBUG=true  # Habilitar debugging
+    ports:
+      - "8000:8000"  # API
+      - "5678:5678"  # Puerto de debugging para VS Code
+    volumes:
+      - ./backend:/app
+      - /app/__pycache__  # Excluir cache de Python
+    depends_on:
+      - postgres
+    networks:
+      - vnm_network_debug
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+  # Frontend React con debugging
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: vnm_frontend_debug
+    environment:
+      - VITE_API_URL=http://localhost:8000/api/v1
+      - CHOKIDAR_USEPOLLING=true  # Para hot reload en Windows
+    ports:
+      - "3000:3000"   # React dev server
+      - "24678:24678" # Puerto adicional para debugging
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Excluir node_modules del bind mount
+    depends_on:
+      - backend
+    networks:
+      - vnm_network_debug
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+networks:
+  vnm_network_debug:
+    driver: bridge
+
+volumes:
+  postgres_data_debug:
+    driver: local

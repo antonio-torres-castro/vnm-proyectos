@@ -4,7 +4,16 @@ WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+# Instalar debugpy para debugging remoto
+RUN pip install debugpy
 
 COPY . .
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Exponer puerto para debugging
+EXPOSE 8000 5678
+
+# Hacer el script ejecutable
+RUN chmod +x start-debug.py
+
+# Comando por defecto (usa variable de entorno ENABLE_DEBUG para activar debugging)
+CMD ["python", "start-debug.py"]

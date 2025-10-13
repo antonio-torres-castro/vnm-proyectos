@@ -9,6 +9,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import Header from './components/layout/Header';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
+import MonitoringPage from './pages/MonitoringPage';
 import NotFound from './pages/NotFound';
 import useAuth from './hooks/useAuth';
 
@@ -39,7 +40,7 @@ const AppRoutes = () => {
         }}></div>
         <h2>Cargando Sistema VNM...</h2>
         <p>Inicializando autenticación</p>
-        <style jsx>{`
+        <style>{`
           @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -82,24 +83,7 @@ const AppRoutes = () => {
             path="/monitoring" 
             element={
               <ProtectedRoute>
-                <div style={{ padding: '2rem', textAlign: 'center' }}>
-                  <h2>📡 Módulo de Monitoreo</h2>
-                  <p>En desarrollo - Próximamente disponible</p>
-                  <div style={{ 
-                    background: '#f8f9fa', 
-                    padding: '2rem', 
-                    borderRadius: '8px',
-                    marginTop: '2rem'
-                  }}>
-                    <h3>Características planeadas:</h3>
-                    <ul style={{ textAlign: 'left', maxWidth: '400px', margin: '0 auto' }}>
-                      <li>📊 Monitoreo en tiempo real</li>
-                      <li>📈 Gráficos de rendimiento</li>
-                      <li>🚨 Sistema de alertas</li>
-                      <li>🗺️ Mapas de red</li>
-                    </ul>
-                  </div>
-                </div>
+                <MonitoringPage />
               </ProtectedRoute>
             } 
           />
@@ -169,7 +153,7 @@ const AppRoutes = () => {
       </main>
 
       {/* Estilos globales */}
-      <style jsx global>{`
+      <style>{`
         * {
           margin: 0;
           padding: 0;

@@ -3,7 +3,7 @@
 -- Insertar estados básicos solo si no existen
 INSERT INTO
     seguridad.estados (id, nombre, descripcion)
-SELECT 1, 'Activo', 'Registro activo en el sistema'
+SELECT 1, 'Creado', 'Registro creado en el sistema'
 WHERE
     NOT EXISTS (
         SELECT 1
@@ -14,7 +14,7 @@ WHERE
 
 INSERT INTO
     seguridad.estados (id, nombre, descripcion)
-SELECT 2, 'Inactivo', 'Registro inactivo en el sistema'
+SELECT 2, 'Activo', 'Registro activo en el sistema'
 WHERE
     NOT EXISTS (
         SELECT 1
@@ -25,7 +25,7 @@ WHERE
 
 INSERT INTO
     seguridad.estados (id, nombre, descripcion)
-SELECT 3, 'Eliminado', 'Registro marcado como eliminado'
+SELECT 3, 'Inactivo', 'Registro inactivo en el sistema'
 WHERE
     NOT EXISTS (
         SELECT 1
@@ -36,7 +36,7 @@ WHERE
 
 INSERT INTO
     seguridad.estados (id, nombre, descripcion)
-SELECT 4, 'Pendiente', 'Registro en estado pendiente'
+SELECT 4, 'Eliminado', 'Registro eliminado logicamente en el sistema'
 WHERE
     NOT EXISTS (
         SELECT 1
@@ -47,7 +47,7 @@ WHERE
 
 INSERT INTO
     seguridad.estados (id, nombre, descripcion)
-SELECT 5, 'Aprobado', 'Registro aprobado'
+SELECT 5, 'Iniciado', 'Proceso o Vigencia en ambito del modulo respectivo a iniciado'
 WHERE
     NOT EXISTS (
         SELECT 1
@@ -58,7 +58,29 @@ WHERE
 
 INSERT INTO
     seguridad.estados (id, nombre, descripcion)
-SELECT 6, 'Rechazado', 'Registro rechazado'
+SELECT 6, 'Terminado', 'Proceso o Vigencia en ambito del modulo respectivo a iniciado'
+WHERE
+    NOT EXISTS (
+        SELECT 1
+        FROM seguridad.estados
+        WHERE
+            id = 6
+    );
+
+INSERT INTO
+    seguridad.estados (id, nombre, descripcion)
+SELECT 6, 'Rechazado', 'Proceso o Tarea en ambito del modulo respectivo rechazada'
+WHERE
+    NOT EXISTS (
+        SELECT 1
+        FROM seguridad.estados
+        WHERE
+            id = 6
+    );
+
+INSERT INTO
+    seguridad.estados (id, nombre, descripcion)
+SELECT 6, 'Aprobado', 'Proceso o Tarea en ambito del modulo respectivo rechazada'
 WHERE
     NOT EXISTS (
         SELECT 1
@@ -101,7 +123,7 @@ WHERE
             id = 3
     );
 
--- Insertar permisos solo si no existen
+-- Insertar permisos solo si no existen Lectura, Creación, Modificación, Exportación
 INSERT INTO
     seguridad.permisos (id, nombre, descripcion)
 SELECT 1, 'Lectura', 'Permiso de lectura de datos'

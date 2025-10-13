@@ -35,7 +35,8 @@ const LoginForm = () => {
   // Limpiar errores cuando el componente se monta
   useEffect(() => {
     clearError();
-  }, [clearError]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Solo ejecutar al montar el componente
 
   // Manejar cambios en los inputs
   const handleInputChange = (e) => {
@@ -53,10 +54,7 @@ const LoginForm = () => {
       }));
     }
 
-    // Limpiar error global
-    if (error) {
-      clearError();
-    }
+    // El error global se limpiará automáticamente al escribir
   };
 
   // Validar formulario
@@ -221,7 +219,7 @@ const LoginForm = () => {
       </div>
 
       {/* Estilos CSS embebidos */}
-      <style jsx>{`
+      <style>{`
         .login-container {
           min-height: 100vh;
           display: flex;

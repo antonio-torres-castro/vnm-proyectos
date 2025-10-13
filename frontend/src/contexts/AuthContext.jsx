@@ -2,7 +2,7 @@
  * Contexto de Autenticación
  * Proporciona estado global de autenticación a toda la aplicación
  */
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo } from 'react';
 import { 
   login as apiLogin, 
   logout as apiLogout, 
@@ -156,7 +156,7 @@ export const AuthProvider = ({ children }) => {
   /**
    * Función de login
    */
-  const login = async (credentials) => {
+  const login = useCallback(async (credentials) => {
     dispatch({ type: AUTH_ACTIONS.LOADING });
     dispatch({ type: AUTH_ACTIONS.CLEAR_ERROR });
 
@@ -184,12 +184,12 @@ export const AuthProvider = ({ children }) => {
       });
       return { success: false, error: errorMessage };
     }
-  };
+  }, []);
 
   /**
    * Función de logout
    */
-  const logout = async () => {
+  const logout = useCallback(async () => {
     dispatch({ type: AUTH_ACTIONS.LOADING });
 
     try {
@@ -200,37 +200,37 @@ export const AuthProvider = ({ children }) => {
       clearAuthData();
       dispatch({ type: AUTH_ACTIONS.LOGOUT });
     }
-  };
+  }, []);
 
   /**
    * Actualizar datos del usuario
    */
-  const updateUser = (userData) => {
+  const updateUser = useCallback((userData) => {
     dispatch({ 
       type: AUTH_ACTIONS.UPDATE_USER, 
       payload: { user: userData } 
     });
-  };
+  }, []);
 
   /**
    * Limpiar errores
    */
-  const clearError = () => {
+  const clearError = useCallback(() => {
     dispatch({ type: AUTH_ACTIONS.CLEAR_ERROR });
-  };
+  }, []);
 
   /**
    * Establecer error
    */
-  const setError = (error) => {
+  const setError = useCallback((error) => {
     dispatch({ 
       type: AUTH_ACTIONS.SET_ERROR, 
       payload: { error } 
     });
-  };
+  }, []);
 
-  // Valor del contexto
-  const contextValue = {
+  // Valor del contexto memoizado
+  const contextValue = useMemo(() => ({
     // Estado
     ...state,
     
@@ -245,7 +245,7 @@ export const AuthProvider = ({ children }) => {
     isLoggedIn: state.isAuthenticated,
     currentUser: state.user,
     authStatus: state.status
-  };
+  }), [state, login, logout, updateUser, clearError, setError]);
 
   return (
     <AuthContext.Provider value={contextValue}>
