@@ -1,85 +1,67 @@
-# PowerShell Script para configurar debugging de VS Code
-# Ejecutar desde la raíz del proyecto vnm-proyectos
+#!/usr/bin/env pwsh
+# Script de configuración para debugging en VS Code - Windows PowerShell
 
 Write-Host "Configurando entorno de debugging de VS Code..." -ForegroundColor Green
 
-# Crear directorios .vscode si no existen
-$directories = @(
-    ".vscode",
-    "backend\.vscode", 
-    "frontend\.vscode"
-)
-
-foreach ($dir in $directories) {
-    if (-not (Test-Path $dir)) {
-        New-Item -ItemType Directory -Path $dir -Force | Out-Null
-        Write-Host "Creado: $dir" -ForegroundColor Green
-    }
-    else {
-        Write-Host "Ya existe: $dir" -ForegroundColor Yellow
+# Función para crear directorio si no existe
+function Create-Directory-If-Not-Exists($path) {
+    if (!(Test-Path -Path $path)) {
+        New-Item -ItemType Directory -Path $path -Force | Out-Null
+        Write-Host "Creado directorio: $path" -ForegroundColor Yellow
     }
 }
 
-# Copiar configuraciones desde vscode-config a .vscode
-$copies = @(
-    @{Source = "vscode-config\root\*"; Destination = ".vscode\" },
-    @{Source = "vscode-config\backend\*"; Destination = "backend\.vscode\" },
-    @{Source = "vscode-config\frontend\*"; Destination = "frontend\.vscode\" }
-)
-
-foreach ($copy in $copies) {
-    try {
-        Copy-Item -Path $copy.Source -Destination $copy.Destination -Force -Recurse
-        Write-Host "Copiado: $($copy.Source) -> $($copy.Destination)" -ForegroundColor Green
-    }
-    catch {
-        Write-Host "Error copiando: $($copy.Source)" -ForegroundColor Red
-        Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+# Función para copiar archivos con verificación
+function Copy-With-Verification($source, $destination) {
+    if (Test-Path -Path $source) {
+        Copy-Item -Path $source -Destination $destination -Force
+        Write-Host "Copiado: $source -> $destination" -ForegroundColor Green
+    } else {
+        Write-Host "Archivo fuente no encontrado: $source" -ForegroundColor Red
     }
 }
 
-# Verificar que los archivos se copiaron correctamente
-$requiredFiles = @(
-    ".vscode\launch.json",
-    ".vscode\tasks.json", 
-    ".vscode\settings.json",
-    ".vscode\extensions.json",
-    "backend\.vscode\launch.json",
-    "backend\.vscode\settings.json",
-    "frontend\.vscode\launch.json",
-    "frontend\.vscode\settings.json"
-)
-
-Write-Host "Verificando configuraciones..." -ForegroundColor Cyan
-$allExists = $true
-
-foreach ($file in $requiredFiles) {
-    if (Test-Path $file) {
-        Write-Host "$file" -ForegroundColor Green
+try {
+    # Verificar que estamos en el directorio correcto
+    if (!(Test-Path -Path "vscode-config")) {
+        Write-Host "Error: Directorio 'vscode-config' no encontrado" -ForegroundColor Red
+        Write-Host "Asegúrate de ejecutar este script desde la raíz del proyecto vnm-proyectos" -ForegroundColor Red
+        exit 1
     }
-    else {
-        Write-Host "$file" -ForegroundColor Red
-        $allExists = $false
-    }
-}
 
-if ($allExists) {
-    Write-Host "Configuración de debugging completada exitosamente!" -ForegroundColor Green
-    Write-Host "Revisa DEBUG_SETUP.md para instrucciones de uso" -ForegroundColor Cyan
+    # Crear directorios .vscode
+    Write-Host "Creando directorios .vscode..." -ForegroundColor Cyan
+    Create-Directory-If-Not-Exists ".vscode"
+    Create-Directory-If-Not-Exists "backend\.vscode"
+    Create-Directory-If-Not-Exists "frontend\.vscode"
+
+    # Copiar configuraciones del directorio raíz
+    Write-Host "Copiando configuraciones del directorio raíz..." -ForegroundColor Cyan
+    Copy-With-Verification "vscode-config\root\launch.json" ".vscode\launch.json"
+    Copy-With-Verification "vscode-config\root\tasks.json" ".vscode\tasks.json"
+    Copy-With-Verification "vscode-config\root\extensions.json" ".vscode\extensions.json"
+    Copy-With-Verification "vscode-config\root\settings.json" ".vscode\settings.json"
+
+    # Copiar configuraciones del backend
+    Write-Host "Copiando configuraciones del backend..." -ForegroundColor Cyan
+    Copy-With-Verification "vscode-config\backend\launch.json" "backend\.vscode\launch.json"
+    Copy-With-Verification "vscode-config\backend\settings.json" "backend\.vscode\settings.json"
+
+    # Copiar configuraciones del frontend
+    Write-Host "Copiando configuraciones del frontend..." -ForegroundColor Cyan
+    Copy-With-Verification "vscode-config\frontend\launch.json" "frontend\.vscode\launch.json"
+    Copy-With-Verification "vscode-config\frontend\extensions.json" "frontend\.vscode\extensions.json"
+
+    Write-Host ""
+    Write-Host "¡Configuración completada exitosamente!" -ForegroundColor Green
+    Write-Host ""
     Write-Host "Próximos pasos:" -ForegroundColor Yellow
-    Write-Host "1. Abrir VS Code en esta carpeta: code ." -ForegroundColor White
-    Write-Host "2. Instalar extensiones recomendadas" -ForegroundColor White
-    Write-Host "3. Iniciar Docker: docker-compose -f docker-compose.debug.yml up -d" -ForegroundColor White
-    Write-Host "4. Arreglar login: Ctrl+Shift+P -> Tasks: Run Task -> Fix Admin Password" -ForegroundColor White
-    Write-Host "5. Debuggear: Ctrl+Shift+D -> 🚀 Full Stack: Debug Both -> F5" -ForegroundColor White
-}
-else {
-    Write-Host "Algunos archivos no se copiaron correctamente" -ForegroundColor Red
-    Write-Host "Revisa los permisos y vuelve a ejecutar el script" -ForegroundColor Yellow
-}
+    Write-Host "1. Abrir VS Code: code ." -ForegroundColor White
+    Write-Host "2. Instalar extensiones recomendadas cuando VS Code lo sugiera" -ForegroundColor White
+    Write-Host "3. Ejecutar task 'Debug: Full Environment Setup' para iniciar todo" -ForegroundColor White
+    Write-Host ""
 
-Write-Host "Configuraciones disponibles:" -ForegroundColor Cyan
-Write-Host "Full Stack: Debug Both - Debuggea backend + frontend" -ForegroundColor White
-Write-Host "Backend: FastAPI Docker Debug - Solo backend" -ForegroundColor White  
-Write-Host "Frontend: React Chrome Debug - Solo frontend" -ForegroundColor White
-Write-Host "Tests con debugging para ambos proyectos" -ForegroundColor White
+} catch {
+    Write-Host "Error durante la configuración: $_" -ForegroundColor Red
+    exit 1
+}

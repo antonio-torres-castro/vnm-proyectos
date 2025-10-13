@@ -1,14 +1,17 @@
 # backend/app/init_data.py
 """
 Script para inicializar datos básicos del sistema
-IMPORTANTE: Las tablas primitivas (estados, permisos, rol) se poblan únicamente
-por scripts SQL directos y no deben poblarse desde código si ya tienen registros.
+IMPORTANTE: Las tablas primitivas (estados, permisos, rol) se poblan
+únicamente por scripts SQL directos y no deben poblarse desde código
+si ya tienen registros.
 """
 
 from sqlalchemy.orm import Session
 from app.core.database import SessionLocal, engine, Base
+# Imports específicos para evitar F403/F401
 from app.models import Estado, Rol, Usuario, Permiso
-from app.models import *  # Importar todos los modelos para crear tablas
+# Import para asegurar que todas las tablas se creen
+import app.models  # noqa: F401
 from app.core.security import get_password_hash
 from datetime import datetime
 import logging
@@ -29,7 +32,8 @@ def check_primitive_tables_empty(db: Session) -> bool:
         estado_count = db.query(Estado).count()
         if estado_count > 0:
             logger.info(
-                f"Tabla estados ya contiene {estado_count} registros - poblada por script SQL"
+                f"Tabla estados ya contiene {estado_count} registros - "
+                f"poblada por script SQL"
             )
             return False
 
@@ -37,7 +41,8 @@ def check_primitive_tables_empty(db: Session) -> bool:
         permiso_count = db.query(Permiso).count()
         if permiso_count > 0:
             logger.info(
-                f"Tabla permisos ya contiene {permiso_count} registros - poblada por script SQL"
+                f"Tabla permisos ya contiene {permiso_count} registros - "
+                f"poblada por script SQL"
             )
             return False
 
@@ -45,7 +50,8 @@ def check_primitive_tables_empty(db: Session) -> bool:
         rol_count = db.query(Rol).count()
         if rol_count > 0:
             logger.info(
-                f"Tabla rol ya contiene {rol_count} registros - poblada por script SQL"
+                f"Tabla rol ya contiene {rol_count} registros - "
+                f"poblada por script SQL"
             )
             return False
 
@@ -65,13 +71,23 @@ def init_estados(db: Session):
     # Verificar que la tabla esté vacía
     if db.query(Estado).count() > 0:
         logger.warning(
-            "Tabla estados ya contiene registros - no se puede poblar desde código"
+            "Tabla estados ya contiene registros - "
+            "no se puede poblar desde código"
         )
         return
-    # creado, activo, inactivo, eliminado, iniciado, terminado, rechazado, aprobado
+    # creado, activo, inactivo, eliminado, iniciado, terminado,
+    # rechazado, aprobado
     estados_basicos = [
-        {"id": 1, "nombre": "Creado", "descripcion": "Registro creado en el sistema"},
-        {"id": 2, "nombre": "Activo", "descripcion": "Registro activo en el sistema"},
+        {
+            "id": 1,
+            "nombre": "Creado",
+            "descripcion": "Registro creado en el sistema"
+        },
+        {
+            "id": 2,
+            "nombre": "Activo",
+            "descripcion": "Registro activo en el sistema"
+        },
         {
             "id": 3,
             "nombre": "Inactivo",
@@ -85,22 +101,34 @@ def init_estados(db: Session):
         {
             "id": 5,
             "nombre": "Iniciado",
-            "descripcion": "Proceso o Vigencia en ambito del modulo respectivo a iniciado",
+            "descripcion": (
+                "Proceso o Vigencia en ambito del modulo "
+                "respectivo a iniciado"
+            ),
         },
         {
             "id": 6,
             "nombre": "Terminado",
-            "descripcion": "Proceso o Vigencia en ambito del modulo respectivo a terminado",
+            "descripcion": (
+                "Proceso o Vigencia en ambito del modulo "
+                "respectivo a terminado"
+            ),
         },
         {
             "id": 7,
             "nombre": "Rechazado",
-            "descripcion": "Proceso o Tarea en ambito del modulo respectivo rechazada",
+            "descripcion": (
+                "Proceso o Tarea en ambito del modulo "
+                "respectivo rechazada"
+            ),
         },
         {
             "id": 8,
             "nombre": "Aprobado",
-            "descripcion": "Proceso o Tarea en ambito del modulo respectivo aprobada",
+            "descripcion": (
+                "Proceso o Tarea en ambito del modulo "
+                "respectivo aprobada"
+            ),
         },
     ]
 
@@ -162,24 +190,30 @@ def init_permisos(db: Session):
     # Verificar que la tabla esté vacía
     if db.query(Permiso).count() > 0:
         logger.warning(
-            "Tabla permisos ya contiene registros - no se puede poblar desde código"
+            "Tabla permisos ya contiene registros - "
+            "no se puede poblar desde código"
         )
         return
 
-    logger.info("Tabla permisos vacía - debe ser poblada por script SQL directo")
+    logger.info(
+        "Tabla permisos vacía - debe ser poblada por script SQL directo"
+    )
 
 
 def init_admin_user(db: Session):
     """
     Crear usuario administrador por defecto.
-    Esta función se ejecuta independientemente del estado de las tablas primitivas.
+    Esta función se ejecuta independientemente del estado de las
+    tablas primitivas.
     """
     admin_email = "admin@monitoreo.cl"
     admin_usuario = "Administrador"
     admin_password = "admin123"
 
     # Verificar si ya existe
-    usuario_existente = db.query(Usuario).filter(Usuario.email == admin_email).first()
+    usuario_existente = db.query(Usuario).filter(
+        Usuario.email == admin_email
+    ).first()
     if usuario_existente:
         logger.info(f"Usuario administrador ya existe: {admin_email}")
         return
@@ -189,12 +223,16 @@ def init_admin_user(db: Session):
     estado_activo = db.query(Estado).filter(Estado.id == 1).first()
 
     if not rol_admin:
-        logger.error("No se puede crear usuario administrador: rol con ID 1 no existe")
+        logger.error(
+            "No se puede crear usuario administrador: "
+            "rol con ID 1 no existe"
+        )
         return
 
     if not estado_activo:
         logger.error(
-            "No se puede crear usuario administrador: estado con ID 1 no existe"
+            "No se puede crear usuario administrador: "
+            "estado con ID 1 no existe"
         )
         return
 
@@ -240,7 +278,8 @@ def init_database():
 
         if primitives_empty:
             logger.info(
-                "Tablas primitivas vacías - procediendo con inicialización desde código"
+                "Tablas primitivas vacías - procediendo con "
+                "inicialización desde código"
             )
             # Inicializar datos básicos solo si las tablas están vacías
             init_estados(db)
@@ -248,7 +287,8 @@ def init_database():
             init_roles(db)
         else:
             logger.info(
-                "Tablas primitivas ya pobladas por scripts SQL - omitiendo inicialización desde código"
+                "Tablas primitivas ya pobladas por scripts SQL - "
+                "omitiendo inicialización desde código"
             )
 
         # El usuario administrador se puede crear independientemente

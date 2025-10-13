@@ -1,20 +1,27 @@
 services:
   # Base de datos PostgreSQL
   postgres:
-    image: postgres:15
+    image: postgis/postgis:16-3.4
     container_name: vnm_postgres_debug
     environment:
-      POSTGRES_DB: monitoreo_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: monitoreo_dev
+      POSTGRES_USER: monitoreo_user
+      POSTGRES_PASSWORD: monitoreo_pass
     ports:
       - "5432:5432"
     volumes:
       - postgres_data_debug:/var/lib/postgresql/data
-      - ./backend/sql:/docker-entrypoint-initdb.d
+      - ./database/init-data:/docker-entrypoint-initdb.d
+      - ./database/backups:/backups
+      - ./database/scripts:/scripts
     networks:
       - vnm_network_debug
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U monitoreo_user -d monitoreo_dev" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   # Backend FastAPI con debugging
   backend:
@@ -23,7 +30,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: vnm_backend_debug
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres123@postgres:5432/monitoreo_db
+      - DATABASE_URL=postgresql://monitoreo_user:monitoreo_pass@postgres:5432/monitoreo_dev
       - SECRET_KEY=your-secret-key-here-change-in-production
       - ACCESS_TOKEN_EXPIRE_MINUTES=30
       - ALGORITHM=HS256
@@ -35,7 +42,8 @@ services:
       - ./backend:/app
       - /app/__pycache__ # Excluir cache de Python
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - vnm_network_debug
     restart: unless-stopped

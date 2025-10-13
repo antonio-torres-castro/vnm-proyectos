@@ -1,0 +1,33 @@
+{
+    "version": "0.2",
+    "language": "en,es",
+    "words": [
+        "inicio",
+        "soporte", 
+        "opcional",
+        "Ejecutar",
+        "remoto",
+        "Iniciando",
+        "servidor",
+        "habilitado",
+        "conectar",
+        "desde",
+        "configuración",
+        "vnm",
+        "proyectos",
+        "backend",
+        "frontend",
+        "debugpy",
+        "uvicorn",
+        "fastapi",
+        "sqlalchemy",
+        "alembic"
+    ],
+    "ignorePaths": [
+        "node_modules/**",
+        ".git/**",
+        "*.log",
+        "**/*.pyc",
+        "__pycache__/**"
+    ]
+}

@@ -16,7 +16,6 @@
                 }
             ],
             "justMyCode": false,
-            "django": false,
             "redirectOutput": true,
             "preLaunchTask": "Start Backend Debug Container"
         },
@@ -53,15 +52,12 @@
             "name": "🐍 Backend: Local Python Debug",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/backend/app/main.py",
-            "args": [],
-            "envFile": "${workspaceFolder}/backend/.env",
+            "program": "${workspaceFolder}/backend/start-debug.py",
+            "args": ["--debug"],
+            "console": "integratedTerminal",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}/backend"
             },
-            "console": "integratedTerminal",
-            "justMyCode": false,
-            "django": false,
             "cwd": "${workspaceFolder}/backend"
         },
         {
@@ -87,17 +83,12 @@
             "type": "python",
             "request": "launch",
             "module": "pytest",
-            "args": [
-                "${workspaceFolder}/backend/tests",
-                "-v"
-            ],
+            "args": ["tests/", "-v"],
             "console": "integratedTerminal",
-            "justMyCode": false,
-            "envFile": "${workspaceFolder}/backend/.env",
+            "cwd": "${workspaceFolder}/backend",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}/backend"
-            },
-            "cwd": "${workspaceFolder}/backend"
+            }
         },
         {
             "name": "🧪 Frontend: Run Tests",
@@ -109,9 +100,6 @@
             "env": {
                 "CI": "true"
             },
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
             "cwd": "${workspaceFolder}/frontend"
         }
     ]

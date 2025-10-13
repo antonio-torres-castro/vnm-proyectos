@@ -1,36 +1,35 @@
-# 🐞 Configuraciones de Debugging para VS Code
+# 🔧 Configuración de Debugging para VS Code
 
-## ⚠️ Problema Identificado
-Las carpetas `.vscode` no son visibles en la interfaz web debido a que el sistema filtra archivos/carpetas que comienzan con punto (`.`).
+## 📖 Descripción
 
-## ✅ Solución Implementada
-Las configuraciones están disponibles en esta carpeta `vscode-config/` que es visible en la interfaz web.
+Esta configuración provee un entorno completo de debugging para el proyecto VNM con soporte para:
+- **Backend FastAPI** con debugging remoto via Docker
+- **Frontend React** con debugging en Edge/Chrome
+- **Tareas automatizadas** para gestión del entorno
+- **Extensiones optimizadas** para desarrollo
 
-## 📁 Estructura de Configuraciones
+## 📁 Estructura de Archivos
 
 ```
 vscode-config/
-├── root/           # Configuraciones para la raíz del proyecto (.vscode/)
-│   ├── launch.json     # 7 configuraciones de debugging
-│   ├── tasks.json      # 13 tareas automatizadas
-│   ├── settings.json   # Configuraciones del workspace
-│   └── extensions.json # Extensiones recomendadas
-├── backend/        # Configuraciones para backend/ (.vscode/)
-│   ├── launch.json     # 4 configuraciones Python/FastAPI
-│   ├── settings.json   # Configuraciones Python
-│   └── extensions.json # Extensiones backend
-└── frontend/       # Configuraciones para frontend/ (.vscode/)
-    ├── launch.json     # 5 configuraciones React/Edge + Chrome
-    ├── settings.json   # Configuraciones React/TypeScript
+├── root/
+│   ├── launch.json     # 5 configuraciones React/Edge + Chrome
+│   ├── tasks.json      # 18 tareas automatizadas
+│   └── extensions.json # Extensiones backend+frontend
+├── backend/
+│   ├── launch.json     # 5 configuraciones Python
+│   └── settings.json   # Configuración Python/Flask8
+└── frontend/
+    ├── launch.json     # 6 configuraciones React
     └── extensions.json # Extensiones frontend
 ```
 
-## 🚀 Instalación Automática
+## 🚀 Instalación Rápida
 
 ### Windows (PowerShell)
 ```powershell
 # Desde la raíz del proyecto vnm-proyectos
-.\setup-vscode-debug.ps1
+./setup-vscode-debug.ps1
 ```
 
 ### Linux/Mac (Bash)
@@ -58,20 +57,20 @@ cp vscode-config/root/* .vscode/
 # Backend
 cp vscode-config/backend/* backend/.vscode/
 
-# Frontend
+# Frontend  
 cp vscode-config/frontend/* frontend/.vscode/
 ```
 
-## 🎯 Configuraciones de Debugging Disponibles
+## 🎯 Configuraciones de Debug Disponibles
 
 ### 🚀 **Full Stack: Debug Both**
-- **Descripción**: Debuggea backend y frontend simultáneamente
-- **Uso**: Ideal para desarrollo completo
-- **Puertos**: Backend 5678, Frontend 3000
+- **Descripción**: Debuggea backend + frontend simultáneamente
+- **Componentes**: FastAPI Docker + React Edge
+- **Uso**: Debugging completo del sistema
 
 ### 🐍 **Backend: FastAPI Docker Debug**
-- **Descripción**: Debuggea solo el backend en Docker
-- **Puerto**: 5678
+- **Descripción**: Debuggea el backend via Docker
+- **Puerto**: 5678 (debugpy)
 - **Requisito**: Contenedor backend ejecutándose
 
 ### 🌐 **Frontend: React Edge Debug (Principal)**
@@ -149,26 +148,6 @@ VS Code te sugerirá instalar las extensiones recomendadas automáticamente.
 > ✅ **Configuración Moderna**: Edge como navegador principal, Chrome como alternativa. Se removió la extensión deprecada `Debugger for Chrome`.
 
 ### 3. Iniciar Entorno de Debugging
-**Opción A**: Usar Task de VS Code
-- `Ctrl+Shift+P` → `Tasks: Run Task` → `Docker: Start Debug Environment`
-
-**Opción B**: Terminal
-```bash
-docker-compose -f docker-compose.debug.yml up -d
-```
-
-### 4. Arreglar Login del Administrador
-**Opción A**: Usar Task de VS Code
-- `Ctrl+Shift+P` → `Tasks: Run Task` → `Fix Admin Password`
-
-**Opción B**: Terminal
-```bash
-curl -X POST http://localhost:8000/api/v1/auth/fix-admin-password \
-  -H "accept: application/json" \
-  -H "Content-Type: application/json"
-```
-
-### 5. Iniciar Debugging
 
 **🌟 Opciones Recomendadas (en orden de prioridad):**
 1. **`🚀 Full Stack: Debug Both`** - Debuggea backend + frontend con Edge
@@ -181,6 +160,25 @@ curl -X POST http://localhost:8000/api/v1/auth/fix-admin-password \
 - Seleccionar la configuración deseada
 - Presionar `F5`
 
+**Opción A**: Usar Task de VS Code
+- `Ctrl+Shift+P` → `Tasks: Run Task` → `Docker: Start Debug Environment`
+
+**Opción B**: Terminal
+```bash
+docker-compose -f docker-compose.debug.yml up -d
+```
+
+### 4. Solucionar Problema de Login ⭐
+```bash
+# Via Task de VS Code
+Ctrl+Shift+P → Tasks: Run Task → Fix Admin Password
+
+# O via terminal
+curl -X POST http://localhost:8000/api/v1/auth/fix-admin-password \
+  -H "accept: application/json" \
+  -H "Content-Type: application/json"
+```
+
 ## 🔍 Verificación
 
 Después de la instalación, verifica que existan estos archivos:
@@ -191,25 +189,44 @@ Después de la instalación, verifica que existan estos archivos:
 - `backend/.vscode/launch.json`
 - `backend/.vscode/settings.json`
 - `frontend/.vscode/launch.json`
-- `frontend/.vscode/settings.json`
+- `frontend/.vscode/extensions.json`
 
-## 🐛 Troubleshooting
+## 🆘 Resolución de Problemas
 
-### Problema: Carpetas .vscode no visibles
-- **Causa**: Filtro de archivos ocultos en la interfaz web
-- **Solución**: Usar los scripts de setup o copia manual
+### Problema: Admin no puede hacer login
+**Solución**: Ejecutar task `Fix Admin Password` o el curl command mostrado arriba
 
-### Problema: Error al conectar debugger
-- **Causa**: Contenedores no iniciados o puertos ocupados
-- **Solución**: Verificar `docker-compose ps` y reiniciar contenedores
+### Problema: Debugging no conecta
+**Verificar**:
+1. Contenedores ejecutándose: `docker-compose -f docker-compose.debug.yml ps`
+2. Puerto 5678 libre: `netstat -an | grep 5678`
+3. Firewall no bloqueando puertos
 
-### Problema: Login falla después del debug setup
-- **Causa**: Hash de password incorrecto en la base de datos
-- **Solución**: Ejecutar tarea `Fix Admin Password`
+### Problema: Frontend no inicia
+**Verificar**:
+1. Node.js instalado: `node --version`
+2. Dependencies instaladas: `npm install` en /frontend
+3. Puerto 3000 libre
+
+## 🔧 Personalización
+
+### Cambiar puertos
+Edita `docker-compose.debug.yml` y actualiza los launch configs correspondientes.
+
+### Agregar extensiones
+Edita los `extensions.json` en cada directorio según necesites.
+
+### Modificar tareas
+Edita `tasks.json` para agregar o modificar comandos automatizados.
+
+---
 
 ## 📞 Soporte
 
-Para más detalles, revisa:
-- `DEBUG_SETUP.md` - Guía completa de debugging
-- `docker-compose.debug.yml` - Configuración Docker
-- `backend/start-debug.py` - Script de inicio del backend
+Si encuentras problemas con esta configuración, verifica:
+1. Versión de VS Code actualizada
+2. Extensiones Python y Edge DevTools instaladas
+3. Docker Desktop ejecutándose
+4. Puertos no ocupados por otros servicios
+
+¡Happy Debugging! 🐛✨

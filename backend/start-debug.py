@@ -5,16 +5,16 @@ Script de inicio para el backend con soporte de debugging opcional
 import os
 import sys
 import subprocess
-from typing import List
+# typing imports removidos - no utilizados
 
 
 def run_with_debug():
     """Ejecutar con debugpy (debugging remoto)"""
-    print("🐛 Iniciando servidor con debugging habilitado...")
-    print("📍 Debug server listening on 0.0.0.0:5678")
+    print(" Iniciando servidor con debugging habilitado...")
+    print(" Debug server listening on 0.0.0.0:5678")
     print(
         (
-            "🔗 Para conectar desde VS Code, usa la configuración "
+            " Para conectar desde VS Code, usa la configuración "
             "'Python: FastAPI Docker Attach'"
         )
     )
@@ -40,7 +40,7 @@ def run_with_debug():
 
 def run_normal():
     """Ejecutar sin debugging"""
-    print("🚀 Iniciando servidor sin debugging...")
+    print(" Iniciando servidor sin debugging...")
 
     cmd = [
         "uvicorn",

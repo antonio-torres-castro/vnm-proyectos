@@ -15,48 +15,47 @@
                     "remoteRoot": "/app"
                 }
             ],
-            "justMyCode": false,
-            "django": false,
-            "redirectOutput": true
+            "justMyCode": false
         },
         {
-            "name": "Python: FastAPI Local Debug",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/app/main.py",
-            "args": [],
-            "envFile": "${workspaceFolder}/.env",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}"
-            },
-            "console": "integratedTerminal",
-            "justMyCode": false,
-            "django": false
-        },
-        {
-            "name": "Python: Debug Current File",
+            "name": "Python: Current File",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "justMyCode": false,
-            "envFile": "${workspaceFolder}/.env",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Python: FastAPI Local",
+            "type": "python",
+            "request": "launch",
+            "program": "start-debug.py",
+            "args": ["--debug"],
+            "console": "integratedTerminal",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
-            }
+            },
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Python: Init Database",
+            "type": "python",
+            "request": "launch",
+            "program": "app/init_data.py",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "cwd": "${workspaceFolder}"
         },
         {
             "name": "Python: Run Tests",
             "type": "python",
             "request": "launch",
             "module": "pytest",
-            "args": [
-                "${workspaceFolder}/tests",
-                "-v"
-            ],
+            "args": ["tests/", "-v"],
             "console": "integratedTerminal",
-            "justMyCode": false,
-            "envFile": "${workspaceFolder}/.env",
+            "cwd": "${workspaceFolder}",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             }
