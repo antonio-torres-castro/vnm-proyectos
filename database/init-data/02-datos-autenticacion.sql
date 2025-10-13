@@ -464,7 +464,7 @@ INSERT INTO
         estado_id,
         fecha_inicio
     )
-SELECT 1, 1, 'admin@monitoreo.cl', 'Administrador', '$2b$12$LQv3c1yqBWVHxkd0L8k7OeY2J0VZ5X5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z', 1, NOW()
+SELECT 1, 1, 'admin@monitoreo.cl', 'Administrador', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBVbUxWqzx1WlG', 1, NOW()
 WHERE
     NOT EXISTS (
         SELECT 1

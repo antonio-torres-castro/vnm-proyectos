@@ -7,9 +7,9 @@
 .\setup-vscode-debug.ps1
 ```
 
-### 2. Corregir hash corrupto (Una sola vez si es necesario)
+### 2. Reinicializar BD con hash corregido (Una sola vez si es necesario)
 ```powershell
-.\fix-hash-corrupto.ps1
+.\reinicializar-database.ps1
 ```
 
 ## 📅 **FLUJO DIARIO DE DESARROLLO**
@@ -39,7 +39,7 @@ cd C:\vnm-proyectos
 
 ### ⚙️ Scripts de Configuración (Una vez)
 - ✅ `setup-vscode-debug.ps1` - Configura VS Code (solo primera vez)
-- ✅ `fix-hash-corrupto.ps1` - Corrige hash corrupto (si es necesario)
+- ✅ `reinicializar-database.ps1` - Reinicializa BD con hash corregido (si es necesario)
 
 ### 📦 Docker
 - ✅ `docker-compose.debug.yml` - Desarrollo con debugging
