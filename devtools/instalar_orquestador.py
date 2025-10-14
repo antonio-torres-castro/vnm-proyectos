@@ -45,6 +45,21 @@ def instalar_dependencias():
     """Instalar dependencias de Python"""
     print_step("Instalando dependencias de Python...")
     
+    # Usar requirements.txt si existe
+    requirements_file = Path(__file__).parent / "requirements.txt"
+    
+    if requirements_file.exists():
+        try:
+            print_step("Instalando desde requirements.txt...")
+            subprocess.run([
+                sys.executable, '-m', 'pip', 'install', '-r', str(requirements_file)
+            ], check=True, capture_output=True)
+            print_success("Dependencias instaladas desde requirements.txt")
+            return True
+        except subprocess.CalledProcessError as e:
+            print_error(f"Error instalando desde requirements.txt: {e}")
+    
+    # Fallback: instalar manualmente
     dependencias = ['requests']
     
     for dep in dependencias:
@@ -127,14 +142,14 @@ def crear_alias_bash():
     
     aliases_content = '''
 # Aliases para Orquestador VNM-Proyectos
-alias vnm-up="python desarrollo.py up"
-alias vnm-down="python desarrollo.py down"
-alias vnm-restart="python desarrollo.py restart"
-alias vnm-clean="python desarrollo.py clean"
-alias vnm-status="python desarrollo.py"
-alias vnm-logs="python desarrollo.py logs"
-alias vnm-backup="python desarrollo.py backup"
-alias vnm-help="python desarrollo.py help"
+alias vnm-up="python vnm.py up"
+alias vnm-down="python vnm.py down"
+alias vnm-restart="python vnm.py restart"
+alias vnm-clean="python vnm.py clean"
+alias vnm-status="python vnm.py"
+alias vnm-logs="python vnm.py logs"
+alias vnm-backup="python vnm.py backup"
+alias vnm-help="python vnm.py help"
 '''
     
     aliases_file = Path('vnm_aliases.sh')

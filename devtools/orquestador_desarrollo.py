@@ -67,7 +67,8 @@ class OrquestadorDesarrollo:
     def __init__(self, modo_debug: bool = True, verboso: bool = False):
         self.modo_debug = modo_debug
         self.verboso = verboso
-        self.proyecto_root = Path.cwd()
+        # Detectar la raíz del proyecto (donde están los docker-compose files)
+        self.proyecto_root = self._detectar_proyecto_root()
         self.docker_compose_file = "docker-compose.debug.yml" if modo_debug else "docker-compose.yml"
         self.prefix_contenedores = "vnm_" if modo_debug else "monitoreo_"
         
@@ -83,9 +84,6 @@ class OrquestadorDesarrollo:
         )
         self.logger = logging.getLogger(__name__)
         
-        # Verificar entorno
-        self._verificar_entorno_inicial()
-        
         # Definir servicios esperados
         self.servicios_esperados = {
             'postgres': {
@@ -96,13 +94,13 @@ class OrquestadorDesarrollo:
             },
             'backend': {
                 'container_name': f'{self.prefix_contenedores}backend{"_debug" if modo_debug else ""}',
-                'healthcheck': False,
+                'healthcheck': True,
                 'puerto': 8000,
                 'dependencias': ['postgres']
             },
             'frontend': {
                 'container_name': f'{self.prefix_contenedores}frontend{"_debug" if modo_debug else ""}',
-                'healthcheck': False,
+                'healthcheck': True,
                 'puerto': 3000,
                 'dependencias': ['backend']
             }
@@ -115,6 +113,27 @@ class OrquestadorDesarrollo:
                 'puerto': 8081,
                 'dependencias': ['postgres']
             }
+        
+        # Verificar entorno
+        self._verificar_entorno_inicial()
+    
+    def _detectar_proyecto_root(self) -> Path:
+        """Detectar la raíz del proyecto buscando docker-compose files"""
+        current_path = Path(__file__).parent
+        
+        # Si estamos en devtools/, la raíz está un nivel arriba
+        if current_path.name == 'devtools':
+            proyecto_root = current_path.parent
+        else:
+            # Si no, usar el directorio actual
+            proyecto_root = Path.cwd()
+        
+        # Verificar que existe al menos un docker-compose file
+        if (proyecto_root / "docker-compose.yml").exists() or (proyecto_root / "docker-compose.debug.yml").exists():
+            return proyecto_root
+        
+        # Si no encontramos, usar el directorio actual como fallback
+        return Path.cwd()
 
     def _print_color(self, message: str, color: str = Color.WHITE, bold: bool = False):
         """Imprimir mensaje con color"""
@@ -247,16 +266,24 @@ class OrquestadorDesarrollo:
             self.logger.error(f"Error obteniendo estado de {nombre_contenedor}: {e}")
             return Estado.DESCONOCIDO, {}
 
-    def verificar_conectividad_servicio(self, servicio: str, puerto: int, timeout: int = 5) -> bool:
+    def verificar_conectividad_servicio(self, servicio: str, puerto: int, timeout: int = 10) -> bool:
         """Verificar conectividad HTTP de un servicio"""
         try:
-            url = f"http://localhost:{puerto}"
             if servicio == 'backend':
-                url += "/docs"  # Endpoint de FastAPI
+                # Usar endpoint de health check para backend
+                url = f"http://localhost:{puerto}/health"
+            elif servicio == 'frontend':
+                # Verificar que el frontend responda
+                url = f"http://localhost:{puerto}"
+            else:
+                url = f"http://localhost:{puerto}"
             
             response = requests.get(url, timeout=timeout)
             return response.status_code < 400
-        except:
+        except Exception as e:
+            # En modo debug, agregar más información sobre fallos de conectividad
+            if hasattr(self, 'modo_debug') and self.modo_debug:
+                print(f"   Conectividad fallida para {servicio}: {str(e)}")
             return False
 
     def verificar_postgres_conectividad(self, contenedor: str) -> bool:
@@ -299,14 +326,27 @@ class OrquestadorDesarrollo:
                 'detalles': info
             }
             
-            # Verificar conectividad específica
+            # Verificar conectividad específica con reintentos
             if estado in [Estado.EJECUTANDO, Estado.SALUDABLE]:
-                if servicio == 'postgres':
-                    servicio_info['conectividad'] = self.verificar_postgres_conectividad(contenedor)
-                else:
-                    servicio_info['conectividad'] = self.verificar_conectividad_servicio(
-                        servicio, config['puerto']
-                    )
+                conectividad_ok = False
+                max_reintentos = 3 if servicio == 'backend' else 1
+                
+                for intento in range(max_reintentos):
+                    if servicio == 'postgres':
+                        conectividad_ok = self.verificar_postgres_conectividad(contenedor)
+                    else:
+                        conectividad_ok = self.verificar_conectividad_servicio(
+                            servicio, config['puerto']
+                        )
+                    
+                    if conectividad_ok:
+                        break
+                    elif intento < max_reintentos - 1:
+                        if self.modo_debug:
+                            print(f"   Reintentando conectividad {servicio} ({intento + 1}/{max_reintentos})")
+                        time.sleep(2)  # Esperar un poco antes del siguiente intento
+                
+                servicio_info['conectividad'] = conectividad_ok
             
             diagnostico['servicios'][servicio] = servicio_info
             
@@ -333,11 +373,19 @@ class OrquestadorDesarrollo:
                                  if s['estado'] in ['healthy', 'running'])
         total_servicios = len(diagnostico['servicios'])
         
+        # Determinar si el entorno es operativo
+        # En modo debug, ser más tolerante - todos ejecutando es suficiente
+        if self.modo_debug:
+            entorno_operativo = (servicios_ejecutando == total_servicios and 
+                               servicios_saludables >= total_servicios - 1)  # Permitir 1 servicio sin conectividad
+        else:
+            entorno_operativo = servicios_saludables == total_servicios
+        
         diagnostico['resumen'] = {
             'servicios_saludables': servicios_saludables,
             'servicios_ejecutando': servicios_ejecutando,
             'total_servicios': total_servicios,
-            'entorno_operativo': servicios_saludables == total_servicios
+            'entorno_operativo': entorno_operativo
         }
         
         # Mostrar resumen

@@ -26,7 +26,9 @@ def ejecutar_orquestador(args):
     """Ejecutar el orquestador principal con argumentos"""
     orquestador_path = Path(__file__).parent / "orquestador_desarrollo.py"
     cmd = [sys.executable, str(orquestador_path)] + args
-    return subprocess.run(cmd).returncode
+    # Cambiar al directorio padre (raíz del proyecto) para ejecutar el orquestador
+    proyecto_root = Path(__file__).parent.parent
+    return subprocess.run(cmd, cwd=proyecto_root).returncode
 
 
 def mostrar_logs(servicio=None):
@@ -55,21 +57,21 @@ def mostrar_ayuda():
 ========================================
 
 Comandos básicos:
-  python desarrollo.py              Diagnosticar estado
-  python desarrollo.py up           Iniciar entorno completo
-  python desarrollo.py down         Terminar entorno (con backup)
-  python desarrollo.py restart      Reiniciar entorno
-  python desarrollo.py clean        Limpieza completa + regenerar
+  python vnm.py              Diagnosticar estado
+  python vnm.py up           Iniciar entorno completo
+  python vnm.py down         Terminar entorno (con backup)
+  python vnm.py restart      Reiniciar entorno
+  python vnm.py clean        Limpieza completa + regenerar
 
 Comandos de logs:
-  python desarrollo.py logs         Ver todos los logs
-  python desarrollo.py logs backend Ver logs del backend
-  python desarrollo.py logs postgres Ver logs de PostgreSQL
+  python vnm.py logs         Ver todos los logs
+  python vnm.py logs backend Ver logs del backend
+  python vnm.py logs postgres Ver logs de PostgreSQL
   
 Comandos avanzados:
-  python desarrollo.py diagnosticar Diagnóstico detallado
-  python desarrollo.py backup       Crear backup manual
-  python desarrollo.py regenerar    Regenerar completamente
+  python vnm.py diagnosticar Diagnóstico detallado
+  python vnm.py backup       Crear backup manual
+  python vnm.py regenerar    Regenerar completamente
 
 URLs después de iniciar:
   • Frontend:     http://localhost:3000
@@ -78,9 +80,14 @@ URLs después de iniciar:
   • Debug Server: localhost:5678
 
 Para debugging en VS Code:
-  1. Ejecutar: python desarrollo.py up
+  1. Ejecutar: python vnm.py up
   2. Abrir VS Code: code .
   3. Presionar F5 → "Backend: FastAPI Docker Debug"
+
+📁 Estructura organizada:
+  • Script principal: vnm.py (en raíz)
+  • Herramientas: devtools/ (organizadas)
+  • Documentación: DEVTOOLS_README.md
 """)
 
 

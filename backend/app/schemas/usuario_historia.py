@@ -6,15 +6,11 @@ from pydantic import BaseModel
 
 
 class UsuarioHistoriaBase(BaseModel):
-    usuario_id: int
+    usuario_id: Optional[int] = None
     rol_id: Optional[int] = None
-    email: str
-    nombre_usuario: str
+    email: Optional[str] = None
+    nombre_usuario: Optional[str] = None
     estado_id: Optional[int] = None
-    accion: str  # CREATE, UPDATE, DELETE
-    usuario_modificador_id: Optional[int] = None
-    ip_address: Optional[str] = None
-    user_agent: Optional[str] = None
 
 
 class UsuarioHistoriaCreate(UsuarioHistoriaBase):
@@ -23,16 +19,12 @@ class UsuarioHistoriaCreate(UsuarioHistoriaBase):
 
 class UsuarioHistoriaResponse(BaseModel):
     id: int
-    usuario_id: int
+    usuario_id: Optional[int]
     rol_id: Optional[int]
-    email: str
-    nombre_usuario: str
+    email: Optional[str]
+    nombre_usuario: Optional[str]
     estado_id: Optional[int]
     fecha: datetime
-    accion: str
-    usuario_modificador_id: Optional[int]
-    ip_address: Optional[str]
-    user_agent: Optional[str]
 
     class Config:
         from_attributes = True
@@ -42,4 +34,3 @@ class UsuarioHistoriaResponse(BaseModel):
 class UsuarioHistoriaDetallada(UsuarioHistoriaResponse):
     rol_nombre: Optional[str] = None
     estado_nombre: Optional[str] = None
-    usuario_modificador_nombre: Optional[str] = None

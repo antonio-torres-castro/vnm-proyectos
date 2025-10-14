@@ -10,19 +10,13 @@ class UsuarioHistoria(Base):
     __table_args__ = {"schema": "seguridad"}
 
     id = Column(Integer, primary_key=True, index=True)
-    usuario_id = Column(Integer, ForeignKey("seguridad.usuario.id"), nullable=False)
+    usuario_id = Column(Integer, ForeignKey("seguridad.usuario.id"))
     rol_id = Column(Integer, ForeignKey("seguridad.rol.id"))
-    email = Column(String(150), nullable=False)
-    nombre_usuario = Column(String(100), nullable=False)
+    email = Column(String(150))
+    nombre_usuario = Column(String(100))
     clave_hash = Column(String(255))
     estado_id = Column(Integer, ForeignKey("seguridad.estados.id"))
-    fecha = Column(DateTime, default=func.now(), nullable=False)
-
-    # Campos adicionales para auditoría
-    accion = Column(String(50), nullable=False)  # CREATE, UPDATE, DELETE
-    usuario_modificador_id = Column(Integer, ForeignKey("seguridad.usuario.id"))
-    ip_address = Column(String(45))  # IPv4 o IPv6
-    user_agent = Column(String(500))
+    fecha = Column(DateTime, default=func.now())
 
     # Relaciones
     usuario = relationship(
@@ -30,4 +24,3 @@ class UsuarioHistoria(Base):
     )
     rol = relationship("Rol", back_populates="usuario_historias")
     estado = relationship("Estado", back_populates="usuario_historias")
-    usuario_modificador = relationship("Usuario", foreign_keys=[usuario_modificador_id])

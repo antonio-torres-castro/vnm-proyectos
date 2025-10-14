@@ -19,14 +19,28 @@ def run_with_debug():
             "'Python: FastAPI Docker Attach'"
         )
     )
+    print(" El servidor iniciará inmediatamente sin esperar debugger.")
+    print(" Use WAIT_FOR_CLIENT=true para esperar conexión del debugger.")
 
+    # Verificar si debe esperar el debugger
+    wait_for_client = os.environ.get("WAIT_FOR_CLIENT", "false").lower() in (
+        "true", "1", "yes", "on"
+    )
+    
     cmd = [
         "python",
         "-m",
         "debugpy",
         "--listen",
         "0.0.0.0:5678",
-        "--wait-for-client",
+    ]
+    
+    # Solo esperar el debugger si está explícitamente habilitado
+    if wait_for_client:
+        cmd.append("--wait-for-client")
+        print(" Esperando conexión del debugger en puerto 5678...")
+    
+    cmd.extend([
         "-m",
         "uvicorn",
         "app.main:app",
@@ -35,7 +49,7 @@ def run_with_debug():
         "--port",
         "8000",
         "--reload",
-    ]
+    ])
     subprocess.run(cmd)
 
 

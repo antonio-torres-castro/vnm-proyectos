@@ -96,10 +96,6 @@ class UsuarioService:
         UsuarioService._create_historia(
             db=db,
             usuario=db_usuario,
-            accion="CREATE",
-            usuario_modificador_id=usuario_creador_id,
-            ip_address=ip_address,
-            user_agent=user_agent,
         )
 
         db.commit()
@@ -147,10 +143,6 @@ class UsuarioService:
         UsuarioService._create_historia(
             db=db,
             usuario=usuario_anterior,  # Estado anterior
-            accion="UPDATE",
-            usuario_modificador_id=usuario_modificador_id,
-            ip_address=ip_address,
-            user_agent=user_agent,
         )
 
         db.commit()
@@ -184,10 +176,6 @@ class UsuarioService:
         UsuarioService._create_historia(
             db=db,
             usuario=db_usuario,
-            accion="CHANGE_PASSWORD",
-            usuario_modificador_id=usuario_modificador_id,
-            ip_address=ip_address,
-            user_agent=user_agent,
             include_password=False,
         )
 
@@ -216,10 +204,6 @@ class UsuarioService:
         UsuarioService._create_historia(
             db=db,
             usuario=db_usuario,
-            accion="DEACTIVATE",
-            usuario_modificador_id=usuario_modificador_id,
-            ip_address=ip_address,
-            user_agent=user_agent,
         )
 
         db.commit()
@@ -252,10 +236,6 @@ class UsuarioService:
     def _create_historia(
         db: Session,
         usuario: Usuario,
-        accion: str,
-        usuario_modificador_id: Optional[int] = None,
-        ip_address: Optional[str] = None,
-        user_agent: Optional[str] = None,
         include_password: bool = False,
     ):
         """Crear registro de auditoría en usuario_historia"""
@@ -267,10 +247,6 @@ class UsuarioService:
             nombre_usuario=usuario.nombre_usuario,
             clave_hash=usuario.clave_hash if include_password else None,
             estado_id=usuario.estado_id,
-            accion=accion,
-            usuario_modificador_id=usuario_modificador_id,
-            ip_address=ip_address,
-            user_agent=user_agent,
         )
 
         db.add(historia)
