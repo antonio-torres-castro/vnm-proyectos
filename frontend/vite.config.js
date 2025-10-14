@@ -7,5 +7,11 @@ export default defineConfig({
         host: '0.0.0.0',
         port: 3000,
         strictPort: true, // Fuerza el puerto 3000
+    },
+    build: {
+        sourcemap: true
+    },
+    css: {
+        devSourcemap: true
     }
 })

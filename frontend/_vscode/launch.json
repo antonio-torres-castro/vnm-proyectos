@@ -8,17 +8,16 @@
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}/src",
             "sourceMapPathOverrides": {
-                "webpack:///src/*": "${webRoot}/*",
-                "webpack:///./src/*": "${webRoot}/*",
-                "webpack:///./*": "${workspaceFolder}/*",
-                "webpack:////*": "*"
+                "/src/*": "${webRoot}/*",
+                "/*": "*"
             },
             "skipFiles": [
                 "<node_internals>/**",
                 "**/node_modules/**"
             ],
             "smartStep": true,
-            "showAsyncStacks": true
+            "showAsyncStacks": true,
+            "runtimeExecutable": "stable"
         },
         {
             "name": "React: Attach to Edge",
@@ -28,15 +27,14 @@
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}/src",
             "sourceMapPathOverrides": {
-                "webpack:///src/*": "${webRoot}/*",
-                "webpack:///./src/*": "${webRoot}/*",
-                "webpack:///./*": "${workspaceFolder}/*",
-                "webpack:////*": "*"
+                "/src/*": "${webRoot}/*",
+                "/*": "*"
             },
             "skipFiles": [
                 "<node_internals>/**",
                 "**/node_modules/**"
-            ]
+            ],
+            "runtimeExecutable": "stable"
         },
         {
             "name": "React: Launch Chrome (Alternativo)",
@@ -45,11 +43,22 @@
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}/src",
             "sourceMapPathOverrides": {
-                "webpack:///src/*": "${webRoot}/*",
-                "webpack:///./src/*": "${webRoot}/*",
-                "webpack:///./*": "${workspaceFolder}/*",
-                "webpack:////*": "*"
+                "/src/*": "${webRoot}/*",
+                "/*": "*"
             },
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        },
+        {
+            "name": "Vite: Debug en Chrome (Recomendado)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/src",
+            "sourceMaps": true,
+            "trace": "verbose",
             "skipFiles": [
                 "<node_internals>/**",
                 "**/node_modules/**"

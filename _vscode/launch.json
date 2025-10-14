@@ -6,14 +6,14 @@
             "type": "msedge",
             "request": "launch",
             "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/frontend",
+            "webRoot": "${workspaceFolder}/frontend/src",
             "sourceMapPathOverrides": {
-                "webpack:///src/*": "${webRoot}/src/*",
-                "webpack:///./*": "${webRoot}/*",
-                "webpack:///./~/*": "${webRoot}/node_modules/*"
+                "/src/*": "${webRoot}/*",
+                "/*": "*",
+                "/./~/*": "${workspaceFolder}/frontend/node_modules/*"
             },
             "userDataDir": false,
-            "runtimeExecutable": "msedge"
+            "runtimeExecutable": "stable"
         },
         {
             "name": "Backend Debug",
