@@ -60,36 +60,30 @@ export const login = async (credentials) => {
   try {
     console.log('Intentando login para:', credentials.username);
     
-    // Crear FormData para el endpoint login-form
-    const formData = new FormData();
-    formData.append('username', credentials.username);
-    formData.append('password', credentials.password);
+    // Preparar datos en formato JSON para el endpoint login-form
+    const loginData = {
+      email: credentials.username, // El backend espera 'email', no 'username'
+      clave: credentials.password  // El backend espera 'clave', no 'password'
+    };
 
-    const response = await apiClient.post('/auth/login-form', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await apiClient.post('/auth/login-form', loginData);
 
-    const { access_token, token_type, user } = response.data;
+    const { access_token, token_type } = response.data;
 
     if (!access_token) {
       throw new Error('Token no recibido del servidor');
     }
 
-    // Guardar token y datos del usuario
+    // Guardar token
     saveToken(access_token);
-    if (user) {
-      saveUserData(user);
-    }
-
-    console.log('Login exitoso para:', user?.username || credentials.username);
+    
+    console.log('Login exitoso para:', credentials.username);
     
     return {
       success: true,
       token: access_token,
       tokenType: token_type,
-      user: user,
+      user: null, // El usuario se obtendrá después con checkAuthStatus
       message: 'Login exitoso'
     };
 

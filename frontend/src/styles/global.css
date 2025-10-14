@@ -3,19 +3,26 @@
  * Estilos base y utilidades CSS
  */
 
-/* Variables CSS */
+/* Variables CSS - Paleta Claro Chile */
 :root {
-  /* Colores principales */
-  --primary-color: #667eea;
-  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --secondary-color: #6c757d;
+  /* Colores principales Claro Chile */
+  --primary-color: #FF2315;  /* Rojo principal Claro */
+  --primary-dark: #B52217;   /* Rojo oscuro Claro */
+  --primary-light: #EEADA9; /* Rosa coral Claro */
+  --primary-gradient: linear-gradient(135deg, #FF2315 0%, #B52217 100%);
+  
+  /* Colores complementarios Claro */
+  --secondary-color: #bbdff6;  /* Azul claro Claro */
+  --accent-color: #ff007f;     /* Rosa/Magenta Claro */
   --success-color: #28a745;
   --warning-color: #ffc107;
-  --danger-color: #dc3545;
-  --info-color: #17a2b8;
+  --danger-color: #FF2315;     /* Usar rojo Claro para danger */
+  --info-color: #bbdff6;       /* Usar azul claro Claro para info */
   
-  /* Colores neutros */
+  /* Colores neutros - Optimizados para Claro */
   --white: #ffffff;
+  --claro-light: #e6e6fa;      /* Lavanda claro */
+  --claro-neutral: #e5e5e5;    /* Gris claro Claro */
   --gray-100: #f8f9fa;
   --gray-200: #e9ecef;
   --gray-300: #dee2e6;
@@ -115,7 +122,7 @@ a {
 }
 
 a:hover {
-  color: #5a67d8;
+  color: var(--primary-dark);
 }
 
 /* Utilidades de espaciado */
@@ -280,7 +287,7 @@ a:hover {
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 35, 21, 0.3);
 }
 
 .btn-secondary {
@@ -332,7 +339,7 @@ a:hover {
 .form-textarea:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgba(255, 35, 21, 0.1);
 }
 
 .form-input.error,

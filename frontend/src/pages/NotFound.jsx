@@ -106,7 +106,7 @@ const NotFound = () => {
       <style jsx>{`
         .not-found {
           min-height: 100vh;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #FF2315 0%, #B52217 100%);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -159,7 +159,7 @@ const NotFound = () => {
         .error-number {
           font-size: 6rem;
           font-weight: 900;
-          color: #667eea;
+          color: #FF2315;
           text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
 
@@ -242,7 +242,7 @@ const NotFound = () => {
         }
 
         .action-button.primary {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #FF2315 0%, #B52217 100%);
           color: white;
         }
 
@@ -298,7 +298,7 @@ const NotFound = () => {
         }
 
         .nav-suggestion:hover {
-          background: #667eea;
+          background: #FF2315;
           color: white;
           transform: translateY(-1px);
         }

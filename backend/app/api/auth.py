@@ -5,12 +5,13 @@ from app.core.config import settings
 from app.core.database import get_db
 from app.core.security import (
     create_access_token,
+    get_current_user,
     verify_password,
     verify_token,
 )
 from app.models.usuario import Usuario
 from app.schemas.token import Token
-from app.schemas.usuario import UsuarioLogin
+from app.schemas.usuario import UsuarioLogin, UsuarioResponse
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -82,3 +83,9 @@ async def verify_token_endpoint(token: str):
             detail="Token inválido o expirado",
         )
     return {"email": email, "valid": True}
+
+
+@router.get("/me", response_model=UsuarioResponse)
+async def get_current_user_info(current_user: Usuario = Depends(get_current_user)):
+    """Obtiene la información del usuario autenticado actualmente"""
+    return current_user

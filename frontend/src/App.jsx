@@ -26,7 +26,7 @@ const AppRoutes = () => {
         alignItems: 'center',
         height: '100vh',
         flexDirection: 'column',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(135deg, #FF2315 0%, #B52217 100%)',
         color: 'white'
       }}>
         <div style={{
@@ -212,7 +212,7 @@ const AppRoutes = () => {
         }
 
         .btn-primary {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #FF2315 0%, #B52217 100%);
           color: white;
         }
 
@@ -240,7 +240,7 @@ const AppRoutes = () => {
         input:focus,
         select:focus,
         textarea:focus {
-          outline: 2px solid #667eea;
+          outline: 2px solid #FF2315;
           outline-offset: 2px;
         }
       `}</style>

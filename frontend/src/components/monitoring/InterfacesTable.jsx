@@ -971,7 +971,7 @@ const InterfacesTable = () => {
           display: flex;
           align-items: center;
           gap: 1rem;
-          border-left: 4px solid #667eea;
+          border-left: 4px solid #FF2315;
         }
 
         .stat-icon {

@@ -294,7 +294,7 @@ const MonitoringPage = () => {
 
         .tab-button.active {
           color: #667eea;
-          border-bottom-color: #667eea;
+          border-bottom-color: #FF2315;
           background: #f8f9ff;
         }
 

@@ -78,7 +78,7 @@ def get_current_user(
         raise credentials_exception
 
     # Verificar que el usuario esté activo
-    if user.estado_id != 1:
+    if user.estado_id != 2:  # 1 = creado, 2 = activo
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail="Usuario inactivo"
         )

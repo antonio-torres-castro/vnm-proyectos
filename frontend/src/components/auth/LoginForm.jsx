@@ -225,7 +225,7 @@ const LoginForm = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #FF2315 0%, #B52217 100%);
           padding: 1rem;
         }
 
@@ -324,7 +324,7 @@ const LoginForm = () => {
 
         .form-input:focus {
           outline: none;
-          border-color: #667eea;
+          border-color: #FF2315;
           box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
@@ -378,7 +378,7 @@ const LoginForm = () => {
         .login-button {
           width: 100%;
           padding: 1rem;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #FF2315 0%, #B52217 100%);
           color: white;
           border: none;
           border-radius: 6px;
