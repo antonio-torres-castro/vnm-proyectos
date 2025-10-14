@@ -1,18 +1,16 @@
 # backend/app/api/auth.py
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from app.core.config import settings
 from app.core.database import get_db
 from app.core.security import (
     create_access_token,
-    get_password_hash,
     verify_password,
     verify_token,
 )
-from app.models import Estado, Rol
 from app.models.usuario import Usuario
 from app.schemas.token import Token
-from app.schemas.usuario import UsuarioLogin, UsuarioResponse
+from app.schemas.usuario import UsuarioLogin
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -35,10 +33,10 @@ async def login(
         )
 
     # Verificar si el usuario está activo
-    if usuario.estado_id != 1:  # 1 = activo
+    if usuario.estado_id != 2:  # 1 = creado, 2 = activo
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Usuario inactivo",
+            detail="Usuario no activo",
         )
 
     # Crear token de acceso
@@ -61,10 +59,10 @@ async def login_form(usuario_data: UsuarioLogin, db: Session = Depends(get_db)):
             detail="Credenciales incorrectas",
         )
 
-    if usuario.estado_id != 1:  # 1 = activo
+    if usuario.estado_id != 2:  # 1 = creado, 2 = activo
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Usuario inactivo",
+            detail="Usuario no activo",
         )
 
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)

@@ -1,0 +1,57 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Frontend Debug",
+            "type": "msedge",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/frontend",
+            "sourceMapPathOverrides": {
+                "webpack:///src/*": "${webRoot}/src/*",
+                "webpack:///./*": "${webRoot}/*",
+                "webpack:///./~/*": "${webRoot}/node_modules/*"
+            },
+            "userDataDir": false,
+            "runtimeExecutable": "msedge"
+        },
+        {
+            "name": "Backend Debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/app/main.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/backend",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/backend",
+                "ENVIRONMENT": "development"
+            },
+            "justMyCode": false
+        },
+        {
+            "name": "FullStack Debug - Ambos simultáneamente",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/app/main.py",
+            "console": "integratedTerminal", 
+            "cwd": "${workspaceFolder}/backend",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/backend",
+                "ENVIRONMENT": "development"
+            },
+            "justMyCode": false,
+            "preLaunchTask": "start-fullstack-environment"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "FullStack Debug - Compound",
+            "configurations": [
+                "Backend Debug", 
+                "Frontend Debug"
+            ],
+            "stopAll": true,
+            "preLaunchTask": "start-fullstack-environment"
+        }
+    ]
+}

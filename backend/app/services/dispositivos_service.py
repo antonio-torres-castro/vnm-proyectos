@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from app.models.dispositivos import Dispositivos
 from app.models.interfaces import Interfaces
 from app.schemas.dispositivos import DispositivosFiltros
-from sqlalchemy import and_, asc, desc, func, or_
+from sqlalchemy import and_, asc, func, or_
 from sqlalchemy.orm import Session
 
 

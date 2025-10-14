@@ -29,7 +29,7 @@ def recrear_base_datos():
     
     # 1. Detener contenedores
     print("\n1. Deteniendo contenedores...")
-    if not ejecutar_comando("docker-compose -f docker-compose.debug.yml down", "Detener contenedores"):
+    if not ejecutar_comando("docker-compose -f ../docker-compose.debug.yml down", "Detener contenedores"):
         return False
     
     # 2. Limpieza completa de contenedores e imágenes
@@ -39,7 +39,7 @@ def recrear_base_datos():
     
     # 3. Levantar solo PostgreSQL
     print("\n3. Levantando PostgreSQL...")
-    if not ejecutar_comando("docker-compose -f docker-compose.debug.yml up -d postgres", "Levantar PostgreSQL"):
+    if not ejecutar_comando("docker-compose -f ../docker-compose.debug.yml up -d postgres", "Levantar PostgreSQL"):
         return False
     
     # 4. Esperar que PostgreSQL esté listo (los scripts se ejecutan automáticamente)
@@ -68,7 +68,7 @@ def recrear_base_datos():
     
     # 6. Reconstruir y levantar backend (forzar rebuild)
     print("\n6. Reconstruyendo y levantando servicios...")
-    if not ejecutar_comando("docker-compose -f docker-compose.debug.yml up -d --build", "Reconstruir y levantar servicios"):
+    if not ejecutar_comando("docker-compose -f ../docker-compose.debug.yml up -d --build", "Reconstruir y levantar servicios"):
         return False
     
     # 7. Esperar que backend esté listo

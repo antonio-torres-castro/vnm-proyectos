@@ -132,7 +132,7 @@ def reconstruir_backend():
     print("🔨 Reconstruyendo backend...")
     
     # Detener backend
-    ejecutar_comando("docker-compose -f docker-compose.debug.yml stop backend", "Detener backend")
+    ejecutar_comando("docker-compose -f ../docker-compose.debug.yml stop backend", "Detener backend")
     
     # Eliminar contenedor backend
     ejecutar_comando("docker rm vnm_backend_debug", "Eliminar contenedor backend")
@@ -142,7 +142,7 @@ def reconstruir_backend():
     
     # Reconstruir y levantar
     exito, stdout, stderr = ejecutar_comando(
-        "docker-compose -f docker-compose.debug.yml up -d --build backend",
+        "docker-compose -f ../docker-compose.debug.yml up -d --build backend",
         "Reconstruir y levantar backend"
     )
     

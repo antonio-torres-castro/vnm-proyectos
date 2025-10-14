@@ -35,7 +35,7 @@ def main():
     
     # Verificar dependencias básicas
     try:
-        import requests
+        import requests  # noqa: F401
     except ImportError:
         print("❌ Error: Falta la dependencia 'requests'")
         print("💡 Ejecuta: pip install requests")

@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Monitoreo PostgreSQL (Debug)",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "monitoreo_dev",
+      "Username": "monitoreo_user",
+      "PassFile": "/tmp/pgpass",
+      "SSLMode": "prefer",
+      "Comment": "Servidor PostgreSQL para desarrollo y debugging del sistema de monitoreo de red IP"
+    }
+  }
+}

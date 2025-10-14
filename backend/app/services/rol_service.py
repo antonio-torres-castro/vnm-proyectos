@@ -5,7 +5,7 @@ from app.models import Menu, Permiso, Rol, RolMenu, RolPermiso
 from app.schemas.menu import RolMenuCreate
 from app.schemas.rol import RolCreate, RolPermisoCreate, RolUpdate
 from sqlalchemy import and_
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session
 
 
 class RolService:

@@ -51,7 +51,7 @@ services:
     stdin_open: true
     tty: true
     healthcheck:
-      test: ["CMD-SHELL", "python -c \"import requests; requests.get('http://localhost:8000/health', timeout=5)\" || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:8000/health || exit 1"]
       interval: 30s
       timeout: 15s
       retries: 5
@@ -80,11 +80,43 @@ services:
     stdin_open: true
     tty: true
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:3000/ || exit 1"]
       interval: 30s
       timeout: 15s
       retries: 5
       start_period: 90s
+
+  # PgAdmin (Opcional - Administracion de PostgreSQL)
+  # Usar profiles para hacer este servicio opcional
+  # Para ejecutar: docker-compose --profile pgadmin up
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: vnm_pgadmin_debug
+    profiles:
+      - pgadmin  # Perfil opcional para PgAdmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@monitoreo.dev
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_LISTEN_PORT: 80
+      PGADMIN_CONFIG_SERVER_MODE: 'False'  # Modo desarrollo
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    ports:
+      - "5050:80"  # Interfaz web de PgAdmin
+    volumes:
+      - pgadmin_data_debug:/var/lib/pgadmin
+      - ./devtools/pgadmin/servers.json:/pgadmin4/servers.json:ro  # Configuracion preestablecida
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - vnm_network_debug
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:80/misc/ping || exit 1"]
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 30s
 
 networks:
   vnm_network_debug:
@@ -92,4 +124,6 @@ networks:
 
 volumes:
   postgres_data_debug:
+    driver: local
+  pgadmin_data_debug:
     driver: local

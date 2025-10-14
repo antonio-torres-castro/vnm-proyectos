@@ -19,15 +19,21 @@
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",
         "editor.formatOnSave": true,
+        "editor.formatOnPaste": true,
+        "editor.formatOnType": false,
         "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit"
+            "source.organizeImports": "explicit",
+            "source.fixAll.flake8": "explicit"
         },
-        "editor.rulers": [79]
+        "editor.rulers": [79, 88],
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 79
     },
     
     // Black Formatter Settings
     "black-formatter.args": [
-        "--line-length=79"
+        "--line-length=79",
+        "--target-version=py311"
     ],
     
     // Linting Settings
@@ -36,7 +42,8 @@
     "python.linting.flake8Enabled": true,
     "python.linting.flake8Args": [
         "--max-line-length=79",
-        "--exclude=migrations,__pycache__,.git,venv"
+        "--extend-ignore=E203,W503,E501",
+        "--exclude=migrations,__pycache__,.git,venv,.venv,build,dist"
     ],
     "python.linting.mypyEnabled": true,
     "python.linting.mypyArgs": [

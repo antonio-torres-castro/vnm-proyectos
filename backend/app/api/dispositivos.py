@@ -1,5 +1,5 @@
 # backend/app/api/dispositivos.py
-from typing import List, Optional
+from typing import Optional
 
 from app.core.database import get_db
 from app.core.security import get_current_user
@@ -9,7 +9,6 @@ from app.schemas.dispositivos import (
     DispositivosEstadisticas,
     DispositivosFiltros,
     DispositivosListResponse,
-    DispositivosResponse,
 )
 from app.services.dispositivos_service import DispositivosService
 from fastapi import APIRouter, Depends, HTTPException, Query, status

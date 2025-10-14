@@ -4,13 +4,11 @@ from typing import List
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models import Usuario
-from app.schemas.menu import MenuResponse, RolMenuCreate, RolMenuResponse
+from app.schemas.menu import MenuResponse, RolMenuCreate
 from app.schemas.permiso import PermisoResponse
 from app.schemas.rol import (
-    RolConPermisos,
     RolCreate,
     RolPermisoCreate,
-    RolPermisoResponse,
     RolResponse,
     RolUpdate,
 )

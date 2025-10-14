@@ -1,5 +1,5 @@
 # backend/app/schemas/dispositivo_historico.py
-from datetime import date, datetime
+from datetime import datetime
 from decimal import Decimal
 from typing import List, Optional
 

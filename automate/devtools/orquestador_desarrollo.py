@@ -10,7 +10,7 @@ de forma idempotente y robusta.
 Funcionalidades:
 - diagnosticar: Verificar estado de contenedores y servicios
 - iniciar: Levantar entorno completo con verificaciones de salud
-- terminar: Parar contenedores con backup automático
+- terminar: Parar contenedores con backup automatico
 - regenerar: Recrear completamente el entorno
 - backup: Realizar backup manual de la base de datos
 
@@ -65,9 +65,9 @@ class OrquestadorDesarrollo:
     def __init__(self, modo_debug: bool = True, verboso: bool = False):
         self.modo_debug = modo_debug
         self.verboso = verboso
-        # Detectar la raíz del proyecto (donde están los docker-compose files)
+        # Detectar la raiz del proyecto (donde estan los docker-compose files)
         self.proyecto_root = self._detectar_proyecto_root()
-        self.docker_compose_file = "docker-compose.debug.yml" if modo_debug else "docker-compose.yml"
+        self.docker_compose_file = "../docker-compose.debug.yml" if modo_debug else "../docker-compose.yml"
         self.prefix_contenedores = "vnm_" if modo_debug else "monitoreo_"
         
         # Configurar logging
@@ -76,7 +76,7 @@ class OrquestadorDesarrollo:
             level=log_level,
             format='%(asctime)s - %(levelname)s - %(message)s',
             handlers=[
-                logging.FileHandler('orquestador.log'),
+                logging.FileHandler('../logs/orquestador.log'),
                 logging.StreamHandler()
             ]
         )
@@ -104,7 +104,7 @@ class OrquestadorDesarrollo:
             }
         }
         
-        # PgAdmin (opcional en modo debug, estándar en producción)
+        # PgAdmin (opcional en modo debug, estandar en produccion)
         if modo_debug:
             # En modo debug, PgAdmin es opcional (requiere --profile pgadmin)
             self.servicios_esperados['pgadmin'] = {
@@ -116,7 +116,7 @@ class OrquestadorDesarrollo:
                 'profile': 'pgadmin'  # Perfil requerido para activar
             }
         else:
-            # En modo producción, PgAdmin es estándar
+            # En modo produccion, PgAdmin es estandar
             self.servicios_esperados['pgadmin'] = {
                 'container_name': 'monitoreo_pgadmin',
                 'healthcheck': False,
@@ -128,11 +128,14 @@ class OrquestadorDesarrollo:
         self._verificar_entorno_inicial()
     
     def _detectar_proyecto_root(self) -> Path:
-        """Detectar la raíz del proyecto buscando docker-compose files"""
+        """Detectar la raiz del proyecto buscando docker-compose files"""
         current_path = Path(__file__).parent
         
-        # Si estamos en devtools/, la raíz está un nivel arriba
-        if current_path.name == 'devtools':
+        # Si estamos en automate/devtools/, la raiz esta dos niveles arriba
+        if current_path.name == 'devtools' and current_path.parent.name == 'automate':
+            proyecto_root = current_path.parent.parent
+        elif current_path.name == 'devtools':
+            # Si estamos en devtools/, la raiz esta un nivel arriba
             proyecto_root = current_path.parent
         else:
             # Si no, usar el directorio actual
@@ -159,52 +162,52 @@ class OrquestadorDesarrollo:
 
     def _print_step(self, step: str, description: str = ""):
         """Imprimir paso de proceso"""
-        self._print_color(f"► {step}", Color.YELLOW, bold=True)
+        self._print_color(f">> {step}", Color.YELLOW, bold=True)
         if description:
             self._print_color(f"  {description}", Color.WHITE)
 
     def _print_success(self, message: str):
-        """Imprimir mensaje de éxito"""
-        self._print_color(f"✓ {message}", Color.GREEN, bold=True)
+        """Imprimir mensaje de exito"""
+        self._print_color(f"[OK] {message}", Color.GREEN, bold=True)
 
     def _print_error(self, message: str):
         """Imprimir mensaje de error"""
-        self._print_color(f"✗ {message}", Color.RED, bold=True)
+        self._print_color(f"[ERROR] {message}", Color.RED, bold=True)
 
     def _print_warning(self, message: str):
         """Imprimir mensaje de advertencia"""
-        self._print_color(f"⚠ {message}", Color.YELLOW, bold=True)
+        self._print_color(f"[WARN] {message}", Color.YELLOW, bold=True)
 
     def _print_info(self, message: str):
         """Imprimir mensaje informativo"""
-        self._print_color(f"ℹ {message}", Color.BLUE)
+        self._print_color(f"[INFO] {message}", Color.BLUE)
 
     def _verificar_entorno_inicial(self):
-        """Verificar que el entorno esté correctamente configurado"""
+        """Verificar que el entorno este correctamente configurado"""
         # Verificar Docker
         try:
             subprocess.run(['docker', '--version'], check=True, capture_output=True)
             subprocess.run(['docker-compose', '--version'], check=True, capture_output=True)
         except (subprocess.CalledProcessError, FileNotFoundError, PermissionError) as e:
-            self._print_error("Docker o docker-compose no están disponibles")
+            self._print_error("Docker o docker-compose no estan disponibles")
             self._print_error(f"Error: {e}")
             self._print_info("Posibles soluciones:")
-            self._print_info("1. Verificar que Docker esté instalado: docker --version")
-            self._print_info("2. Verificar que Docker esté ejecutándose: sudo systemctl status docker")
+            self._print_info("1. Verificar que Docker este instalado: docker --version")
+            self._print_info("2. Verificar que Docker este ejecutandose: sudo systemctl status docker")
             self._print_info("3. Verificar permisos: sudo usermod -aG docker $USER")
-            self._print_info("4. Reiniciar sesión después de cambiar permisos")
+            self._print_info("4. Reiniciar sesion despues de cambiar permisos")
             sys.exit(1)
         
         # Verificar archivo docker-compose
         if not (self.proyecto_root / self.docker_compose_file).exists():
             self._print_error(f"Archivo {self.docker_compose_file} no encontrado")
-            self._print_info(f"Asegúrate de estar en el directorio del proyecto")
+            self._print_info(f"Asegurate de estar en el directorio del proyecto")
             self._print_info(f"Directorio actual: {self.proyecto_root}")
             self._print_info(f"Archivos disponibles: {list(self.proyecto_root.glob('docker-compose*.yml'))}")
             sys.exit(1)
 
     def _ejecutar_comando(self, comando: List[str], capture_output: bool = True, check: bool = True) -> subprocess.CompletedProcess:
-        """Ejecutar comando con logging automático"""
+        """Ejecutar comando con logging automatico"""
         comando_str = ' '.join(comando)
         self.logger.debug(f"Ejecutando: {comando_str}")
         
@@ -242,13 +245,13 @@ class OrquestadorDesarrollo:
             if not result.stdout.strip():
                 return Estado.NO_EXISTE, {}
             
-            # Parsear información del contenedor
+            # Parsear informacion del contenedor
             info = json.loads(result.stdout.strip())
             estado_docker = info.get('State', '').lower()
             
             # Mapear estado de Docker a nuestro enum
             if estado_docker == 'running':
-                # Verificar health check si está disponible
+                # Verificar health check si esta disponible
                 inspect_result = self._ejecutar_comando([
                     'docker', 'inspect', nombre_contenedor
                 ])
@@ -294,13 +297,13 @@ class OrquestadorDesarrollo:
             response = requests.get(url, timeout=timeout)
             return response.status_code < 400
         except Exception as e:
-            # En modo debug, agregar más información sobre fallos de conectividad
+            # En modo debug, agregar mas informacion sobre fallos de conectividad
             if hasattr(self, 'modo_debug') and self.modo_debug:
                 print(f"   Conectividad fallida para {servicio}: {str(e)}")
             return False
 
     def verificar_postgres_conectividad(self, contenedor: str) -> bool:
-        """Verificar conectividad específica de PostgreSQL"""
+        """Verificar conectividad especifica de PostgreSQL"""
         try:
             result = self._ejecutar_comando([
                 'docker', 'exec', contenedor,
@@ -312,7 +315,7 @@ class OrquestadorDesarrollo:
 
     def diagnosticar(self) -> Dict[str, Dict]:
         """Diagnosticar estado completo del entorno"""
-        self._print_header("DIAGNÓSTICO DEL ENTORNO DE DESARROLLO")
+        self._print_header("DIAGNOSTICO DEL ENTORNO DE DESARROLLO")
         
         diagnostico = {
             'timestamp': datetime.now().isoformat(),
@@ -341,7 +344,7 @@ class OrquestadorDesarrollo:
                 'detalles': info
             }
             
-            # Verificar conectividad específica con reintentos
+            # Verificar conectividad especifica con reintentos
             if estado in [Estado.EJECUTANDO, Estado.SALUDABLE]:
                 conectividad_ok = False
                 max_reintentos = 3 if servicio == 'backend' else 1
@@ -367,21 +370,21 @@ class OrquestadorDesarrollo:
             
             # Mostrar resultado
             if estado == Estado.SALUDABLE:
-                status_icon = "✓" if servicio_info['conectividad'] else "⚠"
+                status_icon = "[OK]" if servicio_info['conectividad'] else "[WARN]"
                 color = Color.GREEN if servicio_info['conectividad'] else Color.YELLOW
                 self._print_color(f"  {status_icon} {servicio}: SALUDABLE", color)
             elif estado == Estado.EJECUTANDO:
-                status_icon = "✓" if servicio_info['conectividad'] else "⚠"
+                status_icon = "[OK]" if servicio_info['conectividad'] else "[WARN]"
                 color = Color.GREEN if servicio_info['conectividad'] else Color.YELLOW
                 self._print_color(f"  {status_icon} {servicio}: EJECUTANDO", color)
             elif estado == Estado.DETENIDO:
-                self._print_color(f"  ✗ {servicio}: DETENIDO", Color.RED)
+                self._print_color(f"  [ERROR] {servicio}: DETENIDO", Color.RED)
             elif estado == Estado.NO_EXISTE:
-                self._print_color(f"  ✗ {servicio}: NO EXISTE", Color.RED)
+                self._print_color(f"  [ERROR] {servicio}: NO EXISTE", Color.RED)
             else:
                 self._print_color(f"  ? {servicio}: {estado.value.upper()}", Color.YELLOW)
         
-        # Generar resumen (excluyendo servicios opcionales que no están ejecutándose)
+        # Generar resumen (excluyendo servicios opcionales que no estan ejecutandose)
         servicios_requeridos = {k: v for k, v in diagnostico['servicios'].items() 
                               if not v.get('opcional', False) or v['estado'] in ['healthy', 'running']}
         
@@ -393,7 +396,7 @@ class OrquestadorDesarrollo:
         total_servicios_incluye_opcionales = len(diagnostico['servicios'])
         
         # Determinar si el entorno es operativo
-        # En modo debug, ser más tolerante - todos ejecutando es suficiente
+        # En modo debug, ser mas tolerante - todos ejecutando es suficiente
         if self.modo_debug:
             entorno_operativo = (servicios_ejecutando == total_servicios and 
                                servicios_saludables >= total_servicios - 1)  # Permitir 1 servicio sin conectividad
@@ -418,29 +421,29 @@ class OrquestadorDesarrollo:
         
         # Mostrar resumen
         print()
-        self._print_step("RESUMEN DEL DIAGNÓSTICO")
+        self._print_step("RESUMEN DEL DIAGNOSTICO")
         if diagnostico['resumen']['entorno_operativo']:
             self._print_success("Entorno completamente operativo")
         else:
             self._print_warning(f"Servicios operativos: {servicios_saludables}/{total_servicios}")
         
-        # Mostrar información de servicios opcionales si los hay
+        # Mostrar informacion de servicios opcionales si los hay
         if total_servicios_opcionales > 0:
-            print(f"  📦 Servicios opcionales: {servicios_opcionales_ejecutando}/{total_servicios_opcionales}")
+            print(f"  [PKG] Servicios opcionales: {servicios_opcionales_ejecutando}/{total_servicios_opcionales}")
             if servicios_opcionales_ejecutando == 0 and self.modo_debug:
                 servicios_opcionales = [k for k, v in diagnostico['servicios'].items() if v.get('opcional', False)]
                 for servicio in servicios_opcionales:
                     profile = diagnostico['servicios'][servicio].get('profile')
                     if profile:
-                        print(f"    ℹ  Para activar {servicio}: docker-compose --profile {profile} up")
+                        print(f"    [INFO]  Para activar {servicio}: docker-compose --profile {profile} up")
         
-        # Guardar diagnóstico
+        # Guardar diagnostico
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         diagnostico_file = f"diagnostico_{timestamp}.json"
         with open(diagnostico_file, 'w') as f:
             json.dump(diagnostico, f, indent=2, ensure_ascii=False)
         
-        self._print_info(f"Diagnóstico guardado en: {diagnostico_file}")
+        self._print_info(f"Diagnostico guardado en: {diagnostico_file}")
         
         return diagnostico
 
@@ -448,12 +451,12 @@ class OrquestadorDesarrollo:
         """Crear backup de la base de datos PostgreSQL"""
         self._print_step("Creando backup de la base de datos")
         
-        # Verificar que PostgreSQL esté ejecutándose
+        # Verificar que PostgreSQL este ejecutandose
         postgres_container = self.servicios_esperados['postgres']['container_name']
         estado, _ = self.obtener_estado_contenedor(postgres_container)
         
         if estado not in [Estado.EJECUTANDO, Estado.SALUDABLE]:
-            self._print_error("PostgreSQL no está ejecutándose. No se puede crear backup.")
+            self._print_error("PostgreSQL no esta ejecutandose. No se puede crear backup.")
             return None
         
         # Crear directorio de backups si no existe
@@ -475,7 +478,7 @@ class OrquestadorDesarrollo:
                 ], capture_output=True)
                 f.write(result.stdout)
             
-            # Verificar que el backup se creó correctamente
+            # Verificar que el backup se creo correctamente
             if backup_path.exists() and backup_path.stat().st_size > 0:
                 size_mb = backup_path.stat().st_size / (1024 * 1024)
                 self._print_success(f"Backup creado: {backup_file} ({size_mb:.2f} MB)")
@@ -488,7 +491,7 @@ class OrquestadorDesarrollo:
                 # Eliminar archivo sin comprimir
                 backup_path.unlink()
                 
-                # Mantener solo últimos 10 backups
+                # Mantener solo ultimos 10 backups
                 backups = sorted(backup_dir.glob("backup_*.sql.zip"), 
                                key=lambda x: x.stat().st_mtime, reverse=True)
                 if len(backups) > 10:
@@ -498,7 +501,7 @@ class OrquestadorDesarrollo:
                 
                 return str(zip_path)
             else:
-                self._print_error("El backup está vacío o no se pudo crear")
+                self._print_error("El backup esta vacio o no se pudo crear")
                 if backup_path.exists():
                     backup_path.unlink()
                 return None
@@ -520,10 +523,10 @@ class OrquestadorDesarrollo:
             diagnostico_inicial = self.diagnosticar()
             
             if diagnostico_inicial['resumen']['entorno_operativo']:
-                self._print_success("El entorno ya está completamente operativo")
+                self._print_success("El entorno ya esta completamente operativo")
                 return True
             
-            # Paso 2: Parar servicios si están ejecutándose parcialmente
+            # Paso 2: Parar servicios si estan ejecutandose parcialmente
             servicios_ejecutando = any(
                 s['estado'] in ['running', 'healthy'] 
                 for s in diagnostico_inicial['servicios'].values()
@@ -541,11 +544,11 @@ class OrquestadorDesarrollo:
             comando_up = ['docker-compose', '-f', self.docker_compose_file, 'up', '-d']
             if forzar_rebuild:
                 comando_up.append('--build')
-                self._print_info("Forzando rebuild de imágenes Docker")
+                self._print_info("Forzando rebuild de imagenes Docker")
             
             self._ejecutar_comando(comando_up)
             
-            # Paso 4: Esperar a que los servicios estén listos
+            # Paso 4: Esperar a que los servicios esten listos
             self._print_step("Paso 4: Verificando servicios (timeout: 120s)")
             
             timeout = 120
@@ -554,7 +557,7 @@ class OrquestadorDesarrollo:
             while time.time() - inicio < timeout:
                 diagnostico = self.diagnosticar()
                 if diagnostico['resumen']['entorno_operativo']:
-                    self._print_success("Todos los servicios están operativos")
+                    self._print_success("Todos los servicios estan operativos")
                     break
                 
                 self._print_info("Esperando servicios...")
@@ -562,10 +565,10 @@ class OrquestadorDesarrollo:
             else:
                 self._print_warning("Timeout alcanzado. Algunos servicios pueden no estar listos.")
                 
-                # Mostrar logs de servicios problemáticos
+                # Mostrar logs de servicios problematicos
                 for servicio, info in diagnostico['servicios'].items():
                     if not info['conectividad']:
-                        self._print_error(f"Servicio problemático: {servicio}")
+                        self._print_error(f"Servicio problematico: {servicio}")
                         self._print_info(f"Revisar logs: docker logs {info['contenedor']}")
             
             # Paso 5: Resumen final
@@ -578,7 +581,7 @@ class OrquestadorDesarrollo:
                 print("Entorno iniciado correctamente")
                 return True
             else:
-                self._print_error("Algunos servicios no están completamente operativos")
+                self._print_error("Algunos servicios no estan completamente operativos")
                 return False
                 
         except Exception as e:
@@ -604,7 +607,7 @@ class OrquestadorDesarrollo:
             urls['Debug Server'] = 'localhost:5678'
         
         for servicio, url in urls.items():
-            self._print_color(f"  • {servicio}: {url}", Color.WHITE)
+            self._print_color(f"  - {servicio}: {url}", Color.WHITE)
 
     def terminar(self, crear_backup: bool = True, limpiar_completo: bool = False) -> bool:
         """Terminar el entorno de desarrollo"""
@@ -622,19 +625,19 @@ class OrquestadorDesarrollo:
             self._print_step("Parando contenedores")
             
             if limpiar_completo:
-                # Parar y eliminar todo incluyendo volúmenes
+                # Parar y eliminar todo incluyendo volumenes
                 self._ejecutar_comando([
                     'docker-compose', '-f', self.docker_compose_file, 'down', '-v'
                 ])
                 
-                # Limpiar imágenes no utilizadas
-                self._print_step("Limpiando imágenes Docker no utilizadas")
+                # Limpiar imagenes no utilizadas
+                self._print_step("Limpiando imagenes Docker no utilizadas")
                 self._ejecutar_comando(['docker', 'system', 'prune', '-f'])
                 
                 self._print_success("Limpieza completa finalizada")
                 self._print_warning("Todos los datos de la base de datos han sido eliminados")
             else:
-                # Solo parar contenedores, mantener volúmenes
+                # Solo parar contenedores, mantener volumenes
                 self._ejecutar_comando([
                     'docker-compose', '-f', self.docker_compose_file, 'down'
                 ])
@@ -653,12 +656,12 @@ class OrquestadorDesarrollo:
                 self._print_success("Todos los contenedores han sido detenidos")
                 return True
             else:
-                self._print_warning(f"Aún hay {servicios_ejecutando} servicios ejecutándose")
+                self._print_warning(f"Aun hay {servicios_ejecutando} servicios ejecutandose")
                 return False
                 
         except Exception as e:
-            self._print_error(f"Error durante la terminación: {e}")
-            self.logger.exception("Error detallado durante terminación")
+            self._print_error(f"Error durante la terminacion: {e}")
+            self.logger.exception("Error detallado durante terminacion")
             return False
 
     def regenerar(self) -> bool:
@@ -679,22 +682,22 @@ class OrquestadorDesarrollo:
             exito = self.iniciar(forzar_rebuild=True)
             
             if exito:
-                self._print_success("REGENERACIÓN COMPLETADA EXITOSAMENTE")
+                self._print_success("REGENERACION COMPLETADA EXITOSAMENTE")
                 if backup_path:
                     self._print_info(f"Backup de seguridad disponible en: {backup_path}")
                 return True
             else:
-                self._print_error("Error durante la regeneración")
+                self._print_error("Error durante la regeneracion")
                 return False
                 
         except Exception as e:
-            self._print_error(f"Error durante la regeneración: {e}")
-            self.logger.exception("Error detallado durante regeneración")
+            self._print_error(f"Error durante la regeneracion: {e}")
+            self.logger.exception("Error detallado durante regeneracion")
             return False
 
 
 def main():
-    """Función principal"""
+    """Funcion principal"""
     parser = argparse.ArgumentParser(
         description='Orquestador de Desarrollo VNM-Proyectos',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -713,26 +716,26 @@ Ejemplos de uso:
     parser.add_argument(
         'accion',
         choices=['diagnosticar', 'iniciar', 'terminar', 'regenerar', 'backup'],
-        help='Acción a realizar'
+        help='Accion a realizar'
     )
     
     parser.add_argument(
         '--modo',
         choices=['debug', 'produccion'],
         default='debug',
-        help='Modo de operación (default: debug)'
+        help='Modo de operacion (default: debug)'
     )
     
     parser.add_argument(
         '--verboso', '-v',
         action='store_true',
-        help='Mostrar información detallada'
+        help='Mostrar informacion detallada'
     )
     
     parser.add_argument(
         '--rebuild',
         action='store_true',
-        help='Forzar rebuild de imágenes Docker (solo para iniciar)'
+        help='Forzar rebuild de imagenes Docker (solo para iniciar)'
     )
     
     parser.add_argument(
@@ -744,7 +747,7 @@ Ejemplos de uso:
     parser.add_argument(
         '--limpiar-completo',
         action='store_true',
-        help='Eliminar también volúmenes de datos (solo para terminar)'
+        help='Eliminar tambien volumenes de datos (solo para terminar)'
     )
     
     args = parser.parse_args()
@@ -755,7 +758,7 @@ Ejemplos de uso:
         verboso=args.verboso
     )
     
-    # Ejecutar acción solicitada
+    # Ejecutar accion solicitada
     try:
         if args.accion == 'diagnosticar':
             diagnostico = orquestador.diagnosticar()
@@ -781,7 +784,7 @@ Ejemplos de uso:
             sys.exit(0 if backup_path else 1)
             
     except KeyboardInterrupt:
-        orquestador._print_warning("Operación interrumpida por el usuario")
+        orquestador._print_warning("Operacion interrumpida por el usuario")
         sys.exit(130)
     except Exception as e:
         orquestador._print_error(f"Error inesperado: {e}")

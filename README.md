@@ -1,251 +1,260 @@
-# 🌐 Sistema Web de Monitoreo de Red IP
+# 🚀 VNM-Proyectos - Sistema de Monitoreo de Red
 
-## 📋 Descripción del Proyecto
+**Proyecto completo de monitoreo de dispositivos de red con interfaz web moderna y API robusta**
 
-Sistema web responsivo para visualización, análisis y exploración de datos de monitoreo de interfaces de red IP. Desarrollado con arquitectura moderna backend-frontend, proporciona una interfaz intuitiva para el monitoreo de dispositivos de red en tiempo real e histórico.
-
-### 🎯 Características Principales
-
-- ✅ **Solo lectura** de datos de monitoreo existentes
-- ✅ **Gestión interna** de usuarios, roles, permisos y menús
-- ✅ **Visualización responsiva** para dispositivos móviles y escritorio
-- ✅ **Autenticación JWT** con sistema de roles jerárquico
-- ✅ **Gráficos históricos** interactivos con múltiples períodos
-- ✅ **Mapas de topología** integrados con Google Maps
-- ✅ **Filtros avanzados** en tablas de dispositivos e interfaces
-
-## 🏗️ Arquitectura Técnica
-
-### Stack Tecnológico
-
-#### Backend
-- **Framework:** FastAPI (Python 3.11+)
-- **Base de Datos:** PostgreSQL 16 + PostGIS 3.4
-- **ORM:** SQLAlchemy 2.0
-- **Autenticación:** JWT (9 horas expiración)
-- **API:** REST + WebSocket
-
-#### Frontend
-- **Framework:** React 18 + TypeScript
-- **Build Tool:** Vite
-- **Estilos:** TailwindCSS
-- **Gráficos:** Chart.js / ECharts
-- **Mapas:** Google Maps JavaScript SDK
-
-#### Infraestructura
-- **Contenedores:** Docker + Docker Compose
-- **Reverse Proxy:** Nginx
-- **SSL:** Let's Encrypt
-- **Sistema Operativo:** Ubuntu 24.04.3 LTS (Producción)
-
-## 📊 Módulos Funcionales
-
-### 1. Módulo Interfaces
-- Catálogo de dispositivos con filtros avanzados
-- Tabla responsive con paginación servidor-side
-- Filtros por: Id, IP, Tipo, Vendor, Modelo, HR, Agregador, Comuna, Región
-- Botón "Ver Histórico" en cada fila
-
-### 2. Vista Histórico Monitoreo
-- Gráfico 90 días historia
-- Gráfico último 30 días historia
-- Gráfico último día historia
-- Selector desplegable de período
-
-### 3. Módulo Topología
-- Vista topología general de Chile en Google Maps
-- Vista con centro en región específica
-- Vista con centro en comuna específica
-- Vista con centro en interfaz (latitud/longitud)
-
-### 4. Sistema de Autenticación
-- Roles: Administrador, Supervisor, Ejecutor
-- Permisos: Lectura, Creación, Modificación, Exportación
-- Gestión de menús dinámicos por rol
-- Auditoría de cambios de usuarios
-
-## 🗃️ Modelo de Datos
-
-### Esquema "sistema" (Autenticación)
-- `usuarios`, `roles`, `permisos`, `rol_permisos`
-- `menus`, `menu_grupo`, `rol_menus`
-- `estados`, `usuario_historia`
-
-### Esquema "monitoreo" (Datos de Red)
-- `dispositivos` - Catálogo de dispositivos de red
-- `interfaces` - Interfaces con métricas en tiempo real
-- `interface_historico` - Series de tiempo de métricas
-- `dispositivo_historico` - Historial de estados de dispositivos
-
-## 🚀 Instalación y Desarrollo
-
-### Prerrequisitos
-- Docker Desktop 4.25+ con WSL 2
-- Windows 11 (Desarrollo) / Ubuntu 24.04 (Producción)
-- 8GB RAM mínimo (16GB recomendado)
-
-### Inicio Rápido
-
-```bash
-# Clonar repositorio
-git clone https://github.com/antonio-torres-castro/vnm-proyectos.git
-cd vnm-proyectos
-
-# Iniciar servicios con el script de gestión
-cd database/scripts
-.\manage-db.ps1 start
-```
-
-### Servicios Docker
-
-| Servicio | Puerto | Descripción |
-|----------|--------|-------------|
-| PostgreSQL | 5432 | Base de datos con PostGIS |
-| PgAdmin | 8081 | Interfaz web de administración BD |
-| Backend | 8000 | API FastAPI |
-| Frontend | 3000 | Aplicación React |
-
-### Scripts de Automatización
-
-```powershell
-# Sistema de gestión principal
-.\manage-db.ps1 start           # Iniciar todos los servicios
-.\manage-db.ps1 safe-shutdown   # Apagar con backup automático
-.\manage-db.ps1 restart         # Reiniciar servicios
-.\manage-db.ps1 backup          # Crear backup manual
-.\manage-db.ps1 restore         # Restaurar último backup
-.\manage-db.ps1 status          # Estado del sistema
-```
-
-## 📅 Plan de Desarrollo
-
-### Sprint 1: Autenticación y Estructura Base (20-26 Oct 2025)
-- Configuración backend FastAPI + PostgreSQL
-- APIs autenticación JWT + modelos usuarios
-- Frontend React + TypeScript + TailwindCSS
-- **Despliegue Preproductivo: 26 Oct 2025**
-
-### Sprint 2: Módulo Interfaces - Tabla Principal (27 Oct - 2 Nov 2025)
-- Componente tabla interfaces con todas las columnas
-- Sistema filtros avanzado + paginación
-- **Despliegue Preproductivo: 2 Nov 2025**
-
-### Sprint 3: Vista Histórico Monitoreo (3-9 Nov 2025)
-- Gráficos de series de tiempo (90d, 30d, 1d)
-- Selector período + métricas completas
-- **Despliegue Preproductivo: 9 Nov 2025**
-
-### Sprint 4: Topología - Mapa General Chile (10-16 Nov 2025)
-- Integración Google Maps SDK
-- Vistas por región, comuna, interfaz
-- **Despliegue Preproductivo: 16 Nov 2025**
-
-### Sprint 5: Integración Completa (17-23 Nov 2025)
-- Navegación entre módulos + optimizaciones
-- **Despliegue Preproductivo: 23 Nov 2025**
-
-### Sprint 6: Preparación Producción (24-30 Nov 2025)
-- CI/CD pipeline + security hardening
-- **Despliegue Preproductivo Final: 30 Nov 2025**
-
-### 🎯 Despliegue Producción: 15 Diciembre 2025
-
-## 🔧 Desarrollo
-
-### Estructura del Proyecto
+## 📁 Estructura del Proyecto
 
 ```
 vnm-proyectos/
-├── backend/                 # API FastAPI
-│   ├── app/
-│   │   ├── api/            # Endpoints
-│   │   ├── models/         # Modelos SQLAlchemy
-│   │   └── schemas/        # Esquemas Pydantic
-│   └── requirements.txt
-├── frontend/               # Aplicación React
-│   ├── src/
-│   │   ├── components/     # Componentes React
-│   │   ├── pages/          # Vistas
-│   │   └── services/       # Servicios API
-│   └── package.json
-├── database/               # Configuración BD
-│   ├── scripts/            # Scripts automatización
-│   ├── init.sql            # Inicialización BD
-│   └── backups/            # Backups automáticos
-└── docker-compose.yml      # Orquestación servicios
+├── 📄 README.md                    # Este archivo
+├── 📄 vnm_automate.py             # Script maestro de automatización ⭐
+├── 📄 setup_proyecto.py           # Configuración inicial del proyecto
+├── 📄 inicio_rapido.bat          # Script inicio rápido Windows
+├── 📄 inicio_rapido.ps1          # Script inicio rápido PowerShell
+├── 📄 .vscode/                   # Configuración VS Code para la solución completa
+│
+├── 📁 backend/                    # API FastAPI + Base de datos
+│   ├── 📁 app/                   # Código de la aplicación
+│   ├── 📁 .vscode/              # Configuración VS Code específica backend
+│   └── 📄 requirements.txt      # Dependencias Python
+│
+├── 📁 frontend/                   # Interfaz React + Vite
+│   ├── 📁 src/                   # Código fuente React
+│   ├── 📁 .vscode/              # Configuración VS Code específica frontend  
+│   └── 📄 package.json          # Dependencias Node.js
+│
+├── 📁 database/                   # Configuración PostgreSQL + pgAdmin
+│   ├── 📁 backups/              # Backups automáticos
+│   ├── 📁 scripts/              # Scripts SQL
+│   └── 📄 init.sql              # Inicialización de DB
+│
+├── 📁 automate/                   # 🤖 Todos los automatismos
+│   ├── 📁 devtools/             # Herramientas de desarrollo
+│   ├── 📄 instalar_vscode_config.py    # Instalador VS Code
+│   ├── 📄 verificar_vscode_instalado.py # Verificador VS Code
+│   ├── 📄 formatear_codigo.py          # Formateador código
+│   └── 📄 ...otros automatismos
+│
+├── 📁 vscode-config/             # Plantillas configuración VS Code
+│   ├── 📄 launch.json           # Configuraciones debugging
+│   ├── 📄 tasks.json            # Tareas automatizadas
+│   ├── 📄 settings.json         # Configuración workspace
+│   └── 📄 extensions.json       # Extensiones recomendadas
+│
+├── 📁 info/                      # 📚 Toda la documentación
+│   ├── 📄 README_INSTALACION_VSCODE.md
+│   ├── 📄 FLUJO_DESARROLLO_WINDOWS.md
+│   ├── 📄 CONFIGURACION_DEBUG_VSCODE_CORREGIDA.md
+│   └── 📄 ...más documentación
+│
+├── 📁 logs/                      # Logs del sistema
+└── 📁 mislogs/                   # Logs personalizados
 ```
 
-### Credenciales de Desarrollo
+## 🚀 Inicio Rápido
 
-```
-PostgreSQL:
-- Usuario: monitoreo_user
-- Password: monitoreo_pass
-- Base de datos: monitoreo_dev
-
-PgAdmin:
-- URL: http://localhost:8081
-- Email: admin@monitoreo.cl
-- Password: admin123
-```
-
-## 🎨 Especificaciones UI/UX
-
-### Paleta de Colores
-- **Primario:** Rojo `#E2001A`
-- **Secundario:** Azul oscuro `#0033A0`
-- **Acento:** Azul claro `#00A9E0`
-- **Texto:** Negro `#333333`, Gris `#666666`
-- **Fondo:** Blanco `#FFFFFF`, Gris claro `#F5F5F5`
-
-### Características de Interfaz
-- **Idioma:** Español
-- **Diseño:** Responsive (mobile-first)
-- **Paginación:** 100 registros por página en tablas
-
-## 🐞 Debugging y Desarrollo
-
-### Configuración de VS Code
-El proyecto incluye configuraciones completas de debugging para VS Code con Docker:
-
-#### 🚀 Instalación Automática
+### 1. **Configuración Inicial (Solo la primera vez)**
 ```bash
-# Windows
-.\setup-vscode-debug.ps1
-
-# Linux/Mac
-bash setup-vscode-debug.sh
+cd vnm-proyectos
+python setup_proyecto.py
 ```
 
-#### 📁 Configuraciones Disponibles
-- **🚀 Full Stack Debug** - Debuggea backend + frontend simultáneamente
-- **🐍 Backend Debug** - FastAPI en Docker (puerto 5678)
-- **⚛️ Frontend Debug** - React en Chrome (puerto 3000)
-- **🧪 Tests Debug** - Ejecución de tests con debugging
+### 2. **Iniciar Desarrollo**
+```bash
+# Método 1: Script maestro (recomendado)
+python vnm_automate.py dev-start
 
-#### 📖 Documentación Completa
-- <filepath>vscode-config/README_CONFIGURACION_DEBUG.md</filepath> - Guía detallada
-- <filepath>DEBUG_SETUP.md</filepath> - Setup completo paso a paso
+# Método 2: Windows (doble clic)
+inicio_rapido.bat
+```
 
-## 🔐 Seguridad
+### 3. **Debugging en VS Code**
+1. Abrir VS Code: `code .`
+2. Instalar extensiones recomendadas
+3. Presionar **F5**
+4. Seleccionar: **"FullStack Debug - Ambos simultáneamente"**
 
-- Autenticación JWT con expiración de 9 horas
-- Contraseñas con hash bcrypt
-- Roles y permisos jerárquicos
-- CORS configurado para desarrollo
-- Validación de entrada con Pydantic
+## 🎯 Script Maestro - vnm_automate.py
 
-## 📞 Soporte y Contacto
+**Centraliza todos los automatismos en un solo comando desde el directorio raíz.**
 
-**Desarrollador:** Antonio Torres Castro  
-**Repositorio:** [https://github.com/antonio-torres-castro/vnm-proyectos](https://github.com/antonio-torres-castro/vnm-proyectos)
+### Comandos de Desarrollo
+```bash
+python vnm_automate.py dev-start      # Iniciar entorno completo
+python vnm_automate.py dev-stop       # Detener entorno
+python vnm_automate.py dev-status     # Diagnóstico del entorno
+python vnm_automate.py dev-restart    # Reiniciar entorno completo
+python vnm_automate.py dev-backup     # Backup de base de datos
+```
 
-## 📄 Licencia
+### Comandos de VS Code
+```bash
+python vnm_automate.py vscode-install # Instalar configuración VS Code
+python vnm_automate.py vscode-verify  # Verificar configuración VS Code
+```
 
-Este proyecto es de uso interno para monitoreo de redes.
+### Comandos de Código
+```bash
+python vnm_automate.py code-format    # Formatear código (Black + Flake8)
+python vnm_automate.py code-validate  # Validar código sin formatear
+```
+
+### Comandos de Base de Datos
+```bash
+python vnm_automate.py db-recreate    # Recrear DB desde cero
+python vnm_automate.py db-backup      # Backup manual
+```
+
+### Comandos de Testing
+```bash
+python vnm_automate.py test-all       # Ejecutar todos los tests
+python vnm_automate.py test-backend   # Tests del backend
+python vnm_automate.py test-frontend  # Tests del frontend
+```
+
+### Ver Todos los Comandos
+```bash
+python vnm_automate.py help
+```
+
+## 🔧 Configuraciones VS Code
+
+### Solución Completa (vnm-proyectos/.vscode/)
+- **FullStack Debug - Ambos simultáneamente** ⭐ (Recomendado)
+- **FullStack Debug - Compound** (Alternativo)
+- **Frontend Debug** (Solo React)
+- **Backend Debug** (Solo FastAPI)
+
+### Proyectos Individuales
+- **backend/.vscode/** - Configuración específica para backend
+- **frontend/.vscode/** - Configuración específica para frontend
+
+## 📋 Requisitos del Sistema
+
+### Obligatorios
+- **Python 3.7+**
+- **Docker Desktop** (ejecutándose)
+- **Node.js y npm**
+- **VS Code** (recomendado)
+
+### Puertos Necesarios
+- **3000** - Frontend React
+- **8000** - Backend FastAPI
+- **5432** - PostgreSQL
+- **8080** - pgAdmin
+
+### Sistema Operativo
+- **Windows** ✅ (optimizado)
+- **Linux/macOS** ✅ (compatible)
+
+## 🛠️ Flujo de Desarrollo
+
+### Desarrollo Normal
+1. `python vnm_automate.py dev-start` - Iniciar entorno
+2. `code .` - Abrir VS Code
+3. **F5** → "FullStack Debug - Ambos simultáneamente" 
+4. Desarrollar con debugging completo
+5. `python vnm_automate.py dev-stop` - Detener cuando termines
+
+### Desarrollo Backend Solo
+```bash
+cd backend
+code .  # VS Code con configuración específica backend
+```
+
+### Desarrollo Frontend Solo
+```bash
+cd frontend
+code .  # VS Code con configuración específica frontend
+```
+
+## 📚 Documentación Detallada
+
+Toda la documentación detallada está en la carpeta <filepath>info/</filepath>:
+
+- **Instalación VS Code**: `info/README_INSTALACION_VSCODE.md`
+- **Desarrollo Windows**: `info/FLUJO_DESARROLLO_WINDOWS.md`
+- **Configuración Debug**: `info/CONFIGURACION_DEBUG_VSCODE_CORREGIDA.md`
+- **Y mucho más...**
+
+## 🔄 Automatismos Disponibles
+
+Todos los automatismos están en <filepath>automate/</filepath>:
+
+### Herramientas de Desarrollo (automate/devtools/)
+- **orquestador_desarrollo.py** - Gestión completa del entorno Docker
+- **validar_orquestador.py** - Validación del orquestador
+
+### Automatismos de VS Code (automate/)
+- **instalar_vscode_config.py** - Instalador configuración VS Code
+- **verificar_vscode_instalado.py** - Verificador configuración
+
+### Automatismos de Código (automate/)
+- **formatear_codigo.py** - Formateador con Black y Flake8
+- **diagnosticar_backend.py** - Diagnóstico del backend
+
+### Automatismos de Base de Datos (automate/)
+- **recrear_base_datos.py** - Recreador de base de datos
+
+## ✅ Ventajas de la Nueva Estructura
+
+### 🎯 **Centralización**
+- Un solo comando para todo: `vnm_automate.py`
+- No más navegación entre carpetas
+
+### 📁 **Organización**
+- Automatismos separados de código fuente
+- Documentación centralizada en `info/`
+- Configuraciones específicas por proyecto
+
+### 🐞 **Debugging Mejorado**
+- Configuración VS Code corregida (sin errores)
+- Debug FullStack funcional
+- Configuraciones específicas por componente
+
+### 🖥️ **Optimizado para Windows**
+- Scripts .bat y .ps1 incluidos
+- Detección automática de sistema operativo
+- Configuraciones específicas Windows
+
+### 🔄 **Mantenibilidad**
+- Automatismos versionados y organizados
+- Fácil actualización y mantenimiento
+- Scripts de verificación incluidos
+
+## 🆘 Solución de Problemas
+
+### ❌ Error "Attribute 'request' is missing"
+**SOLUCIONADO** ✅ - La nueva configuración VS Code elimina este error completamente.
+
+### 🐳 Docker no arranca
+```bash
+python vnm_automate.py dev-status  # Diagnosticar problema
+```
+
+### 🔧 VS Code no reconoce configuración
+```bash
+python vnm_automate.py vscode-verify  # Verificar instalación
+python vnm_automate.py vscode-install # Reinstalar si es necesario
+```
+
+### 📝 Problemas de formato código
+```bash
+python vnm_automate.py code-format    # Formatear automáticamente
+```
+
+## 🏆 Estado del Proyecto
+
+- ✅ **Estructura reorganizada y optimizada**
+- ✅ **Debugging VS Code completamente funcional**
+- ✅ **Automatismos centralizados y mejorados** 
+- ✅ **Documentación actualizada y organizada**
+- ✅ **Scripts específicos para Windows**
+- ✅ **Configuraciones VS Code por proyecto**
+- ✅ **Script maestro de automatización**
 
 ---
 
-**Estado del Proyecto:** 🟢 **Desarrollo Activo**  
-**Última Actualización:** Octubre 2025  
-**Próximo Hito:** Sprint 1 - Autenticación y Estructura Base
+**📅 Última actualización**: 2025-10-14 21:02:38  
+**👨‍💻 Autor**: MiniMax Agent  
+**🏷️ Versión**: 2.0 - Estructura Reorganizada

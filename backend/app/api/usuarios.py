@@ -2,7 +2,7 @@
 from typing import List, Optional
 
 from app.core.database import get_db
-from app.core.security import get_current_user, verify_token
+from app.core.security import get_current_user
 from app.models import Usuario
 from app.schemas.usuario import (
     UsuarioChangePassword,
@@ -20,7 +20,11 @@ from sqlalchemy.orm import Session
 router = APIRouter()
 
 
-@router.post("/crear-admin", response_model=UsuarioResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/crear-admin",
+    response_model=UsuarioResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 async def crear_usuario_administrador(
     request: Request,
     db: Session = Depends(get_db),
@@ -29,7 +33,7 @@ async def crear_usuario_administrador(
     Crear usuario administrador inicial - Solo funciona si no existe ningún admin
     Endpoint público para bootstrap del sistema
     """
-    
+
     # Verificar si ya existe un usuario administrador
     admin_existente = db.query(Usuario).filter(Usuario.rol_id == 1).first()
     if admin_existente:
@@ -37,7 +41,7 @@ async def crear_usuario_administrador(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Ya existe un usuario administrador: {admin_existente.email}"
         )
-    
+
     # Verificar si ya existe el email específico
     email_existente = db.query(Usuario).filter(Usuario.email == "admin@monitoreo.cl").first()
     if email_existente:
@@ -45,7 +49,7 @@ async def crear_usuario_administrador(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="El email admin@monitoreo.cl ya existe en el sistema"
         )
-    
+
     # Datos del administrador inicial
     admin_data = UsuarioCreate(
         email="admin@monitoreo.cl",
@@ -54,10 +58,10 @@ async def crear_usuario_administrador(
         rol_id=1,  # Administrador
         estado_id=2,  # Activo
     )
-    
+
     try:
         ip_address, user_agent = get_client_info(request)
-        
+
         # Crear usuario administrador usando el servicio
         usuario = UsuarioService.create(
             db=db,
@@ -66,9 +70,9 @@ async def crear_usuario_administrador(
             ip_address=ip_address,
             user_agent=user_agent,
         )
-        
+
         return usuario
-        
+
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error de validación: {str(e)}")
     except Exception as e:
