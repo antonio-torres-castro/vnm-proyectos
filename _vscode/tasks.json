@@ -49,8 +49,8 @@
         {
             "label": "start-fullstack-environment",
             "type": "shell",
-            "command": "python",
-            "args": ["devtools/orquestador_desarrollo.py", "iniciar"],
+            "command": "docker-compose",
+            "args": ["-f", "docker-compose.debug.yml", "up", "-d"],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -74,20 +74,48 @@
                 },
                 "background": {
                     "activeOnStart": true,
-                    "beginsPattern": ".*Iniciando.*",
-                    "endsPattern": ".*iniciado.*|.*ready.*|.*running.*"
+                    "beginsPattern": ".*Creating.*|.*Starting.*|.*Pulling.*",
+                    "endsPattern": ".*done.*"
                 }
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": "wait-for-services"
+        },
+        {
+            "label": "wait-for-services",
+            "type": "shell",
+            "command": "timeout",
+            "args": ["60", "bash", "-c", "while ! curl -s http://localhost:8000/health > /dev/null 2>&1; do echo 'Waiting for backend...'; sleep 2; done && echo 'Backend ready!'"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            },
+            "windows": {
+                "command": "powershell",
+                "args": ["-Command", "$timeout = 60; $count = 0; do { Start-Sleep -Seconds 2; $count += 2; try { $response = Invoke-WebRequest -Uri 'http://localhost:8000/health' -UseBasicParsing -TimeoutSec 5; if ($response.StatusCode -eq 200) { Write-Host 'Backend ready!'; exit 0 } } catch { Write-Host 'Waiting for backend...' } } while ($count -lt $timeout); Write-Host 'Timeout waiting for backend'; exit 1"]
             }
         },
         {
             "label": "stop-environment",
             "type": "shell",
-            "command": "python",
-            "args": ["devtools/orquestador_desarrollo.py", "detener"],
+            "command": "docker-compose",
+            "args": ["-f", "docker-compose.debug.yml", "down"],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "group": "build"
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
         },
         {
             "label": "install-frontend-dependencies",
