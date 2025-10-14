@@ -453,22 +453,5 @@ WHERE
             AND rol_id = 3
     );
 
--- Crear usuario administrador por defecto solo si no existe (clave: admin123)
-INSERT INTO
-    seguridad.usuario (
-        id,
-        rol_id,
-        email,
-        nombre_usuario,
-        clave_hash,
-        estado_id,
-        fecha_inicio
-    )
-SELECT 1, 1, 'admin@monitoreo.cl', 'Administrador', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBVbUxWqzx1WlG', 1, NOW()
-WHERE
-    NOT EXISTS (
-        SELECT 1
-        FROM seguridad.usuario
-        WHERE
-            id = 1
-    );
+-- USUARIO ADMINISTRADOR SE CREA VIA ENDPOINT /crear-admin
+-- NO crear usuario por script para evitar conflictos de secuencia

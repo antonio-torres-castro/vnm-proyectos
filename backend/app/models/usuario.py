@@ -8,7 +8,7 @@ class Usuario(Base):
     __tablename__ = "usuario"
     __table_args__ = {"schema": "seguridad"}
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     rol_id = Column(Integer, ForeignKey("seguridad.rol.id"))
     email = Column(String(150), unique=True, nullable=False, index=True)
     nombre_usuario = Column(String(100), nullable=False)

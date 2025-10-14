@@ -20,6 +20,72 @@ from sqlalchemy.orm import Session
 router = APIRouter()
 
 
+@router.post("/crear-admin", response_model=UsuarioResponse, status_code=status.HTTP_201_CREATED)
+async def crear_usuario_administrador(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    """
+    Crear usuario administrador inicial - Solo funciona si no existe ningún admin
+    Endpoint público para bootstrap del sistema
+    """
+    
+    # Verificar si ya existe un usuario administrador
+    admin_existente = db.query(Usuario).filter(Usuario.rol_id == 1).first()
+    if admin_existente:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Ya existe un usuario administrador: {admin_existente.email}"
+        )
+    
+    # Verificar si ya existe el email específico
+    email_existente = db.query(Usuario).filter(Usuario.email == "admin@monitoreo.cl").first()
+    if email_existente:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="El email admin@monitoreo.cl ya existe en el sistema"
+        )
+    
+    # Datos del administrador inicial
+    admin_data = UsuarioCreate(
+        email="admin@monitoreo.cl",
+        nombre_usuario="Administrador",
+        clave="admin123",
+        rol_id=1,  # Administrador
+        estado_id=2,  # Activo
+    )
+    
+    try:
+        ip_address, user_agent = get_client_info(request)
+        
+        # Crear usuario administrador usando el servicio
+        usuario = UsuarioService.create(
+            db=db,
+            usuario_data=admin_data,
+            usuario_creador_id=None,  # Bootstrap - no hay usuario creador
+            ip_address=ip_address,
+            user_agent=user_agent,
+        )
+        
+        return usuario
+        
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error de validación: {str(e)}")
+    except Exception as e:
+        # Capturar errores de base de datos como duplicate key
+        error_msg = str(e)
+        if "duplicate key" in error_msg or "already exists" in error_msg:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Error de secuencia PostgreSQL. Ejecuta: python reparar_secuencia_usuario.py"
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Error creando usuario administrador: {error_msg}"
+            )
+
+
 def get_client_info(request: Request) -> tuple[str, str]:
     """Extraer información del cliente para auditoría"""
     ip_address = request.client.host
