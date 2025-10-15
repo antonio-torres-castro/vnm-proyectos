@@ -89,3 +89,11 @@ async def verify_token_endpoint(token: str):
 async def get_current_user_info(current_user: Usuario = Depends(get_current_user)):
     """Obtiene la información del usuario autenticado actualmente"""
     return current_user
+
+
+@router.post("/logout")
+async def logout(current_user: Usuario = Depends(get_current_user)):
+    """Cerrar sesión del usuario actual"""
+    # En aplicaciones JWT stateless, el logout se maneja principalmente en el cliente
+    # eliminando el token. Este endpoint puede usarse para logs de auditoría.
+    return {"message": "Sesión cerrada exitosamente", "success": True}

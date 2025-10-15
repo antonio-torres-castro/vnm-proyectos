@@ -32,6 +32,20 @@
             "justMyCode": false
         },
         {
+            "name": "Frontend Debug - Compound",
+            "type": "msedge",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/frontend",
+            "sourceMapPathOverrides": {
+                "/src/*": "${workspaceFolder}/frontend/src/*",
+                "/*": "*",
+                "/./~/*": "${workspaceFolder}/frontend/node_modules/*"
+            },
+            "userDataDir": false,
+            "runtimeExecutable": "stable"
+        },
+        {
             "name": "FullStack Debug - Ambos simultáneamente",
             "type": "python",
             "request": "attach",
@@ -54,7 +68,7 @@
             "name": "FullStack Debug - Compound",
             "configurations": [
                 "Backend Debug", 
-                "Frontend Debug"
+                "Frontend Debug - Compound"
             ],
             "stopAll": true,
             "preLaunchTask": "start-fullstack-environment"

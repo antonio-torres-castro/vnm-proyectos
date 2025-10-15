@@ -26,7 +26,7 @@ export const getDevices = async (filters = {}, skip = 0, limit = 100) => {
       }
     });
 
-    const response = await apiClient.get(`/dispositivos/?${params.toString()}`);
+    const response = await apiClient.get(`/monitoreo/dispositivos/?${params.toString()}`);
     
     return {
       success: true,
@@ -51,7 +51,7 @@ export const getDevices = async (filters = {}, skip = 0, limit = 100) => {
  */
 export const getDeviceById = async (deviceId) => {
   try {
-    const response = await apiClient.get(`/dispositivos/${deviceId}`);
+    const response = await apiClient.get(`/monitoreo/dispositivos/${deviceId}`);
     
     return {
       success: true,
@@ -90,7 +90,7 @@ export const getInterfaces = async (filters = {}, skip = 0, limit = 100) => {
       }
     });
 
-    const response = await apiClient.get(`/interfaces/?${params.toString()}`);
+    const response = await apiClient.get(`/monitoreo/interfaces/?${params.toString()}`);
     
     return {
       success: true,
@@ -115,7 +115,7 @@ export const getInterfaces = async (filters = {}, skip = 0, limit = 100) => {
  */
 export const getInterfaceById = async (interfaceId) => {
   try {
-    const response = await apiClient.get(`/interfaces/${interfaceId}`);
+    const response = await apiClient.get(`/monitoreo/interfaces/${interfaceId}`);
     
     return {
       success: true,
@@ -141,7 +141,7 @@ export const getInterfaceById = async (interfaceId) => {
  */
 export const getDeviceInterfaces = async (deviceId, skip = 0, limit = 50) => {
   try {
-    const response = await apiClient.get(`/dispositivos/${deviceId}/interfaces`, {
+    const response = await apiClient.get(`/monitoreo/dispositivos/${deviceId}/interfaces`, {
       params: { skip, limit }
     });
     

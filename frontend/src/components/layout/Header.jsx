@@ -27,12 +27,16 @@ const Header = () => {
 
   // Manejar logout
   const handleLogout = async () => {
+    // Mostrar confirmación antes del logout
+    const confirmed = window.confirm('¿Estás seguro de que deseas cerrar sesión?');
+    if (!confirmed) {
+      return;
+    }
+
     setIsLoggingOut(true);
     try {
-      const result = await logout(true); // Con confirmación
-      if (!result.cancelled) {
-        navigate('/login', { replace: true });
-      }
+      await logout();
+      navigate('/login', { replace: true });
     } catch (error) {
       console.error('Error en logout:', error);
     } finally {
