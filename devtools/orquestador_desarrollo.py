@@ -104,16 +104,13 @@ class OrquestadorDesarrollo:
             }
         }
         
-        # PgAdmin (opcional en modo debug, estándar en producción)
+        # PgAdmin en modo debug (ahora incluido automaticamente)
         if modo_debug:
-            # En modo debug, PgAdmin es opcional (requiere --profile pgadmin)
             self.servicios_esperados['pgadmin'] = {
                 'container_name': f'{self.prefix_contenedores}pgadmin_debug',
                 'healthcheck': True,
                 'puerto': 5050,
-                'dependencias': ['postgres'],
-                'opcional': True,  # Nuevo flag para servicios opcionales
-                'profile': 'pgadmin'  # Perfil requerido para activar
+                'dependencias': ['postgres']
             }
         else:
             # En modo producción, PgAdmin es estándar
@@ -537,9 +534,14 @@ class OrquestadorDesarrollo:
             # Paso 3: Iniciar servicios
             self._print_step("Paso 3: Iniciando servicios")
             comando_up = ['docker-compose', '-f', self.docker_compose_file, 'up', '-d']
+            
+            # En modo debug, incluir pgadmin automaticamente
+            if self.modo_debug:
+                comando_up.extend(['--profile', 'pgadmin'])
+                
             if forzar_rebuild:
                 comando_up.append('--build')
-                self._print_info("Forzando rebuild de imágenes Docker")
+                self._print_info("Forzando rebuild de imagenes Docker")
             
             self._ejecutar_comando(comando_up)
             
@@ -600,6 +602,7 @@ class OrquestadorDesarrollo:
             urls['PgAdmin'] = 'http://localhost:8081'
         else:
             urls['Debug Server'] = 'localhost:5678'
+            urls['PgAdmin Debug'] = 'http://localhost:5050'
         
         for servicio, url in urls.items():
             self._print_color(f"  • {servicio}: {url}", Color.WHITE)

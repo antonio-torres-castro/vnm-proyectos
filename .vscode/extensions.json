@@ -1,58 +1,58 @@
 {
     "recommendations": [
-        // ESSENTIAL EXTENSIONS (Core functionality)
-        "ms-python.python",                    // Python support
-        "ms-python.debugpy",                   // Python remote debugging
-        "ms-vscode.vscode-typescript-next",    // TypeScript support
-        "ms-vscode.js-debug",                  // JavaScript debugging
-        "ms-edgedevtools.vscode-edge-devtools", // Browser dev tools
+        // DESARROLLO PYTHON
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "ms-python.flake8",
+        "ms-python.pylance",
+        "ms-python.mypy-type-checker",
         
-        // BACKEND DEVELOPMENT
-        "ms-python.black-formatter",           // Python code formatter
-        "ms-python.isort",                     // Python import sorter
-        "ms-python.flake8",                    // Python linting
-        "ms-python.pylance",                   // Advanced Python IntelliSense  
-        "ms-python.mypy-type-checker",         // Python type checking
-        "ckolkman.vscode-postgres",            // PostgreSQL support
-        "mtxr.sqltools",                       // SQL Tools
-        "mtxr.sqltools-driver-pg",             // PostgreSQL driver for SQL Tools
+        // DESARROLLO JAVASCRIPT/TYPESCRIPT
+        "ms-vscode.vscode-typescript-next",
+        "ms-vscode.js-debug",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
         
-        // FRONTEND DEVELOPMENT
-        "esbenp.prettier-vscode",              // JavaScript/TypeScript formatter
-        "dbaeumer.vscode-eslint",              // JavaScript/TypeScript linting
-        "dsznajder.es7-react-js-snippets",     // React snippets
-        "burkeholland.simple-react-snippets",  // Simple React snippets
-        "formulahendry.auto-rename-tag",       // Auto rename HTML/JSX tags
-        "christian-kohler.npm-intellisense",   // NPM IntelliSense for imports
-        "bradlc.vscode-tailwindcss",           // Tailwind CSS support
-        "ms-vscode.vscode-css-peek",           // CSS peek functionality
-        "zignd.html-css-class-completion",     // HTML/CSS class completion
+        // DESARROLLO REACT
+        "dsznajder.es7-react-js-snippets",
+        "burkeholland.simple-react-snippets",
+        "formulahendry.auto-rename-tag",
+        "christian-kohler.npm-intellisense",
+        "bradlc.vscode-tailwindcss",
         
-        // DEVOPS & TOOLS
-        "ms-azuretools.vscode-docker",         // Docker support
-        "ms-vscode-remote.remote-containers",  // Docker container development
+        // BASE DE DATOS
+        "ckolkman.vscode-postgres",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
         
-        // PRODUCTIVITY (Essential for development)
-        "eamodio.gitlens",                     // Git enhancement
-        "gruntfuggly.todo-tree",               // TODO/FIXME highlighting
-        "aaron-bond.better-comments",          // Enhanced comments
-        "usernamehw.errorlens",                // Inline error display
-        "visualstudioexptteam.vscodeintellicode", // AI-assisted coding
-        "GitHub.copilot",                      // GitHub Copilot AI assistant
+        // DEVOPS
+        "ms-azuretools.vscode-docker",
+        "ms-vscode-remote.remote-containers",
         
-        // SYSTEM & TERMINAL
-        "ms-vscode.PowerShell",                // PowerShell support (Windows)
+        // HERRAMIENTAS WEB
+        "ms-edgedevtools.vscode-edge-devtools",
+        "ms-vscode.vscode-css-peek",
+        "zignd.html-css-class-completion",
         
-        // FILE SUPPORT
-        "ms-vscode.vscode-json",               // JSON support
-        "redhat.vscode-yaml",                  // YAML support
-        "vscode-icons-team.vscode-icons",      // File icons
-        "DavidAnson.vscode-markdownlint",      // Markdown linting
-        "yzhang.markdown-all-in-one",          // Markdown all-in-one
-        "streetsidesoftware.code-spell-checker", // Spell checker
+        // PRODUCTIVIDAD
+        "visualstudioexptteam.vscodeintellicode",
+        "GitHub.copilot",
         
-        // API DEVELOPMENT
-        "rangav.vscode-thunder-client",        // REST API client
-        "humao.rest-client"                    // Alternative REST client
+        // ARCHIVOS Y DOCUMENTACION
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "vscode-icons-team.vscode-icons",
+        "DavidAnson.vscode-markdownlint",
+        "yzhang.markdown-all-in-one",
+        "streetsidesoftware.code-spell-checker",
+        
+        // API Y TESTING
+        "rangav.vscode-thunder-client",
+        "humao.rest-client",
+        
+        // SISTEMA
+        "ms-vscode.PowerShell"
     ]
 }

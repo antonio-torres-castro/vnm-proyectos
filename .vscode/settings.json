@@ -59,6 +59,6 @@
             "password": "monitoreo_pass"
         }
     ],
-    "sqltools.useNodeRuntime": true,
+    "sqltools.useNodeRuntime": false,
     "sqltools.format.language": "sql"
 }
