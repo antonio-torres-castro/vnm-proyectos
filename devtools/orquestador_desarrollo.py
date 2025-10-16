@@ -151,33 +151,31 @@ class OrquestadorDesarrollo:
         print(f"{prefix}{color}{message}{Color.END}")
 
     def _print_header(self, title: str):
-        """Imprimir encabezado estilizado"""
-        separator = "=" * 60
-        self._print_color(separator, Color.CYAN, bold=True)
-        self._print_color(f" {title}", Color.CYAN, bold=True)
-        self._print_color(separator, Color.CYAN, bold=True)
+        """Imprimir encabezado simple"""
+        print(f"{title}")
+        print("-" * len(title))
 
     def _print_step(self, step: str, description: str = ""):
         """Imprimir paso de proceso"""
-        self._print_color(f"► {step}", Color.YELLOW, bold=True)
+        print(f"{step}")
         if description:
-            self._print_color(f"  {description}", Color.WHITE)
+            print(f"{description}")
 
     def _print_success(self, message: str):
         """Imprimir mensaje de éxito"""
-        self._print_color(f"✓ {message}", Color.GREEN, bold=True)
+        print(f"OK - {message}")
 
     def _print_error(self, message: str):
         """Imprimir mensaje de error"""
-        self._print_color(f"✗ {message}", Color.RED, bold=True)
+        print(f"ERROR - {message}")
 
     def _print_warning(self, message: str):
         """Imprimir mensaje de advertencia"""
-        self._print_color(f"⚠ {message}", Color.YELLOW, bold=True)
+        print(f"ADVERTENCIA - {message}")
 
     def _print_info(self, message: str):
         """Imprimir mensaje informativo"""
-        self._print_color(f"ℹ {message}", Color.BLUE)
+        self._print_color(f"[INFO] {message}", Color.BLUE)
 
     def _verificar_entorno_inicial(self):
         """Verificar que el entorno esté correctamente configurado"""
@@ -367,11 +365,11 @@ class OrquestadorDesarrollo:
             
             # Mostrar resultado
             if estado == Estado.SALUDABLE:
-                status_icon = "✓" if servicio_info['conectividad'] else "⚠"
+                status_icon = "OK" if servicio_info['conectividad'] else "FALLO"
                 color = Color.GREEN if servicio_info['conectividad'] else Color.YELLOW
                 self._print_color(f"  {status_icon} {servicio}: SALUDABLE", color)
             elif estado == Estado.EJECUTANDO:
-                status_icon = "✓" if servicio_info['conectividad'] else "⚠"
+                status_icon = "OK" if servicio_info['conectividad'] else "FALLO"
                 color = Color.GREEN if servicio_info['conectividad'] else Color.YELLOW
                 self._print_color(f"  {status_icon} {servicio}: EJECUTANDO", color)
             elif estado == Estado.DETENIDO:
@@ -426,13 +424,13 @@ class OrquestadorDesarrollo:
         
         # Mostrar información de servicios opcionales si los hay
         if total_servicios_opcionales > 0:
-            print(f"  📦 Servicios opcionales: {servicios_opcionales_ejecutando}/{total_servicios_opcionales}")
+            print(f"Servicios opcionales: {servicios_opcionales_ejecutando}/{total_servicios_opcionales}")
             if servicios_opcionales_ejecutando == 0 and self.modo_debug:
                 servicios_opcionales = [k for k, v in diagnostico['servicios'].items() if v.get('opcional', False)]
                 for servicio in servicios_opcionales:
                     profile = diagnostico['servicios'][servicio].get('profile')
                     if profile:
-                        print(f"    ℹ  Para activar {servicio}: docker-compose --profile {profile} up")
+                        print(f"Para activar {servicio}: docker-compose --profile {profile} up")
         
         # Guardar diagnóstico
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')

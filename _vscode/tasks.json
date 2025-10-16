@@ -5,7 +5,7 @@
             "label": "start-containers",
             "type": "shell",
             "command": "python",
-            "args": ["docker_manager.py", "start"],
+            "args": ["docker_manager.py", "start-debug"],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -176,6 +176,50 @@
             },
             "windows": {
                 "command": ".venv\\Scripts\\python.exe"
+            }
+        },
+        {
+            "label": "start-development-environment",
+            "type": "shell",
+            "command": "python",
+            "args": ["vnm_automate.py", "dev-start"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "isBackground": true,
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^(.*)$",
+                    "file": 1
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Iniciando entorno de desarrollo|INICIANDO ENTORNO",
+                    "endsPattern": "Entorno iniciado correctamente|completada exitosamente"
+                }
+            }
+        },
+        {
+            "label": "stop-development-environment",
+            "type": "shell",
+            "command": "python",
+            "args": ["vnm_automate.py", "dev-stop"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
             }
         }
     ]

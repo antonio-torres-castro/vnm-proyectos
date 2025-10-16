@@ -64,6 +64,23 @@
             "justMyCode": false,
             "python": "${workspaceFolder}/.venv/Scripts/python.exe",
             "preLaunchTask": "start-containers"
+        },
+        {
+            "name": "FullStack Debug (Smart)",
+            "type": "python",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/backend",
+                    "remoteRoot": "/app"
+                }
+            ],
+            "justMyCode": false,
+            "preLaunchTask": "start-development-environment"
         }
     ]
 }

@@ -65,7 +65,7 @@ class VNMAutomate:
     def __init__(self):
         self.root_dir = Path(__file__).parent
         self.automate_dir = self.root_dir / "automate"
-        self.devtools_dir = self.automate_dir / "devtools"
+        self.devtools_dir = self.root_dir / "devtools"
         
     def _print_color(self, message: str, color: str = Color.WHITE, bold: bool = False):
         """Imprimir mensaje con color"""
@@ -73,23 +73,21 @@ class VNMAutomate:
         print(f"{prefix}{color}{message}{Color.END}")
         
     def _print_header(self, title: str):
-        """Imprimir encabezado estilizado"""
-        separator = "=" * 60
-        self._print_color(separator, Color.CYAN, bold=True)
-        self._print_color(f" {title}", Color.CYAN, bold=True)
-        self._print_color(separator, Color.CYAN, bold=True)
+        """Imprimir encabezado simple"""
+        print(f"{title}")
+        print("-" * len(title))
         
     def _print_success(self, message: str):
         """Imprimir mensaje de exito"""
-        self._print_color(f"[OK] {message}", Color.GREEN, bold=True)
+        print(f"OK - {message}")
         
     def _print_error(self, message: str):
         """Imprimir mensaje de error"""
-        self._print_color(f"[ERROR] {message}", Color.RED, bold=True)
+        print(f"ERROR - {message}")
         
     def _print_info(self, message: str):
         """Imprimir mensaje informativo"""
-        self._print_color(f"[INFO] {message}", Color.BLUE)
+        print(f"INFO - {message}")
         
     def _run_script(self, script_path: Path, args: List[str] = None) -> int:
         """Ejecutar script de Python"""
@@ -219,16 +217,16 @@ class VNMAutomate:
         }
         
         for category, cmd_list in commands.items():
-            print(f"\n{Color.YELLOW}{Color.BOLD}{category}:{Color.END}")
+            print(f"\n{category}:")
             for cmd, desc in cmd_list:
-                print(f"  {Color.GREEN}{cmd:<20}{Color.END} {desc}")
+                print(f"  {cmd:<20} {desc}")
         
-        print(f"\n{Color.CYAN}Uso:{Color.END}")
-        print(f"  python vnm_automate.py <comando>")
-        print(f"\n{Color.CYAN}Ejemplos:{Color.END}")
-        print(f"  python vnm_automate.py dev-start")
-        print(f"  python vnm_automate.py vscode-install")
-        print(f"  python vnm_automate.py code-format")
+        print("\nUso:")
+        print("  python vnm_automate.py <comando>")
+        print("\nEjemplos:")
+        print("  python vnm_automate.py dev-start")
+        print("  python vnm_automate.py vscode-install")
+        print("  python vnm_automate.py code-format")
 
 def main():
     """Funcion principal"""
