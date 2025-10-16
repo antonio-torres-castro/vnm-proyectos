@@ -2,112 +2,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "React: Launch Edge (Principal)",
+            "name": "Frontend Debug",
             "type": "msedge",
             "request": "launch",
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}/src",
             "sourceMapPathOverrides": {
                 "/src/*": "${webRoot}/*",
-                "/*": "*"
+                "/*": "*",
+                "/./~/*": "${workspaceFolder}/node_modules/*"
             },
-            "skipFiles": [
-                "<node_internals>/**",
-                "**/node_modules/**"
-            ],
-            "smartStep": true,
-            "showAsyncStacks": true,
+            "userDataDir": false,
             "runtimeExecutable": "stable"
-        },
-        {
-            "name": "React: Attach to Edge",
-            "type": "msedge",
-            "request": "attach",
-            "port": 9222,
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/src",
-            "sourceMapPathOverrides": {
-                "/src/*": "${webRoot}/*",
-                "/*": "*"
-            },
-            "skipFiles": [
-                "<node_internals>/**",
-                "**/node_modules/**"
-            ],
-            "runtimeExecutable": "stable"
-        },
-        {
-            "name": "React: Launch Chrome (Alternativo)",
-            "type": "chrome",
-            "request": "launch",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/src",
-            "sourceMapPathOverrides": {
-                "/src/*": "${webRoot}/*",
-                "/*": "*"
-            },
-            "skipFiles": [
-                "<node_internals>/**",
-                "**/node_modules/**"
-            ]
-        },
-        {
-            "name": "Vite: Debug en Chrome (Recomendado)",
-            "type": "chrome",
-            "request": "launch",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/src",
-            "sourceMaps": true,
-            "trace": "verbose",
-            "skipFiles": [
-                "<node_internals>/**",
-                "**/node_modules/**"
-            ]
-        },
-        {
-            "name": "React: Launch Edge DevTools",
-            "type": "vscode-edge-devtools.debug",
-            "request": "launch",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/src",
-            "sourceMapPathOverrides": {
-                "webpack:///src/*": "${webRoot}/*",
-                "webpack:///./src/*": "${webRoot}/*",
-                "webpack:///./*": "${workspaceFolder}/*",
-                "webpack:////*": "*"
-            },
-            "skipFiles": [
-                "<node_internals>/**",
-                "**/node_modules/**"
-            ],
-            "runtimeArgs": [
-                "--disable-web-security",
-                "--user-data-dir=${workspaceFolder}/.vscode/edge-debug-userdatadir"
-            ]
-        },
-        {
-            "name": "Node.js: Debug Current File",
-            "type": "node",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "skipFiles": [
-                "<node_internals>/**"
-            ]
-        },
-        {
-            "name": "React: Run Tests",
-            "type": "node",
-            "request": "launch",
-            "program": "${workspaceFolder}/node_modules/.bin/react-scripts",
-            "args": ["test", "--watchAll=false"],
-            "console": "integratedTerminal",
-            "env": {
-                "CI": "true"
-            },
-            "skipFiles": [
-                "<node_internals>/**"
-            ]
         }
     ]
 }

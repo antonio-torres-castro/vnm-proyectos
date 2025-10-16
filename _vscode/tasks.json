@@ -12,15 +12,15 @@
             "group": "build",
             "isBackground": true,
             "problemMatcher": {
-                "owner": "webpack",
+                "owner": "vite",
                 "pattern": {
                     "regexp": "^(.*)$",
                     "file": 1
                 },
                 "background": {
                     "activeOnStart": true,
-                    "beginsPattern": "^.*webpack.*",
-                    "endsPattern": "^.*compiled.*successfully.*"
+                    "beginsPattern": "^.*VITE.*",
+                    "endsPattern": "ready in.*ms"
                 }
             }
         },
@@ -48,6 +48,11 @@
         },
         {
             "label": "start-fullstack-environment",
+            "dependsOrder": "parallel",
+            "dependsOn": ["start-backend-services", "start-frontend"]
+        },
+        {
+            "label": "start-backend-services",
             "type": "shell",
             "command": "docker-compose",
             "args": ["-f", "docker-compose.debug.yml", "up", "-d"],
@@ -56,9 +61,6 @@
             },
             "group": "build",
             "isBackground": true,
-            "runOptions": {
-                "runOn": "folderOpen"
-            },
             "presentation": {
                 "echo": true,
                 "reveal": "always",

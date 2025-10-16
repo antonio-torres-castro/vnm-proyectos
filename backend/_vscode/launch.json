@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: FastAPI Docker Attach",
+            "name": "Backend Debug",
             "type": "python",
             "request": "attach",
             "connect": {
@@ -16,49 +16,6 @@
                 }
             ],
             "justMyCode": false
-        },
-        {
-            "name": "Python: Current File",
-            "type": "python",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "name": "Python: FastAPI Local",
-            "type": "python",
-            "request": "launch",
-            "program": "start-debug.py",
-            "args": ["--debug"],
-            "console": "integratedTerminal",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}"
-            },
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "name": "Python: Init Database",
-            "type": "python",
-            "request": "launch",
-            "program": "app/init_data.py",
-            "console": "integratedTerminal",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}"
-            },
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "name": "Python: Run Tests",
-            "type": "python",
-            "request": "launch",
-            "module": "pytest",
-            "args": ["tests/", "-v"],
-            "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}"
-            }
         }
     ]
 }
