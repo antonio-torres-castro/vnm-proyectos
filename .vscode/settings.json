@@ -40,5 +40,25 @@
     "editor.tabSize": 4,
     "editor.insertSpaces": true,
     "files.autoSave": "afterDelay",
-    "files.autoSaveDelay": 1000
+    "files.autoSaveDelay": 1000,
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "sqltools.connections": [
+        {
+            "name": "PostgreSQL Local",
+            "driver": "PostgreSQL",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "database": "monitoreo_dev",
+            "username": "monitoreo_user",
+            "password": "monitoreo_pass"
+        }
+    ],
+    "sqltools.useNodeRuntime": true,
+    "sqltools.format.language": "sql"
 }

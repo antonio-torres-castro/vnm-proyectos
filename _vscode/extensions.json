@@ -11,14 +11,22 @@
         "ms-python.black-formatter",           // Python code formatter
         "ms-python.isort",                     // Python import sorter
         "ms-python.flake8",                    // Python linting
+        "ms-python.pylance",                   // Advanced Python IntelliSense  
+        "ms-python.mypy-type-checker",         // Python type checking
         "ckolkman.vscode-postgres",            // PostgreSQL support
+        "mtxr.sqltools",                       // SQL Tools
+        "mtxr.sqltools-driver-pg",             // PostgreSQL driver for SQL Tools
         
         // FRONTEND DEVELOPMENT
         "esbenp.prettier-vscode",              // JavaScript/TypeScript formatter
         "dbaeumer.vscode-eslint",              // JavaScript/TypeScript linting
         "dsznajder.es7-react-js-snippets",     // React snippets
+        "burkeholland.simple-react-snippets",  // Simple React snippets
         "formulahendry.auto-rename-tag",       // Auto rename HTML/JSX tags
         "christian-kohler.npm-intellisense",   // NPM IntelliSense for imports
+        "bradlc.vscode-tailwindcss",           // Tailwind CSS support
+        "ms-vscode.vscode-css-peek",           // CSS peek functionality
+        "zignd.html-css-class-completion",     // HTML/CSS class completion
         
         // DEVOPS & TOOLS
         "ms-azuretools.vscode-docker",         // Docker support
@@ -40,8 +48,11 @@
         "redhat.vscode-yaml",                  // YAML support
         "vscode-icons-team.vscode-icons",      // File icons
         "DavidAnson.vscode-markdownlint",      // Markdown linting
+        "yzhang.markdown-all-in-one",          // Markdown all-in-one
+        "streetsidesoftware.code-spell-checker", // Spell checker
         
         // API DEVELOPMENT
-        "rangav.vscode-thunder-client"         // REST API client
+        "rangav.vscode-thunder-client",        // REST API client
+        "humao.rest-client"                    // Alternative REST client
     ]
 }
