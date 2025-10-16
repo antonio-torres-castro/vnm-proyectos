@@ -13,6 +13,9 @@ import MonitoringPage from './pages/MonitoringPage';
 import NotFound from './pages/NotFound';
 import useAuth from './hooks/useAuth';
 
+// Importar tema de Claro Chile
+import './styles/claro-theme.css';
+
 // Componente wrapper para manejar la redirección inicial
 const AppRoutes = () => {
   const { isAuthenticated, isInitializing } = useAuth();

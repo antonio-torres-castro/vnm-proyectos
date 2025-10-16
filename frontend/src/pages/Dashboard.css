@@ -1,8 +1,8 @@
-/* Dashboard Component Styles */
+/* Dashboard Component Styles - Tema Claro Chile */
 
 .dashboard {
   min-height: calc(100vh - 70px);
-  background: linear-gradient(135deg, #ffffff 0%, #e6e6fa 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #ffeaea 100%);
 }
 
 .dashboard-container {

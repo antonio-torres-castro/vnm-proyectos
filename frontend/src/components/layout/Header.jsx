@@ -27,18 +27,25 @@ const Header = () => {
 
   // Manejar logout
   const handleLogout = async () => {
-    // Mostrar confirmación antes del logout
-    const confirmed = window.confirm('¿Estás seguro de que deseas cerrar sesión?');
-    if (!confirmed) {
-      return;
-    }
-
     setIsLoggingOut(true);
     try {
-      await logout();
-      navigate('/login', { replace: true });
+      // El hook useAuth ya maneja la confirmación
+      const result = await logout(true); // true para mostrar confirmación
+      
+      if (result.cancelled) {
+        setIsLoggingOut(false);
+        return;
+      }
+      
+      if (result.success) {
+        navigate('/login', { replace: true });
+      } else {
+        console.error('Error en logout:', result.message);
+        alert('Error al cerrar sesión: ' + result.message);
+      }
     } catch (error) {
       console.error('Error en logout:', error);
+      alert('Error inesperado al cerrar sesión');
     } finally {
       setIsLoggingOut(false);
       setShowUserMenu(false);
@@ -214,16 +221,16 @@ const Header = () => {
         ></div>
       )}
 
-      {/* Estilos CSS embebidos */}
+      {/* Estilos CSS embebidos - Tema Claro Chile */}
       <style>{`
         .header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #ed1c24 0%, #b71c1c 100%);
           color: white;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2);
           position: sticky;
           top: 0;
           z-index: 1000;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 12px rgba(237, 28, 36, 0.3);
         }
 
         .header-container {
@@ -274,26 +281,30 @@ const Header = () => {
         }
 
         .nav-item {
-          background: rgba(255, 255, 255, 0.1);
-          border: none;
+          background: rgba(255, 255, 255, 0.15);
+          border: 1px solid rgba(255, 255, 255, 0.2);
           color: white;
           padding: 0.5rem 1rem;
-          border-radius: 6px;
+          border-radius: 8px;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           font-size: 0.9rem;
-          font-weight: 500;
-          backdrop-filter: blur(10px);
+          font-weight: 600;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         .nav-item:hover {
-          background: rgba(255, 255, 255, 0.2);
-          transform: translateY(-1px);
+          background: rgba(255, 255, 255, 0.25);
+          border-color: rgba(255, 255, 255, 0.4);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .nav-item.active {
-          background: rgba(255, 255, 255, 0.25);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          background: rgba(255, 255, 255, 0.3);
+          border-color: rgba(255, 255, 255, 0.5);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+          font-weight: 700;
         }
 
         .header-user {
@@ -326,19 +337,25 @@ const Header = () => {
           width: 45px;
           height: 45px;
           border-radius: 50%;
-          background: rgba(255, 255, 255, 0.2);
-          border: 2px solid rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.25);
+          border: 2px solid rgba(255, 255, 255, 0.4);
           color: white;
           font-weight: 700;
           font-size: 1rem;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           backdrop-filter: blur(10px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .user-avatar:hover {
-          background: rgba(255, 255, 255, 0.3);
-          transform: scale(1.05);
+          background: rgba(255, 255, 255, 0.35);
+          border-color: rgba(255, 255, 255, 0.6);
+          transform: scale(1.1);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
         .user-dropdown {
@@ -365,25 +382,27 @@ const Header = () => {
         }
 
         .dropdown-header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #ed1c24 0%, #b71c1c 100%);
           color: white;
           padding: 1.5rem;
           display: flex;
           align-items: center;
           gap: 1rem;
+          box-shadow: 0 2px 8px rgba(237, 28, 36, 0.2);
         }
 
         .user-avatar-large {
           width: 50px;
           height: 50px;
           border-radius: 50%;
-          background: rgba(255, 255, 255, 0.2);
-          border: 2px solid rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.25);
+          border: 2px solid rgba(255, 255, 255, 0.4);
           display: flex;
           align-items: center;
           justify-content: center;
           font-weight: 700;
           font-size: 1.1rem;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .user-details {
@@ -436,11 +455,13 @@ const Header = () => {
         }
 
         .dropdown-item.logout {
-          color: #dc3545;
+          color: #ed1c24;
+          font-weight: 600;
         }
 
         .dropdown-item.logout:hover {
-          background: #fff5f5;
+          background: #ffeaea;
+          color: #b71c1c;
         }
 
         .dropdown-item:disabled {

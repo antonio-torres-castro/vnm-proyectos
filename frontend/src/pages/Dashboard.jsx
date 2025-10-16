@@ -51,11 +51,6 @@ const Dashboard = () => {
               📅 {formatTime(currentTime)}
             </div>
           </div>
-          <div className="user-badge">
-            <span className="badge-role">
-              {getUserRoles()[0]?.nombre || 'Usuario'}
-            </span>
-          </div>
         </div>
 
         {/* Tarjetas de estadísticas */}
