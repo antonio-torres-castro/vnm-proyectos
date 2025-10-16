@@ -5,10 +5,12 @@ Simple guide for the 3 debugging configurations available.
 ## Prerequisites
 
 **Always run first:** `python automate\inicio_desarrollo.py`
-This script prepares the complete development environment automatically:
+This script prepares the Docker development environment:
 - Installs frontend dependencies (npm install)
 - Starts Docker containers
 - Verifies service readiness
+
+**VS Code Setup:** See <filepath>_vscode/EXTENSIONES-RECOMENDADAS.md</filepath> for recommended extensions.
 
 ## Available Configurations
 
@@ -82,3 +84,51 @@ Only the `--complete` option will delete your data.
 - Use the centralized automation in `automate\` folder
 - Each configuration works in its specific folder context
 - The startup script handles all service preparation automatically
+
+## VS Code Setup Guide
+
+### Required Extensions
+
+For optimal development experience, install the recommended VS Code extensions:
+
+**See complete guide:** <filepath>_vscode/EXTENSIONES-RECOMENDADAS.md</filepath>
+
+**Quick install (essential):**
+```bash
+# Backend essentials
+code --install-extension ms-python.python
+code --install-extension usernamehw.errorlens
+code --install-extension eamodio.gitlens
+code --install-extension ms-azuretools.vscode-docker
+
+# Frontend essentials  
+code --install-extension dsznajder.es7-react-js-snippets
+code --install-extension esbenp.prettier-vscode
+code --install-extension formulahendry.auto-rename-tag
+```
+
+### Python Import Errors
+
+If you see Pylance errors like:
+```
+Import "sqlalchemy" could not be resolved
+```
+
+**Manual Solution:**
+```bash
+# Option 1: Complete setup (may fail on Windows due to native dependencies)
+python automate/configurar_entorno_local.py
+
+# Option 2: Windows-specific setup (recommended)
+python automate/configurar_entorno_windows.py
+
+# Option 3: Quick fix with fallback
+python automate/fix_vscode_imports.py
+```
+
+**After setup:**
+1. Restart VS Code
+2. Import errors should disappear
+3. Code analysis and IntelliSense will work properly
+
+**Important:** These local environments are only for VS Code analysis. Actual execution happens in Docker containers.

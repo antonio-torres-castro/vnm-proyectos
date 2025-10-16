@@ -7,27 +7,36 @@
 ```
 vnm-proyectos/
 ├── 📄 README.md                    # Este archivo
-├── 📄 vnm_automate.py             # Script maestro de automatización ⭐
-├── 📄 setup_proyecto.py           # Configuración inicial del proyecto
-├── 📄 inicio_rapido.bat          # Script inicio rápido Windows
-├── 📄 inicio_rapido.ps1          # Script inicio rápido PowerShell
-├── 📄 .vscode/                   # Configuración VS Code para la solución completa
+├── 📁 automate/                    # 🔧 Scripts de automatización
+│   ├── 📄 inicio_desarrollo.py    # Iniciar entorno completo
+│   ├── 📄 cerrar_desarrollo.py    # Cerrar entorno
+│   ├── 📄 instalar_extensiones_vscode.py  # Instalar extensiones VS Code
+│   ├── 📄 configurar_entorno_windows.py   # Configurar Python local
+│   ├── 📄 utilidades.py           # Menú interactivo de herramientas
+│   └── 📄 verificar_configuracion_completa.py # Diagnóstico
+├── 📁 _vscode/                     # Configuración VS Code
+│   ├── 📄 README-DEBUG.md         # Guía de debugging
+│   ├── 📄 EXTENSIONES-RECOMENDADAS.md # Lista de extensiones
+│   ├── 📄 settings.json           # Configuración del editor
+│   └── 📄 launch.json             # Configuraciones de debug
 │
-├── 📁 backend/                    # API FastAPI + Base de datos
-│   ├── 📁 app/                   # Código de la aplicación
-│   ├── 📁 .vscode/              # Configuración VS Code específica backend
-│   └── 📄 requirements.txt      # Dependencias Python
+├── 📁 backend/                     # API FastAPI + Base de datos
+│   ├── 📁 app/                    # Código de la aplicación
+│   ├── 📄 requirements.txt       # Dependencias Python completas
+│   ├── 📄 requirements-dev.txt   # Dependencias para VS Code (Windows)
+│   └── 📄 Dockerfile.dev          # Container de desarrollo
 │
-├── 📁 frontend/                   # Interfaz React + Vite
-│   ├── 📁 src/                   # Código fuente React
-│   ├── 📁 .vscode/              # Configuración VS Code específica frontend  
-│   └── 📄 package.json          # Dependencias Node.js
+├── 📁 frontend/                    # Interfaz React + Vite
+│   ├── 📁 src/                    # Código fuente React
+│   ├── 📄 package.json           # Dependencias Node.js
+│   └── 📄 Dockerfile.dev          # Container de desarrollo
 │
-├── 📁 database/                   # Configuración PostgreSQL + pgAdmin
-│   ├── 📁 backups/              # Backups automáticos
-│   ├── 📁 scripts/              # Scripts SQL
-│   └── 📄 init.sql              # Inicialización de DB
+├── 📁 database/                    # Configuración PostgreSQL
+│   ├── 📁 scripts/               # Scripts SQL de inicialización
+│   └── 📄 init.sql               # Esquema inicial
 │
+└── 📄 docker-compose.debug.yml    # Orquestación de servicios
+```
 ├── 📁 automate/                   # 🤖 Todos los automatismos
 │   ├── 📁 devtools/             # Herramientas de desarrollo
 │   ├── 📄 instalar_vscode_config.py    # Instalador VS Code
@@ -53,50 +62,64 @@ vnm-proyectos/
 
 ## 🚀 Inicio Rápido
 
-### 1. **Configuración Inicial (Solo la primera vez)**
+### 1. **Iniciar Desarrollo**
 ```bash
-cd vnm-proyectos
-python setup_proyecto.py
+# Desde vnm-proyectos/
+python automate/inicio_desarrollo.py
 ```
+Este comando:
+- Instala dependencias del frontend (npm install)
+- Inicia todos los servicios Docker
+- Prepara el entorno completo
 
-### 2. **Iniciar Desarrollo**
+### 2. **Configurar VS Code (primera vez)**
 ```bash
-# Método 1: Script maestro (recomendado)
-python vnm_automate.py dev-start
+# Instalar extensiones recomendadas
+python automate/instalar_extensiones_vscode.py
 
-# Método 2: Windows (doble clic)
-inicio_rapido.bat
+# Configurar entorno Python local (para evitar errores de importación)
+python automate/configurar_entorno_windows.py
 ```
 
 ### 3. **Debugging en VS Code**
 1. Abrir VS Code: `code .`
-2. Instalar extensiones recomendadas
-3. Presionar **F5**
-4. Seleccionar: **"FullStack Debug - Ambos simultáneamente"**
+2. Presionar **F5**
+3. Seleccionar: **"Backend: FastAPI Docker Debug"**
+4. ¡Listo! La aplicación está corriendo
 
-## 🎯 Script Maestro - vnm_automate.py
+### 4. **Servicios Disponibles**
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000 (después de F5)
+- **PostgreSQL**: localhost:5432
 
-**Centraliza todos los automatismos en un solo comando desde el directorio raíz.**
-
-### Comandos de Desarrollo
+### 5. **Cerrar Entorno**
 ```bash
-python vnm_automate.py dev-start      # Iniciar entorno completo
-python vnm_automate.py dev-stop       # Detener entorno
-python vnm_automate.py dev-status     # Diagnóstico del entorno
-python vnm_automate.py dev-restart    # Reiniciar entorno completo
-python vnm_automate.py dev-backup     # Backup de base de datos
+# Cerrar manteniendo datos
+python automate/cerrar_desarrollo.py
+
+# Cerrar rápido (solo parar)
+python automate/cerrar_desarrollo.py --simple
 ```
 
-### Comandos de VS Code
+## 🛠️ Herramientas de Desarrollo
+
+### Script de Utilidades
 ```bash
-python vnm_automate.py vscode-install # Instalar configuración VS Code
-python vnm_automate.py vscode-verify  # Verificar configuración VS Code
+# Acceso a todas las herramientas en un menú interactivo
+python automate/utilidades.py
 ```
 
-### Comandos de Código
+### Scripts Individuales
 ```bash
-python vnm_automate.py code-format    # Formatear código (Black + Flake8)
-python vnm_automate.py code-validate  # Validar código sin formatear
+# Gestión del entorno
+python automate/inicio_desarrollo.py          # Iniciar desarrollo
+python automate/cerrar_desarrollo.py          # Cerrar (mantener datos)
+python automate/verificar_configuracion_completa.py  # Diagnóstico
+
+# Configuración VS Code
+python automate/instalar_extensiones_vscode.py    # Instalar extensiones
+python automate/configurar_entorno_windows.py     # Configurar Python local
+python automate/fix_vscode_imports.py             # Solucionar errores importación
 ```
 
 ### Comandos de Base de Datos

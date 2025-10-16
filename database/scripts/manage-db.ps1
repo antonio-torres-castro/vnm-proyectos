@@ -73,7 +73,7 @@ function Install-Dependencies {
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 sqlalchemy==2.0.23
-psycopg2-binary==2.9.9
+psycopg2==2.9.11
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 pydantic[email]==2.5.0

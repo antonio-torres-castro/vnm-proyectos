@@ -1,0 +1,29 @@
+# Requirements específicos para entorno de desarrollo local
+# Solo incluye las dependencias necesarias para Pylance/VS Code
+# Las dependencias completas están en requirements.txt para Docker
+
+# FastAPI core (para análisis de código)
+fastapi==0.104.1
+
+# SQLAlchemy (para resolver imports)
+sqlalchemy==2.0.23
+
+# Authentication & Security (para análisis de código)
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
+
+# Validation & Models (para análisis de código)
+pydantic[email]==2.5.0
+email-validator==2.0.0
+
+# Utilities (para análisis de código)
+python-dotenv==1.0.0
+python-multipart==0.0.6
+
+# Development
+debugpy==1.8.0
+
+# NOTA: psycopg2 omitido intencionalmente
+# Causa problemas de compilacion en Windows pero no es necesario
+# para el analisis de codigo de VS Code/Pylance

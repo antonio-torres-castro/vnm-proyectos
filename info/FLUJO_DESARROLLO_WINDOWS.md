@@ -282,7 +282,7 @@ python devtools/orquestador_desarrollo.py terminar
 ```json
 // .vscode/settings.json (ya configurado)
 {
-    "python.defaultInterpreterPath": "./backend/.venv/Scripts/python.exe",
+    "python.defaultInterpreterPath": "./.venv/Scripts/python.exe",
     "terminal.integrated.defaultProfile.windows": "PowerShell",
     "terminal.integrated.profiles.windows": {
         "PowerShell": {

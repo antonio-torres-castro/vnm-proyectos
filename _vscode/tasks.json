@@ -2,72 +2,81 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "start-containers",
+            "type": "shell",
+            "command": "python",
+            "args": ["docker_manager.py", "start"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "isBackground": true,
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^(.*)$",
+                    "file": 1
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Iniciando containers",
+                    "endsPattern": "Containers iniciados correctamente"
+                }
+            }
+        },
+        {
+            "label": "start-containers-debug",
+            "type": "shell",
+            "command": "python",
+            "args": ["docker_manager.py", "start-debug"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "isBackground": true,
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "stop-containers",
+            "type": "shell",
+            "command": "python",
+            "args": ["docker_manager.py", "stop"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
             "label": "start-frontend",
             "type": "shell",
             "command": "npm",
-            "args": ["start"],
+            "args": ["run", "dev"],
             "options": {
                 "cwd": "${workspaceFolder}/frontend"
             },
             "group": "build",
             "isBackground": true,
-            "problemMatcher": {
-                "owner": "vite",
-                "pattern": {
-                    "regexp": "^(.*)$",
-                    "file": 1
-                },
-                "background": {
-                    "activeOnStart": true,
-                    "beginsPattern": "^.*VITE.*",
-                    "endsPattern": "ready in.*ms"
-                }
-            }
-        },
-        {
-            "label": "start-backend-dependencies",
-            "type": "shell",
-            "command": "python",
-            "args": ["devtools/orquestador_desarrollo.py", "iniciar"],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "build",
-            "isBackground": true,
-            "problemMatcher": {
-                "pattern": {
-                    "regexp": "^(.*)$",
-                    "file": 1
-                },
-                "background": {
-                    "activeOnStart": true,
-                    "beginsPattern": "Iniciando entorno de desarrollo",
-                    "endsPattern": "Entorno iniciado correctamente"
-                }
-            }
-        },
-        {
-            "label": "start-fullstack-environment",
-            "dependsOrder": "parallel",
-            "dependsOn": ["start-backend-services", "start-frontend"]
-        },
-        {
-            "label": "start-backend-services",
-            "type": "shell",
-            "command": "docker-compose",
-            "args": ["-f", "docker-compose.debug.yml", "up", "-d"],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "build",
-            "isBackground": true,
             "presentation": {
                 "echo": true,
                 "reveal": "always",
                 "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false
+                "panel": "shared"
             },
             "problemMatcher": {
                 "pattern": {
@@ -76,47 +85,28 @@
                 },
                 "background": {
                     "activeOnStart": true,
-                    "beginsPattern": ".*Creating.*|.*Starting.*|.*Pulling.*",
-                    "endsPattern": ".*done.*"
+                    "beginsPattern": "VITE.*ready",
+                    "endsPattern": "Local:.*http://localhost:3000"
                 }
-            },
-            "dependsOrder": "sequence",
-            "dependsOn": "wait-for-services"
+            }
         },
         {
-            "label": "wait-for-services",
+            "label": "install-python-dependencies",
             "type": "shell",
-            "command": "timeout",
-            "args": ["60", "bash", "-c", "while ! curl -s http://localhost:8000/health > /dev/null 2>&1; do echo 'Waiting for backend...'; sleep 2; done && echo 'Backend ready!'"],
+            "command": ".venv/Scripts/python.exe",
+            "args": ["-m", "pip", "install", "-r", "backend/requirements.txt"],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
             "group": "build",
             "presentation": {
                 "echo": true,
-                "reveal": "silent",
+                "reveal": "always",
                 "focus": false,
                 "panel": "shared"
             },
             "windows": {
-                "command": "powershell",
-                "args": ["-Command", "$timeout = 60; $count = 0; do { Start-Sleep -Seconds 2; $count += 2; try { $response = Invoke-WebRequest -Uri 'http://localhost:8000/health' -UseBasicParsing -TimeoutSec 5; if ($response.StatusCode -eq 200) { Write-Host 'Backend ready!'; exit 0 } } catch { Write-Host 'Waiting for backend...' } } while ($count -lt $timeout); Write-Host 'Timeout waiting for backend'; exit 1"]
-            }
-        },
-        {
-            "label": "stop-environment",
-            "type": "shell",
-            "command": "docker-compose",
-            "args": ["-f", "docker-compose.debug.yml", "down"],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
+                "command": ".venv\\Scripts\\python.exe"
             }
         },
         {
@@ -127,17 +117,66 @@
             "options": {
                 "cwd": "${workspaceFolder}/frontend"
             },
-            "group": "build"
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
         },
         {
-            "label": "install-backend-dependencies",
+            "label": "activate-venv",
             "type": "shell",
-            "command": "pip",
-            "args": ["install", "-r", "requirements.txt"],
+            "command": ".venv\\Scripts\\activate",
             "options": {
-                "cwd": "${workspaceFolder}/backend"
+                "cwd": "${workspaceFolder}"
             },
-            "group": "build"
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            },
+            "windows": {
+                "command": ".venv\\Scripts\\activate.bat"
+            }
+        },
+        {
+            "label": "docker-status",
+            "type": "shell",
+            "command": "python",
+            "args": ["docker_manager.py", "status"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "run-diagnostics",
+            "type": "shell",
+            "command": ".venv\\Scripts\\python.exe",
+            "args": ["automate/utilidades.py", "--diagnostico"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "windows": {
+                "command": ".venv\\Scripts\\python.exe"
+            }
         }
     ]
 }

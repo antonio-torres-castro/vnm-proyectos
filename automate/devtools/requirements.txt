@@ -1,2 +1,0 @@
-# Dependencias para las Herramientas de Desarrollo VNM
-requests>=2.25.0

@@ -71,7 +71,7 @@ Las configuraciones incluyen tareas automatizadas que se ejecutan antes del inic
 
 ### Error: "Python interpreter not found"
 - Configura el intérprete de Python: Ctrl+Shift+P > "Python: Select Interpreter"
-- Selecciona el intérprete del entorno virtual: `./backend/.venv/bin/python`
+- Selecciona el intérprete del entorno virtual: `./.venv/bin/python`
 
 ### Error: "Database connection failed"
 - Ejecuta manualmente: `python devtools/orquestador_desarrollo.py iniciar`
