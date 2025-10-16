@@ -1,0 +1,47 @@
+{
+    "recommendations": [
+        // ESSENTIAL EXTENSIONS (Core functionality)
+        "ms-python.python",                    // Python support
+        "ms-python.debugpy",                   // Python remote debugging
+        "ms-vscode.vscode-typescript-next",    // TypeScript support
+        "ms-vscode.js-debug",                  // JavaScript debugging
+        "ms-edgedevtools.vscode-edge-devtools", // Browser dev tools
+        
+        // BACKEND DEVELOPMENT
+        "ms-python.black-formatter",           // Python code formatter
+        "ms-python.isort",                     // Python import sorter
+        "ms-python.flake8",                    // Python linting
+        "ckolkman.vscode-postgres",            // PostgreSQL support
+        
+        // FRONTEND DEVELOPMENT
+        "esbenp.prettier-vscode",              // JavaScript/TypeScript formatter
+        "dbaeumer.vscode-eslint",              // JavaScript/TypeScript linting
+        "dsznajder.es7-react-js-snippets",     // React snippets
+        "formulahendry.auto-rename-tag",       // Auto rename HTML/JSX tags
+        "christian-kohler.npm-intellisense",   // NPM IntelliSense for imports
+        
+        // DEVOPS & TOOLS
+        "ms-azuretools.vscode-docker",         // Docker support
+        "ms-vscode-remote.remote-containers",  // Docker container development
+        
+        // PRODUCTIVITY (Essential for development)
+        "eamodio.gitlens",                     // Git enhancement
+        "gruntfuggly.todo-tree",               // TODO/FIXME highlighting
+        "aaron-bond.better-comments",          // Enhanced comments
+        "usernamehw.errorlens",                // Inline error display
+        "visualstudioexptteam.vscodeintellicode", // AI-assisted coding
+        "GitHub.copilot",                      // GitHub Copilot AI assistant
+        
+        // SYSTEM & TERMINAL
+        "ms-vscode.PowerShell",                // PowerShell support (Windows)
+        
+        // FILE SUPPORT
+        "ms-vscode.vscode-json",               // JSON support
+        "redhat.vscode-yaml",                  // YAML support
+        "vscode-icons-team.vscode-icons",      // File icons
+        "DavidAnson.vscode-markdownlint",      // Markdown linting
+        
+        // API DEVELOPMENT
+        "rangav.vscode-thunder-client"         // REST API client
+    ]
+}
