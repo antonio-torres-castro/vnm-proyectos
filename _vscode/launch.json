@@ -2,71 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Backend Debug (Local)",
-            "type": "python",
-            "request": "launch",
-            "module": "uvicorn",
-            "args": ["app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"],
-            "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/backend",
-            "env": {
-                "DATABASE_URL": "postgresql://monitoreo_user:monitoreo_pass@localhost:5432/monitoreo_dev",
-                "JWT_SECRET_KEY": "dev_secret_key_change_in_production",
-                "PYTHONPATH": "${workspaceFolder}/backend"
-            },
-            "justMyCode": false,
-            "python": "${workspaceFolder}/.venv/Scripts/python.exe"
-        },
-        {
             "name": "Backend Debug (Container)",
-            "type": "python",
-            "request": "attach",
-            "connect": {
-                "host": "localhost",
-                "port": 5678
-            },
-            "pathMappings": [
-                {
-                    "localRoot": "${workspaceFolder}/backend",
-                    "remoteRoot": "/app"
-                }
-            ],
-            "justMyCode": false
-        },
-        {
-            "name": "Frontend Debug",
-            "type": "msedge",
-            "request": "launch",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/frontend/src",
-            "sourceMapPathOverrides": {
-                "/src/*": "${workspaceFolder}/frontend/src/*",
-                "/*": "*",
-                "/./~/*": "${workspaceFolder}/frontend/node_modules/*"
-            },
-            "userDataDir": false,
-            "runtimeExecutable": "stable",
-            "preLaunchTask": "start-frontend"
-        },
-        {
-            "name": "FullStack Debug",
-            "type": "python",
-            "request": "launch",
-            "module": "uvicorn",
-            "args": ["app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"],
-            "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/backend",
-            "env": {
-                "DATABASE_URL": "postgresql://monitoreo_user:monitoreo_pass@localhost:5432/monitoreo_dev",
-                "JWT_SECRET_KEY": "dev_secret_key_change_in_production",
-                "PYTHONPATH": "${workspaceFolder}/backend"
-            },
-            "justMyCode": false,
-            "python": "${workspaceFolder}/.venv/Scripts/python.exe",
-            "preLaunchTask": "start-containers"
-        },
-        {
-            "name": "Backend Debug (Smart)",
             "type": "python",
             "request": "attach",
             "connect": {
@@ -84,56 +20,32 @@
         },
         {
             "name": "Frontend Debug (Container)",
-            "type": "msedge",
-            "request": "launch",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/frontend/src",
-            "sourceMapPathOverrides": {
-                "/src/*": "${workspaceFolder}/frontend/src/*",
-                "/*": "*",
-                "/static/js/*": "${workspaceFolder}/frontend/src/*",
-                "/./~/*": "${workspaceFolder}/frontend/node_modules/*"
-            },
-            "userDataDir": false,
-            "runtimeExecutable": "stable",
-            "timeout": 10000,
-            "disableNetworkCache": true,
-            "showAsyncStacks": true
-        },
-        {
-            "name": "Frontend Debug (Browser - Chrome)",
-            "type": "chrome",
-            "request": "launch",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/frontend/src",
-            "sourceMapPathOverrides": {
-                "/src/*": "${workspaceFolder}/frontend/src/*",
-                "/*": "*",
-                "/static/js/*": "${workspaceFolder}/frontend/src/*",
-                "/./~/*": "${workspaceFolder}/frontend/node_modules/*"
-            },
-            "userDataDir": false,
-            "timeout": 10000,
-            "disableNetworkCache": true,
-            "showAsyncStacks": true
+            "type": "node",
+            "request": "attach",
+            "port": 24678,
+            "address": "localhost",
+            "localRoot": "${workspaceFolder}/frontend",
+            "remoteRoot": "/app",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "restart": true,
+            "protocol": "inspector",
+            "sourceMaps": true,
+            "outFiles": [
+                "${workspaceFolder}/frontend/src/**/*.js",
+                "${workspaceFolder}/frontend/src/**/*.ts",
+                "${workspaceFolder}/frontend/src/**/*.jsx",
+                "${workspaceFolder}/frontend/src/**/*.tsx"
+            ]
         }
     ],
     "compounds": [
         {
-            "name": "FullStack Debug (Smart)",
+            "name": "FullStack Debug (Complete)",
             "configurations": [
-                "Backend Debug (Smart)",
+                "Backend Debug (Container)",
                 "Frontend Debug (Container)"
-            ],
-            "stopAll": true,
-            "preLaunchTask": "start-development-environment"
-        },
-        {
-            "name": "FullStack Debug (Complete - Chrome)",
-            "configurations": [
-                "Backend Debug (Smart)",
-                "Frontend Debug (Container)",
-                "Frontend Debug (Browser - Chrome)"
             ],
             "stopAll": true,
             "preLaunchTask": "start-development-environment"
