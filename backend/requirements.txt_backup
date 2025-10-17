@@ -1,6 +1,6 @@
-# FastAPI core - Versiones compatibles actualizadas
-fastapi==0.115.4
-uvicorn[standard]==0.32.0
+# FastAPI core
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
 
 # Database
 sqlalchemy==2.0.23
@@ -11,8 +11,8 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 bcrypt==4.0.1
 
-# Validation & Models - Version fija para compatibilidad
-pydantic==2.9.2
+# Validation & Models
+pydantic[email]
 email-validator==2.0.0
 
 # Utilities
