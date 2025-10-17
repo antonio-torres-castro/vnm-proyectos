@@ -15,32 +15,37 @@
                     "remoteRoot": "/app"
                 }
             ],
-            "justMyCode": false
+            "justMyCode": false,
+            "preLaunchTask": "start-development-environment"
         },
         {
-            "name": "Frontend Debug (Browser - Chrome)",
-            "type": "chrome",
-            "request": "launch",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/frontend/src",
-            "sourceMapPathOverrides": {
-                "/src/*": "${workspaceFolder}/frontend/src/*",
-                "/*": "*",
-                "/static/js/*": "${workspaceFolder}/frontend/src/*",
-                "/./~/*": "${workspaceFolder}/frontend/node_modules/*"
-            },
-            "userDataDir": false,
-            "timeout": 30000,
-            "disableNetworkCache": true,
-            "showAsyncStacks": true
+            "name": "Frontend Debug (Container)",
+            "type": "node",
+            "request": "attach",
+            "port": 24678,
+            "address": "localhost",
+            "localRoot": "${workspaceFolder}/frontend",
+            "remoteRoot": "/app",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "restart": true,
+            "protocol": "inspector",
+            "sourceMaps": true,
+            "outFiles": [
+                "${workspaceFolder}/frontend/src/**/*.js",
+                "${workspaceFolder}/frontend/src/**/*.ts",
+                "${workspaceFolder}/frontend/src/**/*.jsx",
+                "${workspaceFolder}/frontend/src/**/*.tsx"
+            ]
         }
     ],
     "compounds": [
         {
-            "name": "FullStack Debug (Optimized)",
+            "name": "FullStack Debug (Complete)",
             "configurations": [
                 "Backend Debug (Container)",
-                "Frontend Debug (Browser - Chrome)"
+                "Frontend Debug (Container)"
             ],
             "stopAll": true,
             "preLaunchTask": "start-development-environment"
