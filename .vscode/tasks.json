@@ -5,7 +5,10 @@
             "label": "start-containers",
             "type": "shell",
             "command": "python",
-            "args": ["docker_manager.py", "start-debug"],
+            "args": [
+                "docker_manager.py",
+                "start-debug"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -33,7 +36,10 @@
             "label": "start-containers-debug",
             "type": "shell",
             "command": "python",
-            "args": ["docker_manager.py", "start-debug"],
+            "args": [
+                "docker_manager.py",
+                "start-debug"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -50,7 +56,10 @@
             "label": "stop-containers",
             "type": "shell",
             "command": "python",
-            "args": ["docker_manager.py", "stop"],
+            "args": [
+                "docker_manager.py",
+                "stop"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -66,7 +75,10 @@
             "label": "start-frontend",
             "type": "shell",
             "command": "npm",
-            "args": ["run", "dev"],
+            "args": [
+                "run",
+                "dev"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}/frontend"
             },
@@ -94,7 +106,13 @@
             "label": "install-python-dependencies",
             "type": "shell",
             "command": ".venv/Scripts/python.exe",
-            "args": ["-m", "pip", "install", "-r", "backend/requirements.txt"],
+            "args": [
+                "-m",
+                "pip",
+                "install",
+                "-r",
+                "backend/requirements.txt"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -113,7 +131,9 @@
             "label": "install-frontend-dependencies",
             "type": "shell",
             "command": "npm",
-            "args": ["install"],
+            "args": [
+                "install"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}/frontend"
             },
@@ -147,7 +167,10 @@
             "label": "docker-status",
             "type": "shell",
             "command": "python",
-            "args": ["docker_manager.py", "status"],
+            "args": [
+                "docker_manager.py",
+                "status"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -163,7 +186,10 @@
             "label": "run-diagnostics",
             "type": "shell",
             "command": ".venv\\Scripts\\python.exe",
-            "args": ["automate/utilidades.py", "--diagnostico"],
+            "args": [
+                "automate/utilidades.py",
+                "--diagnostico"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -182,7 +208,10 @@
             "label": "start-development-environment",
             "type": "shell",
             "command": "python",
-            "args": ["automate/vnm_automate.py", "dev-start"],
+            "args": [
+                "automate/vnm_automate.py",
+                "dev-start"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -192,13 +221,28 @@
                 "reveal": "always",
                 "focus": false,
                 "panel": "shared"
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^(.*)$",
+                    "file": 1
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "INICIANDO ENTORNO DE DESARROLLO",
+                    "endsPattern": "Entorno iniciado correctamente"
+                }
             }
         },
         {
             "label": "stop-development-environment",
             "type": "shell",
             "command": "python",
-            "args": ["automate/vnm_automate.py", "dev-stop"],
+            "args": [
+                "automate/vnm_automate.py",
+                "dev-stop"
+            ],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
