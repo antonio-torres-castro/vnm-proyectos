@@ -534,10 +534,6 @@ class OrquestadorDesarrollo:
             # Paso 3: Iniciar servicios
             self._print_step("Paso 3: Iniciando servicios")
             comando_up = ['docker-compose', '-f', self.docker_compose_file, 'up', '-d']
-            
-            # En modo debug, incluir pgadmin automaticamente
-            if self.modo_debug:
-                comando_up.extend(['--profile', 'pgadmin'])
                 
             if forzar_rebuild:
                 comando_up.append('--build')
