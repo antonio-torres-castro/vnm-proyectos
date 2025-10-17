@@ -35,13 +35,13 @@
 
 ```bash
 # Iniciar entorno completo (modo debug por defecto)
-python vnm_automate.py dev-start
+python automate/vnm_automate.py dev-start
 
 # Diagnosticar estado
-python vnm_automate.py dev-status
+python automate/vnm_automate.py dev-status
 
 # Detener con backup
-python vnm_automate.py dev-stop
+python automate/vnm_automate.py dev-stop
 ```
 
 ## Verificacion de Debugging
@@ -71,7 +71,7 @@ Despues de ejecutar `FullStack Debug (Smart)`, verificar:
 docker-compose -f docker-compose.yml down
 
 # Iniciar modo debug
-python vnm_automate.py dev-start
+python automate/vnm_automate.py dev-start
 ```
 
 **Si VS Code no se conecta al debugger**:

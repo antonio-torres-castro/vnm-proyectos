@@ -124,20 +124,20 @@ python automate/fix_vscode_imports.py             # Solucionar errores importaci
 
 ### Comandos de Base de Datos
 ```bash
-python vnm_automate.py db-recreate    # Recrear DB desde cero
-python vnm_automate.py db-backup      # Backup manual
+python automate/vnm_automate.py db-recreate    # Recrear DB desde cero
+python automate/vnm_automate.py db-backup      # Backup manual
 ```
 
 ### Comandos de Testing
 ```bash
-python vnm_automate.py test-all       # Ejecutar todos los tests
-python vnm_automate.py test-backend   # Tests del backend
-python vnm_automate.py test-frontend  # Tests del frontend
+python automate/vnm_automate.py test-all       # Ejecutar todos los tests
+python automate/vnm_automate.py test-backend   # Tests del backend
+python automate/vnm_automate.py test-frontend  # Tests del frontend
 ```
 
 ### Ver Todos los Comandos
 ```bash
-python vnm_automate.py help
+python automate/vnm_automate.py help
 ```
 
 ## 🔧 Configuraciones VS Code
@@ -173,11 +173,11 @@ python vnm_automate.py help
 ## 🛠️ Flujo de Desarrollo
 
 ### Desarrollo Normal
-1. `python vnm_automate.py dev-start` - Iniciar entorno
+1. `python automate/vnm_automate.py dev-start` - Iniciar entorno
 2. `code .` - Abrir VS Code
 3. **F5** → "FullStack Debug - Ambos simultáneamente" 
 4. Desarrollar con debugging completo
-5. `python vnm_automate.py dev-stop` - Detener cuando termines
+5. `python automate/vnm_automate.py dev-stop` - Detener cuando termines
 
 ### Desarrollo Backend Solo
 ```bash
@@ -222,7 +222,7 @@ Todos los automatismos están en <filepath>automate/</filepath>:
 ## ✅ Ventajas de la Nueva Estructura
 
 ### 🎯 **Centralización**
-- Un solo comando para todo: `vnm_automate.py`
+- Un solo comando para todo: `automate/vnm_automate.py`
 - No más navegación entre carpetas
 
 ### 📁 **Organización**
@@ -252,18 +252,18 @@ Todos los automatismos están en <filepath>automate/</filepath>:
 
 ### 🐳 Docker no arranca
 ```bash
-python vnm_automate.py dev-status  # Diagnosticar problema
+python automate/vnm_automate.py dev-status  # Diagnosticar problema
 ```
 
 ### 🔧 VS Code no reconoce configuración
 ```bash
-python vnm_automate.py vscode-verify  # Verificar instalación
-python vnm_automate.py vscode-install # Reinstalar si es necesario
+python automate/vnm_automate.py vscode-verify  # Verificar instalación
+python automate/vnm_automate.py vscode-install # Reinstalar si es necesario
 ```
 
 ### 📝 Problemas de formato código
 ```bash
-python vnm_automate.py code-format    # Formatear automáticamente
+python automate/vnm_automate.py code-format    # Formatear automáticamente
 ```
 
 ## 🏆 Estado del Proyecto

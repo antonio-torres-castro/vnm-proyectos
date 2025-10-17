@@ -182,7 +182,7 @@
             "label": "start-development-environment",
             "type": "shell",
             "command": "python",
-            "args": ["vnm_automate.py", "dev-start"],
+            "args": ["automate/vnm_automate.py", "dev-start"],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -198,7 +198,7 @@
             "label": "stop-development-environment",
             "type": "shell",
             "command": "python",
-            "args": ["vnm_automate.py", "dev-stop"],
+            "args": ["automate/vnm_automate.py", "dev-stop"],
             "options": {
                 "cwd": "${workspaceFolder}"
             },

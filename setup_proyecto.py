@@ -237,9 +237,9 @@ Read-Host "Presiona Enter para continuar"
         print("   Presiona F5 -> Selecciona 'FullStack Debug - Ambos simultaneamente'")
         
         print(f"\\n{Color.CYAN}{Color.BOLD}COMANDOS DISPONIBLES:{Color.END}")
-        print("   python vnm_automate.py help    # Ver todos los comandos")
-        print("   python vnm_automate.py dev-status    # Ver estado del entorno")
-        print("   python vnm_automate.py dev-stop      # Detener entorno")
+        print("   python automate/vnm_automate.py help    # Ver todos los comandos")
+        print("   python automate/vnm_automate.py dev-status    # Ver estado del entorno")
+        print("   python automate/vnm_automate.py dev-stop      # Detener entorno")
         
         print(f"\\n{Color.GREEN}{Color.BOLD}El proyecto esta listo para desarrollo!{Color.END}")
     

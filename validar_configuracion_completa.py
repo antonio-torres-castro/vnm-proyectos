@@ -17,10 +17,10 @@ def validar_configuracion():
     project_root = Path(__file__).parent
     errores = []
     
-    # 1. Verificar que vnm_automate.py existe
-    vnm_automate = project_root / "vnm_automate.py"
+    # 1. Verificar que automate/vnm_automate.py existe
+    vnm_automate = project_root / "automate" / "vnm_automate.py"
     if not vnm_automate.exists():
-        errores.append("vnm_automate.py no encontrado")
+        errores.append("automate/vnm_automate.py no encontrado")
     
     # 2. Verificar que orquestador_desarrollo.py existe
     orquestador = project_root / "devtools" / "orquestador_desarrollo.py"
@@ -57,8 +57,8 @@ def validar_configuracion():
                     if task.get('command') != 'python':
                         errores.append("Task no usa python como comando")
                     args = task.get('args', [])
-                    if len(args) < 2 or args[0] != 'vnm_automate.py' or args[1] != 'dev-start':
-                        errores.append("Task no llama a vnm_automate.py dev-start")
+                    if len(args) < 2 or args[0] != 'automate/vnm_automate.py' or args[1] != 'dev-start':
+                        errores.append("Task no llama a automate/vnm_automate.py dev-start")
                     break
             
             if not task_encontrado:

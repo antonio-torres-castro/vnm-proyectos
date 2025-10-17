@@ -15,7 +15,7 @@ Funcionalidades disponibles:
 - Testing automatizado
 
 Uso:
-    python vnm_automate.py <comando> [opciones]
+    python automate/vnm_automate.py <comando> [opciones]
 
 Comandos disponibles:
     dev-start        Iniciar entorno de desarrollo
@@ -63,7 +63,8 @@ class VNMAutomate:
     """Clase principal para automatizacion VNM"""
     
     def __init__(self):
-        self.root_dir = Path(__file__).parent
+        # El script esta en automate/, el root_dir es el directorio padre
+        self.root_dir = Path(__file__).parent.parent
         self.automate_dir = self.root_dir / "automate"
         self.devtools_dir = self.root_dir / "devtools"
         
@@ -222,11 +223,11 @@ class VNMAutomate:
                 print(f"  {cmd:<20} {desc}")
         
         print("\nUso:")
-        print("  python vnm_automate.py <comando>")
+        print("  python automate/vnm_automate.py <comando>")
         print("\nEjemplos:")
-        print("  python vnm_automate.py dev-start")
-        print("  python vnm_automate.py vscode-install")
-        print("  python vnm_automate.py code-format")
+        print("  python automate/vnm_automate.py dev-start")
+        print("  python automate/vnm_automate.py vscode-install")
+        print("  python automate/vnm_automate.py code-format")
 
 def main():
     """Funcion principal"""

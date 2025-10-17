@@ -13,5 +13,9 @@ export default defineConfig({
     },
     css: {
         devSourcemap: true
+    },
+    // Optimización para debugging
+    esbuild: {
+        sourcemap: 'both' // Generar source maps inline y externos
     }
 })

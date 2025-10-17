@@ -135,7 +135,7 @@ def check_automation_scripts():
     print("\n=== VERIFICACION SCRIPTS DE AUTOMATIZACION ===")
     
     scripts = [
-        ("vnm_automate.py", "Script maestro de automatizacion"),
+        ("automate/vnm_automate.py", "Script maestro de automatizacion"),
         ("devtools/orquestador_desarrollo.py", "Orquestador inteligente"),
         ("docker_manager.py", "Manager basico de containers")
     ]
@@ -178,7 +178,7 @@ def main():
     else:
         print("RESULTADO: CONFIGURACION INCOMPLETA")
         print("\nExecutar para reparar:")
-        print("python vnm_automate.py vscode-install")
+        print("python automate/vnm_automate.py vscode-install")
         
     return 0 if all_passed else 1
 

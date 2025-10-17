@@ -116,7 +116,7 @@ class VerificadorEstructura:
         self._print_color("\\n► Verificando archivos principales...", Color.YELLOW, bold=True)
         
         archivos_principales = [
-            ("vnm_automate.py", "Script maestro de automatización"),
+            ("automate/vnm_automate.py", "Script maestro de automatización"),
             ("setup_proyecto.py", "Script de configuración inicial"),
             ("README.md", "Documentación principal"),
             ("automate/devtools/orquestador_desarrollo.py", "Orquestador de desarrollo"),
@@ -180,7 +180,7 @@ class VerificadorEstructura:
             except Exception as e:
                 self._error(f"Error leyendo launch.json: {e}")
         else:
-            self._warning("Configuración VS Code principal no instalada - ejecuta: python vnm_automate.py vscode-install")
+            self._warning("Configuración VS Code principal no instalada - ejecuta: python automate/vnm_automate.py vscode-install")
         
         # Verificar configuraciones específicas de proyectos
         project_configs = [
@@ -203,14 +203,14 @@ class VerificadorEstructura:
         
         # Verificar script maestro
         try:
-            result = subprocess.run([sys.executable, "vnm_automate.py", "help"], 
+            result = subprocess.run([sys.executable, "automate/vnm_automate.py", "help"], 
                                   cwd=self.root_dir, capture_output=True, text=True, timeout=30)
             if result.returncode == 0:
-                self._success("Script maestro vnm_automate.py funciona correctamente")
+                self._success("Script maestro automate/vnm_automate.py funciona correctamente")
             else:
-                self._error("Script maestro vnm_automate.py tiene errores")
+                self._error("Script maestro automate/vnm_automate.py tiene errores")
         except Exception as e:
-            self._error(f"Error ejecutando vnm_automate.py: {e}")
+            self._error(f"Error ejecutando automate/vnm_automate.py: {e}")
         
         # Verificar orquestador
         orquestador_path = self.root_dir / "automate" / "devtools" / "orquestador_desarrollo.py"
@@ -335,8 +335,8 @@ class VerificadorEstructura:
         
         print(f"\\n{Color.CYAN}Próximos pasos recomendados:{Color.END}")
         print("1. python setup_proyecto.py        # Configuración inicial")
-        print("2. python vnm_automate.py help     # Ver comandos disponibles")
-        print("3. python vnm_automate.py dev-start # Iniciar desarrollo")
+        print("2. python automate/vnm_automate.py help     # Ver comandos disponibles")
+        print("3. python automate/vnm_automate.py dev-start # Iniciar desarrollo")
     
     def ejecutar_verificacion_completa(self):
         """Ejecutar verificación completa"""
