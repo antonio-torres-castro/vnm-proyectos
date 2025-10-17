@@ -14,8 +14,12 @@ export default defineConfig({
     css: {
         devSourcemap: true
     },
-    // Optimización para debugging
+    // Configuración optimizada para debugging
+    define: {
+        __DEV__: true
+    },
     esbuild: {
-        sourcemap: 'both' // Generar source maps inline y externos
+        sourcemap: 'both', // Generar source maps inline y externos
+        target: 'es2020'
     }
 })

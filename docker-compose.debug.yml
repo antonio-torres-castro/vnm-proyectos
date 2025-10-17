@@ -68,7 +68,6 @@ services:
       - CHOKIDAR_USEPOLLING=true # Para hot reload en Windows
     ports:
       - "3000:3000" # React dev server
-      - "24678:24678" # Puerto adicional para debugging
     volumes:
       - ./frontend:/app
       - /app/node_modules # Excluir node_modules del bind mount

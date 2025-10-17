@@ -84,24 +84,6 @@
         },
         {
             "name": "Frontend Debug (Container)",
-            "type": "node",
-            "request": "attach",
-            "port": 24678,
-            "address": "localhost",
-            "localRoot": "${workspaceFolder}/frontend",
-            "remoteRoot": "/app",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "restart": true,
-            "protocol": "inspector",
-            "sourceMaps": true,
-            "outFiles": [
-                "${workspaceFolder}/frontend/build/**/*.js"
-            ]
-        },
-        {
-            "name": "Frontend Debug (Browser)",
             "type": "msedge",
             "request": "launch",
             "url": "http://localhost:3000",
@@ -113,7 +95,27 @@
                 "/./~/*": "${workspaceFolder}/frontend/node_modules/*"
             },
             "userDataDir": false,
-            "runtimeExecutable": "stable"
+            "runtimeExecutable": "stable",
+            "timeout": 10000,
+            "disableNetworkCache": true,
+            "showAsyncStacks": true
+        },
+        {
+            "name": "Frontend Debug (Browser - Chrome)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/frontend/src",
+            "sourceMapPathOverrides": {
+                "/src/*": "${workspaceFolder}/frontend/src/*",
+                "/*": "*",
+                "/static/js/*": "${workspaceFolder}/frontend/src/*",
+                "/./~/*": "${workspaceFolder}/frontend/node_modules/*"
+            },
+            "userDataDir": false,
+            "timeout": 10000,
+            "disableNetworkCache": true,
+            "showAsyncStacks": true
         }
     ],
     "compounds": [
@@ -127,11 +129,11 @@
             "preLaunchTask": "start-development-environment"
         },
         {
-            "name": "FullStack Debug (Complete)",
+            "name": "FullStack Debug (Complete - Chrome)",
             "configurations": [
                 "Backend Debug (Smart)",
                 "Frontend Debug (Container)",
-                "Frontend Debug (Browser)"
+                "Frontend Debug (Browser - Chrome)"
             ],
             "stopAll": true,
             "preLaunchTask": "start-development-environment"

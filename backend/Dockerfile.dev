@@ -16,10 +16,10 @@ COPY requirements.txt .
 RUN pip install --upgrade pip setuptools wheel
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar el código de la aplicación
+# Copiar el codigo de la aplicacion
 COPY . .
 
-# Exponer puertos para la aplicación y debugging
+# Exponer puertos para la aplicacion y debugging
 EXPOSE 8000 5678
 
 # Hacer el script ejecutable
