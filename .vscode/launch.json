@@ -66,7 +66,7 @@
             "preLaunchTask": "start-containers"
         },
         {
-            "name": "FullStack Debug (Smart)",
+            "name": "Backend Debug (Smart)",
             "type": "python",
             "request": "attach",
             "connect": {
@@ -80,6 +80,60 @@
                 }
             ],
             "justMyCode": false,
+            "preLaunchTask": "start-development-environment"
+        },
+        {
+            "name": "Frontend Debug (Container)",
+            "type": "node",
+            "request": "attach",
+            "port": 24678,
+            "address": "localhost",
+            "localRoot": "${workspaceFolder}/frontend",
+            "remoteRoot": "/app",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "restart": true,
+            "protocol": "inspector",
+            "sourceMaps": true,
+            "outFiles": [
+                "${workspaceFolder}/frontend/build/**/*.js"
+            ]
+        },
+        {
+            "name": "Frontend Debug (Browser)",
+            "type": "msedge",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/frontend/src",
+            "sourceMapPathOverrides": {
+                "/src/*": "${workspaceFolder}/frontend/src/*",
+                "/*": "*",
+                "/static/js/*": "${workspaceFolder}/frontend/src/*",
+                "/./~/*": "${workspaceFolder}/frontend/node_modules/*"
+            },
+            "userDataDir": false,
+            "runtimeExecutable": "stable"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "FullStack Debug (Smart)",
+            "configurations": [
+                "Backend Debug (Smart)",
+                "Frontend Debug (Container)"
+            ],
+            "stopAll": true,
+            "preLaunchTask": "start-development-environment"
+        },
+        {
+            "name": "FullStack Debug (Complete)",
+            "configurations": [
+                "Backend Debug (Smart)",
+                "Frontend Debug (Container)",
+                "Frontend Debug (Browser)"
+            ],
+            "stopAll": true,
             "preLaunchTask": "start-development-environment"
         }
     ]
