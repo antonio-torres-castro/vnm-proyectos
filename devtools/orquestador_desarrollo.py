@@ -178,8 +178,14 @@ class OrquestadorDesarrollo:
         """Verificar que el entorno esté correctamente configurado"""
         # Verificar Docker
         try:
-            subprocess.run(['docker', '--version'], check=True, capture_output=True)
-            subprocess.run(['docker-compose', '--version'], check=True, capture_output=True)
+            subprocess.run(
+                ['docker', '--version'], check=True, capture_output=True,
+                encoding='utf-8', errors='replace'
+            )
+            subprocess.run(
+                ['docker-compose', '--version'], check=True, capture_output=True,
+                encoding='utf-8', errors='replace'
+            )
         except (subprocess.CalledProcessError, FileNotFoundError, PermissionError) as e:
             self._print_error("Docker o docker-compose no están disponibles")
             self._print_error(f"Error: {e}")
@@ -209,7 +215,8 @@ class OrquestadorDesarrollo:
                 capture_output=capture_output,
                 text=True,
                 check=check,
-                cwd=self.proyecto_root
+                cwd=self.proyecto_root,
+                encoding='utf-8', errors='replace'
             )
             if self.verboso and result.stdout:
                 self.logger.debug(f"STDOUT: {result.stdout}")

@@ -101,7 +101,10 @@ class VNMAutomate:
             cmd.extend(args)
             
         try:
-            result = subprocess.run(cmd, cwd=self.root_dir)
+            result = subprocess.run(
+                cmd, cwd=self.root_dir,
+                encoding='utf-8', errors='replace'
+            )
             return result.returncode
         except Exception as e:
             self._print_error(f"Error ejecutando {script_path.name}: {e}")
