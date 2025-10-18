@@ -2,42 +2,50 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Frontend Debug (Chrome)",
+            "name": "Frontend Debug (Local)",
             "type": "chrome",
             "request": "launch",
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}/frontend/src",
             "sourceMapPathOverrides": {
-                "webpack:///./src/*": "${webRoot}/*",
                 "/./*": "${webRoot}/*",
-                "/src/*": "${webRoot}/*"
-            }
+                "/src/*": "${webRoot}/*",
+                "/./src/*": "${webRoot}/*"
+            },
+            "skipFiles": [
+                "<node_internals>/**",
+                "${workspaceFolder}/frontend/node_modules/**"
+            ]
         },
         {
-            "name": "Backend Debug",
+            "name": "Backend Debug (Local)", 
             "type": "python",
-            "request": "attach",
-            "connect": {
-                "host": "localhost",
-                "port": 5678
-            },
-            "pathMappings": [
-                {
-                    "localRoot": "${workspaceFolder}/backend",
-                    "remoteRoot": "/app"
-                }
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/app/main.py",
+            "module": "uvicorn",
+            "args": [
+                "app.main:app",
+                "--host", "0.0.0.0",
+                "--port", "8000",
+                "--reload"
             ],
-            "justMyCode": false
+            "cwd": "${workspaceFolder}/backend",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/backend"
+            },
+            "justMyCode": false,
+            "console": "integratedTerminal"
         }
     ],
     "compounds": [
         {
-            "name": "FullStack Debug",
+            "name": "FullStack Debug (Local)",
             "configurations": [
-                "Backend Debug",
-                "Frontend Debug (Chrome)"
+                "Backend Debug (Local)",
+                "Frontend Debug (Local)"
             ],
-            "stopAll": true
+            "stopAll": true,
+            "preLaunchTask": "Start Frontend Dev Server"
         }
     ]
 }

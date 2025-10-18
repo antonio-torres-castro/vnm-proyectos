@@ -2,10 +2,10 @@ import os
 
 
 class Settings:
-    # Database - Lee desde variables de entorno Docker
+    # Database - Para desarrollo local (solo DB en Docker)
     DATABASE_URL: str = os.getenv(
         "DATABASE_URL",
-        "postgresql://monitoreo_user:monitoreo_pass@postgres:5432/monitoreo_dev"
+        "postgresql://monitoreo_user:monitoreo_pass@localhost:5432/monitoreo_dev"
     )
 
     # JWT - Lee desde variables de entorno Docker
