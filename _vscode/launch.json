@@ -1,54 +1,17 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Backend Debug (Container)",
-            "type": "python",
-            "request": "attach",
-            "connect": {
-                "host": "localhost",
-                "port": 5678
-            },
-            "pathMappings": [
-                {
-                    "localRoot": "${workspaceFolder}/backend",
-                    "remoteRoot": "/app"
-                }
-            ],
-            "justMyCode": false,
-            "preLaunchTask": "start-development-environment"
-        },
-        {
-            "name": "Frontend Debug (Container)",
-            "type": "node",
-            "request": "attach",
-            "port": 24678,
-            "address": "localhost",
-            "localRoot": "${workspaceFolder}/frontend",
-            "remoteRoot": "/app",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "restart": true,
-            "protocol": "inspector",
-            "sourceMaps": true,
-            "outFiles": [
-                "${workspaceFolder}/frontend/src/**/*.js",
-                "${workspaceFolder}/frontend/src/**/*.ts",
-                "${workspaceFolder}/frontend/src/**/*.jsx",
-                "${workspaceFolder}/frontend/src/**/*.tsx"
-            ]
-        }
-    ],
-    "compounds": [
-        {
-            "name": "FullStack Debug (Complete)",
-            "configurations": [
-                "Backend Debug (Container)",
-                "Frontend Debug (Container)"
-            ],
-            "stopAll": true,
-            "preLaunchTask": "start-development-environment"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Frontend Debug (Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/frontend/src",
+      "sourceMapPathOverrides": {
+        "webpack:///./src/*": "${webRoot}/*",
+        "/./*": "${webRoot}/*",
+        "/src/*": "${webRoot}/*"
+      }
+    }
+  ]
 }

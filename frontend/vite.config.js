@@ -14,7 +14,7 @@ export default defineConfig({
     css: {
         devSourcemap: true
     },
-    // Configuración optimizada para debugging
+    // ConfiguraciÃ³n optimizada para debugging
     define: {
         __DEV__: true
     },

@@ -1,64 +1,14 @@
 {
-    "python.defaultInterpreterPath": "./.venv/Scripts/python.exe",
-    "python.terminal.activateEnvironment": true,
-    "python.analysis.autoImportCompletions": true,
-    "python.analysis.typeCheckingMode": "basic",
-    "files.exclude": {
-        "**/__pycache__": true,
-        "**/.pytest_cache": true,
-        "**/node_modules": true,
-        "**/.git": true,
-        "**/.DS_Store": true,
-        "**/Thumbs.db": true,
-        "**/.venv": false
-    },
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": "explicit"
-    },
-    "python.linting.enabled": true,
-    "python.linting.flake8Enabled": true,
-    "python.linting.pylintEnabled": false,
-    "python.formatting.provider": "black",
-    "python.defaultInterpreterPath.windows": "./.venv/Scripts/python.exe",
-    "python.defaultInterpreterPath.linux": "./.venv/bin/python",
-    "python.defaultInterpreterPath.osx": "./.venv/bin/python",
-    "eslint.workingDirectories": [
-        "frontend"
-    ],
-    "typescript.preferences.importModuleSpecifier": "relative",
-    "emmet.includeLanguages": {
-        "javascript": "javascriptreact"
-    },
-    "debug.allowBreakpointsEverywhere": true,
-    "debug.showInlineBreakpointCandidates": true,
-    "debug.showBreakpointsInOverviewRuler": true,
-    "terminal.integrated.defaultProfile.windows": "PowerShell",
-    "workbench.colorTheme": "Default Dark+",
-    "editor.minimap.enabled": true,
-    "editor.wordWrap": "on",
-    "editor.tabSize": 4,
-    "editor.insertSpaces": true,
-    "files.autoSave": "afterDelay",
-    "files.autoSaveDelay": 1000,
-    "[json]": {
-        "editor.defaultFormatter": "vscode.json-language-features"
-    },
-    "[jsonc]": {
-        "editor.defaultFormatter": "vscode.json-language-features"
-    },
-    "sqltools.connections": [
-        {
-            "name": "PostgreSQL Local",
-            "driver": "PostgreSQL",
-            "previewLimit": 50,
-            "server": "localhost",
-            "port": 5432,
-            "database": "monitoreo_dev",
-            "username": "monitoreo_user",
-            "password": "monitoreo_pass"
-        }
-    ],
-    "sqltools.useNodeRuntime": false,
-    "sqltools.format.language": "sql"
+  "python.defaultInterpreterPath": "./venv/Scripts/python.exe",
+  "python.terminal.activateEnvironment": true,
+  "files.encoding": "utf8",
+  "files.autoSave": "afterDelay",
+  "editor.formatOnSave": true,
+  "python.formatting.provider": "black",
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
+  "javascript.preferences.includePackageJsonAutoImports": "auto",
+  "debug.console.fontSize": 14,
+  "debug.console.fontFamily": "Consolas, 'Courier New', monospace"
 }

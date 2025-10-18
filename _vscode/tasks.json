@@ -1,258 +1,33 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "start-containers",
-            "type": "shell",
-            "command": "python",
-            "args": [
-                "docker_manager.py",
-                "start-debug"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "build",
-            "isBackground": true,
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": {
-                "pattern": {
-                    "regexp": "^(.*)$",
-                    "file": 1
-                },
-                "background": {
-                    "activeOnStart": true,
-                    "beginsPattern": "Iniciando containers",
-                    "endsPattern": "Containers iniciados correctamente"
-                }
-            }
-        },
-        {
-            "label": "start-containers-debug",
-            "type": "shell",
-            "command": "python",
-            "args": [
-                "docker_manager.py",
-                "start-debug"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "build",
-            "isBackground": true,
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            }
-        },
-        {
-            "label": "stop-containers",
-            "type": "shell",
-            "command": "python",
-            "args": [
-                "docker_manager.py",
-                "stop"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            }
-        },
-        {
-            "label": "start-frontend",
-            "type": "shell",
-            "command": "npm",
-            "args": [
-                "run",
-                "dev"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}/frontend"
-            },
-            "group": "build",
-            "isBackground": true,
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": {
-                "pattern": {
-                    "regexp": "^(.*)$",
-                    "file": 1
-                },
-                "background": {
-                    "activeOnStart": true,
-                    "beginsPattern": "VITE.*ready",
-                    "endsPattern": "Local:.*http://localhost:3000"
-                }
-            }
-        },
-        {
-            "label": "install-python-dependencies",
-            "type": "shell",
-            "command": ".venv/Scripts/python.exe",
-            "args": [
-                "-m",
-                "pip",
-                "install",
-                "-r",
-                "backend/requirements.txt"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "windows": {
-                "command": ".venv\\Scripts\\python.exe"
-            }
-        },
-        {
-            "label": "install-frontend-dependencies",
-            "type": "shell",
-            "command": "npm",
-            "args": [
-                "install"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}/frontend"
-            },
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            }
-        },
-        {
-            "label": "activate-venv",
-            "type": "shell",
-            "command": ".venv\\Scripts\\activate",
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": true,
-                "panel": "shared"
-            },
-            "windows": {
-                "command": ".venv\\Scripts\\activate.bat"
-            }
-        },
-        {
-            "label": "docker-status",
-            "type": "shell",
-            "command": "python",
-            "args": [
-                "docker_manager.py",
-                "status"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "test",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            }
-        },
-        {
-            "label": "run-diagnostics",
-            "type": "shell",
-            "command": ".venv\\Scripts\\python.exe",
-            "args": [
-                "automate/utilidades.py",
-                "--diagnostico"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "test",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "windows": {
-                "command": ".venv\\Scripts\\python.exe"
-            }
-        },
-        {
-            "label": "start-development-environment",
-            "type": "shell",
-            "command": "python",
-            "args": [
-                "automate/vnm_automate.py",
-                "dev-start"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "isBackground": true,
-            "problemMatcher": {
-                "pattern": {
-                    "regexp": "^(.*)$",
-                    "file": 1
-                },
-                "background": {
-                    "activeOnStart": true,
-                    "beginsPattern": "INICIANDO ENTORNO DE DESARROLLO",
-                    "endsPattern": "Entorno iniciado correctamente"
-                }
-            }
-        },
-        {
-            "label": "stop-development-environment",
-            "type": "shell",
-            "command": "python",
-            "args": [
-                "automate/vnm_automate.py",
-                "dev-stop"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            }
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Iniciar Frontend Debug",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["-f", "docker-compose.debug.yml", "up", "-d", "frontend"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Detener Frontend Debug",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["-f", "docker-compose.debug.yml", "down"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
 }

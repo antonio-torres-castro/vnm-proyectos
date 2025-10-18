@@ -1,58 +1,9 @@
 {
-    "recommendations": [
-        // DESARROLLO PYTHON
-        "ms-python.python",
-        "ms-python.debugpy",
-        "ms-python.black-formatter",
-        "ms-python.isort",
-        "ms-python.flake8",
-        "ms-python.pylance",
-        "ms-python.mypy-type-checker",
-        
-        // DESARROLLO JAVASCRIPT/TYPESCRIPT
-        "ms-vscode.vscode-typescript-next",
-        "ms-vscode.js-debug",
-        "esbenp.prettier-vscode",
-        "dbaeumer.vscode-eslint",
-        
-        // DESARROLLO REACT
-        "dsznajder.es7-react-js-snippets",
-        "burkeholland.simple-react-snippets",
-        "formulahendry.auto-rename-tag",
-        "christian-kohler.npm-intellisense",
-        "bradlc.vscode-tailwindcss",
-        
-        // BASE DE DATOS
-        "ckolkman.vscode-postgres",
-        "mtxr.sqltools",
-        "mtxr.sqltools-driver-pg",
-        
-        // DEVOPS
-        "ms-azuretools.vscode-docker",
-        "ms-vscode-remote.remote-containers",
-        
-        // HERRAMIENTAS WEB
-        "ms-edgedevtools.vscode-edge-devtools",
-        "ms-vscode.vscode-css-peek",
-        "zignd.html-css-class-completion",
-        
-        // PRODUCTIVIDAD
-        "visualstudioexptteam.vscodeintellicode",
-        "GitHub.copilot",
-        
-        // ARCHIVOS Y DOCUMENTACION
-        "ms-vscode.vscode-json",
-        "redhat.vscode-yaml",
-        "vscode-icons-team.vscode-icons",
-        "DavidAnson.vscode-markdownlint",
-        "yzhang.markdown-all-in-one",
-        "streetsidesoftware.code-spell-checker",
-        
-        // API Y TESTING
-        "rangav.vscode-thunder-client",
-        "humao.rest-client",
-        
-        // SISTEMA
-        "ms-vscode.PowerShell"
-    ]
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.black-formatter",
+    "ms-vscode.vscode-typescript-next",
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode"
+  ]
 }
