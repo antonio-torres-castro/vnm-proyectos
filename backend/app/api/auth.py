@@ -26,7 +26,7 @@ async def login(
     # Buscar usuario por email
     usuario = db.query(Usuario).filter(Usuario.email == form_data.username).first()
 
-    if not usuario or not verify_password(form_data.password, usuario.clave_hash):
+    if not usuario or not verify_password(form_data.password, str(usuario.clave_hash)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Credenciales incorrectas",
@@ -54,7 +54,7 @@ async def login_form(usuario_data: UsuarioLogin, db: Session = Depends(get_db)):
     # Versión alternativa que recibe JSON en lugar de form-data
     usuario = db.query(Usuario).filter(Usuario.email == usuario_data.email).first()
 
-    if not usuario or not verify_password(usuario_data.clave, usuario.clave_hash):
+    if not usuario or not verify_password(usuario_data.clave, str(usuario.clave_hash)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Credenciales incorrectas",

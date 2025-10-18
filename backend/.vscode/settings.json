@@ -1,7 +1,7 @@
 {
     // Python Interpreter
     "python.defaultInterpreterPath": "./venv/bin/python",
-    
+
     // Editor Settings
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
@@ -12,7 +12,7 @@
     "editor.insertSpaces": true,
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
-    
+
     // Python-specific Settings
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",
@@ -21,12 +21,12 @@
             "source.organizeImports": "explicit"
         }
     },
-    
+
     // Black Formatter Settings
     "black-formatter.args": [
         "--line-length=79"
     ],
-    
+
     // Linting Settings
     "python.linting.enabled": true,
     "python.linting.flake8Enabled": true,
@@ -40,14 +40,14 @@
         "--follow-imports=silent",
         "--show-column-numbers"
     ],
-    
+
     // Testing Settings
     "python.testing.pytestEnabled": true,
     "python.testing.pytestArgs": [
         "tests"
     ],
     "python.testing.unittestEnabled": false,
-    
+
     // Analysis Settings
     "python.analysis.typeCheckingMode": "basic"
 }
