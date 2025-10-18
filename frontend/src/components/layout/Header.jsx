@@ -2,50 +2,38 @@
  * Componente Header
  * Barra de navegación principal con información del usuario y logout
  */
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
+import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { 
-    isAuthenticated, 
-    user, 
-    logout, 
-    isAdmin, 
-    getUserRoles 
-  } = useAuth();
+  const { isAuthenticated, user, logout, isAdmin, getUserRoles } = useAuth();
 
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // No mostrar header en la página de login
-  if (!isAuthenticated || location.pathname === '/login') {
+  if (!isAuthenticated || location.pathname === "/login") {
     return null;
   }
 
   // Manejar logout
   const handleLogout = async () => {
     // Confirmación ANTES de mostrar loading state
-    if (!window.confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+    if (!window.confirm("¿Estás seguro de que quieres cerrar sesión?")) {
       return;
     }
 
     setIsLoggingOut(true);
     try {
-      // Ahora logout no maneja confirmación
-      const result = await logout();
-      
-      if (result.success) {
-        navigate('/login', { replace: true });
-      } else {
-        console.error('Error en logout:', result.message);
-        alert('Error al cerrar sesión: ' + result.message);
-      }
+      // logout del contexto no retorna nada, solo ejecuta
+      await logout();
+      navigate("/login", { replace: true });
     } catch (error) {
-      console.error('Error en logout:', error);
-      alert('Error inesperado al cerrar sesión');
+      console.error("Error en logout:", error);
+      alert("Error inesperado al cerrar sesión");
     } finally {
       setIsLoggingOut(false);
       setShowUserMenu(false);
@@ -62,19 +50,19 @@ const Header = () => {
   const getUserInitials = () => {
     if (user?.nombre_completo) {
       return user.nombre_completo
-        .split(' ')
-        .map(word => word.charAt(0))
+        .split(" ")
+        .map((word) => word.charAt(0))
         .slice(0, 2)
-        .join('')
+        .join("")
         .toUpperCase();
     }
-    return user?.username?.charAt(0).toUpperCase() || 'U';
+    return user?.username?.charAt(0).toUpperCase() || "U";
   };
 
   // Formatear roles para mostrar
   const formatRoles = () => {
     const roles = getUserRoles();
-    if (roles.length === 0) return 'Sin roles asignados';
+    if (roles.length === 0) return "Sin roles asignados";
     if (roles.length === 1) return roles[0].nombre;
     return `${roles[0].nombre} (+${roles.length - 1})`;
   };
@@ -83,7 +71,10 @@ const Header = () => {
     <header className="header">
       <div className="header-container">
         {/* Logo y título */}
-        <div className="header-brand" onClick={() => handleNavigation('/dashboard')}>
+        <div
+          className="header-brand"
+          onClick={() => handleNavigation("/dashboard")}
+        >
           <div className="brand-icon">🚀</div>
           <div className="brand-text">
             <h1>VNM Monitor</h1>
@@ -94,31 +85,39 @@ const Header = () => {
         {/* Navegación principal */}
         <nav className="header-nav">
           <button
-            className={`nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}
-            onClick={() => handleNavigation('/dashboard')}
+            className={`nav-item ${
+              location.pathname === "/dashboard" ? "active" : ""
+            }`}
+            onClick={() => handleNavigation("/dashboard")}
           >
             📊 Dashboard
           </button>
-          
+
           {isAdmin() && (
             <button
-              className={`nav-item ${location.pathname.startsWith('/admin') ? 'active' : ''}`}
-              onClick={() => handleNavigation('/admin')}
+              className={`nav-item ${
+                location.pathname.startsWith("/admin") ? "active" : ""
+              }`}
+              onClick={() => handleNavigation("/admin")}
             >
               ⚙️ Administración
             </button>
           )}
-          
+
           <button
-            className={`nav-item ${location.pathname === '/monitoring' ? 'active' : ''}`}
-            onClick={() => handleNavigation('/monitoring')}
+            className={`nav-item ${
+              location.pathname === "/monitoring" ? "active" : ""
+            }`}
+            onClick={() => handleNavigation("/monitoring")}
           >
             📡 Monitoreo
           </button>
-          
+
           <button
-            className={`nav-item ${location.pathname === '/reports' ? 'active' : ''}`}
-            onClick={() => handleNavigation('/reports')}
+            className={`nav-item ${
+              location.pathname === "/reports" ? "active" : ""
+            }`}
+            onClick={() => handleNavigation("/reports")}
           >
             📈 Reportes
           </button>
@@ -128,11 +127,9 @@ const Header = () => {
         <div className="header-user">
           <div className="user-info">
             <span className="user-name">
-              {user?.nombre_completo || user?.username || 'Usuario'}
+              {user?.nombre_completo || user?.username || "Usuario"}
             </span>
-            <span className="user-role">
-              {formatRoles()}
-            </span>
+            <span className="user-role">{formatRoles()}</span>
           </div>
 
           {/* Avatar con menú desplegable */}
@@ -149,12 +146,10 @@ const Header = () => {
             {showUserMenu && (
               <div className="user-dropdown">
                 <div className="dropdown-header">
-                  <div className="user-avatar-large">
-                    {getUserInitials()}
-                  </div>
+                  <div className="user-avatar-large">{getUserInitials()}</div>
                   <div className="user-details">
                     <strong>{user?.nombre_completo || user?.username}</strong>
-                    <span>{user?.email || 'Sin email'}</span>
+                    <span>{user?.email || "Sin email"}</span>
                     <small>{formatRoles()}</small>
                   </div>
                 </div>
@@ -164,14 +159,14 @@ const Header = () => {
                 <div className="dropdown-menu">
                   <button
                     className="dropdown-item"
-                    onClick={() => handleNavigation('/profile')}
+                    onClick={() => handleNavigation("/profile")}
                   >
                     👤 Mi Perfil
                   </button>
-                  
+
                   <button
                     className="dropdown-item"
-                    onClick={() => handleNavigation('/settings')}
+                    onClick={() => handleNavigation("/settings")}
                   >
                     ⚙️ Configuración
                   </button>
@@ -181,7 +176,7 @@ const Header = () => {
                       <div className="dropdown-divider"></div>
                       <button
                         className="dropdown-item"
-                        onClick={() => handleNavigation('/admin/users')}
+                        onClick={() => handleNavigation("/admin/users")}
                       >
                         👥 Gestión de Usuarios
                       </button>
@@ -189,10 +184,12 @@ const Header = () => {
                   )}
 
                   <div className="dropdown-divider"></div>
-                  
+
                   <button
-                    className={`dropdown-item logout ${isLoggingOut ? 'loading' : ''}`}
-                    onClick={handleLogout}
+                    className={`dropdown-item logout ${
+                      isLoggingOut ? "loading" : ""
+                    }`}
+                    onClick={() => handleLogout()}
                     disabled={isLoggingOut}
                   >
                     {isLoggingOut ? (
@@ -201,9 +198,7 @@ const Header = () => {
                         Cerrando sesión...
                       </>
                     ) : (
-                      <>
-                        🚪 Cerrar Sesión
-                      </>
+                      <>🚪 Cerrar Sesión</>
                     )}
                   </button>
                 </div>
@@ -215,7 +210,7 @@ const Header = () => {
 
       {/* Overlay para cerrar el menú */}
       {showUserMenu && (
-        <div 
+        <div
           className="dropdown-overlay"
           onClick={() => setShowUserMenu(false)}
         ></div>

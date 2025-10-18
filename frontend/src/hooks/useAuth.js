@@ -107,23 +107,6 @@ export const useAuth = () => {
     }
   };
 
-  // Logout sin confirmación (la confirmación se maneja en el componente)
-  const logoutWithoutConfirmation = async () => {
-    try {
-      await logout();
-      return { 
-        success: true, 
-        message: 'Sesión cerrada correctamente' 
-      };
-    } catch (error) {
-      console.error('Error en logout:', error);
-      return { 
-        success: false, 
-        message: 'Error al cerrar sesión' 
-      };
-    }
-  };
-
   return {
     // Estado básico
     isAuthenticated,
@@ -135,9 +118,9 @@ export const useAuth = () => {
     status,
     authStatus,
 
-    // Funciones básicas
+    // Funciones básicas - logout directo del contexto
     login: loginWithFeedback,
-    logout: logoutWithoutConfirmation,
+    logout: logout,
     updateUser,
     clearError,
     setError,
