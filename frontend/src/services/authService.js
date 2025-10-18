@@ -126,17 +126,18 @@ export const login = async (credentials) => {
  */
 export const logout = async () => {
   try {
+    console.log('🔍 SERVICE: logout iniciado');
     // Intentar hacer logout en el servidor
     await apiClient.post('/auth/logout');
     
     // Limpiar datos locales
     clearAuthData();
     
-    console.log('Logout exitoso');
+    console.log('🔍 SERVICE: Logout exitoso');
     return { success: true, message: 'Sesión cerrada correctamente' };
     
   } catch (error) {
-    console.error('Error en logout:', error);
+    console.error('🔍 SERVICE: Error en logout:', error);
     
     // Aunque falle el logout en el servidor, limpiar datos locales
     clearAuthData();

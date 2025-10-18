@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./database/pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
       - ./database/init-data:/docker-entrypoint-initdb.d
       - ./database/backups:/backups
       - ./database/scripts:/scripts
@@ -42,52 +42,12 @@ services:
       - monitoreo-network
     restart: unless-stopped
 
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
-    container_name: monitoreo_backend
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./backend:/app
-      - backend-python-packages:/usr/local/lib/python3.11/site-packages
-    environment:
-      DATABASE_URL: postgresql://monitoreo_user:monitoreo_pass@postgres:5432/monitoreo_dev
-      JWT_SECRET_KEY: "dev_secret_key_change_in_production"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    command: python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-    networks:
-      - monitoreo-network
-    restart: always
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    container_name: monitoreo_frontend
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    depends_on:
-      backend:
-        condition: service_started
-    networks:
-      - monitoreo-network
-    restart: always
-
 networks:
   monitoreo-network:
     driver: bridge
 
 volumes:
   postgres_data:
-    driver: local
-  backend-python-packages:
     driver: local
   pgadmin_data:
     driver: local

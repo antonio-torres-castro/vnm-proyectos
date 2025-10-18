@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Script simplificado para manejar containers Docker con persistencia
-Solo maneja: levantar/bajar containers + base de datos PostgreSQL
+Script simplificado para manejar containers Docker
+Solo maneja: PostgreSQL + pgAdmin
+Frontend y Backend corren localmente
 """
 import os
 import subprocess
@@ -13,7 +14,6 @@ class DockerManager:
     def __init__(self):
         self.project_root = os.path.dirname(os.path.abspath(__file__))
         self.compose_file = "docker-compose.yml"
-        self.compose_debug_file = "docker-compose.debug.yml"
 
     def run_command(self, command, show_output=True):
         """Ejecuta comando y retorna el resultado"""
@@ -47,18 +47,15 @@ class DockerManager:
         print("Docker disponible")
         return True
 
-    def start_containers(self, debug_mode=False):
-        """Inicia los containers"""
+    def start_containers(self):
+        """Inicia los containers de base de datos"""
         if not self.check_docker():
             return False
 
-        compose_file = self.compose_debug_file if debug_mode else self.compose_file
-        mode_text = "debug" if debug_mode else "produccion"
-
-        print(f"Iniciando containers en modo {mode_text}...")
+        print("Iniciando containers de base de datos...")
         print("=" * 50)
 
-        success, _ = self.run_command(f"docker-compose -f {compose_file} up -d")
+        success, _ = self.run_command(f"docker-compose -f {self.compose_file} up -d")
 
         if success:
             print("Containers iniciados correctamente")
@@ -69,12 +66,10 @@ class DockerManager:
 
         return success
 
-    def stop_containers(self, debug_mode=False):
-        """Detiene los containers"""
-        compose_file = self.compose_debug_file if debug_mode else self.compose_file
-
+    def stop_containers(self):
+        """Detiene los containers de base de datos"""
         print("Deteniendo containers...")
-        success, _ = self.run_command(f"docker-compose -f {compose_file} down")
+        success, _ = self.run_command(f"docker-compose -f {self.compose_file} down")
 
         if success:
             print("Containers detenidos correctamente")
@@ -83,12 +78,12 @@ class DockerManager:
 
         return success
 
-    def restart_containers(self, debug_mode=False):
-        """Reinicia los containers"""
+    def restart_containers(self):
+        """Reinicia los containers de base de datos"""
         print("Reiniciando containers...")
-        self.stop_containers(debug_mode)
+        self.stop_containers()
         time.sleep(2)
-        return self.start_containers(debug_mode)
+        return self.start_containers()
 
     def show_status(self):
         """Muestra estado de los containers"""
@@ -106,12 +101,9 @@ class DockerManager:
             self.run_command("docker-compose logs -f")
 
     def show_urls(self):
-        """Muestra URLs de acceso"""
+        """Muestra URLs de acceso a la base de datos"""
         print("\nServicios disponibles:")
         print("-" * 30)
-        print(" Frontend: http://localhost:3000")
-        print(" Backend API: http://localhost:8000")
-        print(" Backend Docs: http://localhost:8000/docs")
         print(" pgAdmin: http://localhost:8081")
         print("  - Email: admin@monitoreo.cl")
         print("  - Password: admin123")
@@ -119,6 +111,9 @@ class DockerManager:
         print("  - DB: monitoreo_dev")
         print("  - User: monitoreo_user")
         print("  - Password: monitoreo_pass")
+        print("\nPara desarrollo:")
+        print(" Frontend: npm run dev (puerto 3000)")
+        print(" Backend: uvicorn app.main:app --reload (puerto 8000)")
 
     def clean_containers(self):
         """Limpia containers, redes e imagenes no utilizadas"""
@@ -134,12 +129,9 @@ def main():
     if len(sys.argv) < 2:
         print("Uso: python docker_manager.py [comando]")
         print("\nComandos disponibles:")
-        print("  start          - Iniciar containers")
-        print("  start-debug    - Iniciar containers en modo debug")
+        print("  start          - Iniciar containers de base de datos")
         print("  stop           - Detener containers")
-        print("  stop-debug     - Detener containers debug")
         print("  restart        - Reiniciar containers")
-        print("  restart-debug  - Reiniciar containers debug")
         print("  status         - Ver estado de containers")
         print("  logs [servicio]- Ver logs (opcional: servicio especifico)")
         print("  urls           - Mostrar URLs de acceso")
@@ -149,17 +141,11 @@ def main():
     command = sys.argv[1].lower()
 
     if command == "start":
-        manager.start_containers(debug_mode=False)
-    elif command == "start-debug":
-        manager.start_containers(debug_mode=True)
+        manager.start_containers()
     elif command == "stop":
-        manager.stop_containers(debug_mode=False)
-    elif command == "stop-debug":
-        manager.stop_containers(debug_mode=True)
+        manager.stop_containers()
     elif command == "restart":
-        manager.restart_containers(debug_mode=False)
-    elif command == "restart-debug":
-        manager.restart_containers(debug_mode=True)
+        manager.restart_containers()
     elif command == "status":
         manager.show_status()
     elif command == "logs":

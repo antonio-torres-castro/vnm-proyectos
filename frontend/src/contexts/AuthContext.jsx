@@ -190,13 +190,17 @@ export const AuthProvider = ({ children }) => {
    * Función de logout
    */
   const logout = useCallback(async () => {
+    console.log('🔍 CONTEXT: logout iniciado');
     dispatch({ type: AUTH_ACTIONS.LOADING });
 
     try {
+      console.log('🔍 CONTEXT: Llamando apiLogout...');
       await apiLogout();
+      console.log('🔍 CONTEXT: apiLogout completado');
     } catch (error) {
-      console.error('Error durante logout:', error);
+      console.error('🔍 CONTEXT: Error en apiLogout:', error);
     } finally {
+      console.log('🔍 CONTEXT: Limpiando datos y despachando LOGOUT');
       clearAuthData();
       dispatch({ type: AUTH_ACTIONS.LOGOUT });
     }
