@@ -27,15 +27,15 @@ const Header = () => {
 
   // Manejar logout
   const handleLogout = async () => {
+    // Confirmación ANTES de mostrar loading state
+    if (!window.confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+      return;
+    }
+
     setIsLoggingOut(true);
     try {
-      // El hook useAuth ya maneja la confirmación
-      const result = await logout(true); // true para mostrar confirmación
-      
-      if (result.cancelled) {
-        setIsLoggingOut(false);
-        return;
-      }
+      // Ahora logout no maneja confirmación
+      const result = await logout();
       
       if (result.success) {
         navigate('/login', { replace: true });

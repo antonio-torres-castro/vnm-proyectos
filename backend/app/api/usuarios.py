@@ -39,7 +39,7 @@ async def crear_usuario_administrador(
     if admin_existente:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Ya existe un usuario administrador: {admin_existente.email}",
+            detail=f"Ya existe un usuario administrador: {admin_existente.email}"
         )
 
     # Verificar si ya existe el email específico
@@ -49,7 +49,7 @@ async def crear_usuario_administrador(
     if email_existente:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="El email admin@monitoreo.cl ya existe en el sistema",
+            detail="El email admin@monitoreo.cl ya existe en el sistema"
         )
 
     # Datos del administrador inicial
@@ -78,7 +78,7 @@ async def crear_usuario_administrador(
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Error de validación: {str(e)}",
+            detail=f"Error de validación: {str(e)}"
         )
     except Exception as e:
         # Capturar errores de base de datos como duplicate key
@@ -86,18 +86,18 @@ async def crear_usuario_administrador(
         if "duplicate key" in error_msg or "already exists" in error_msg:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail="Error de secuencia PostgreSQL. Ejecuta: python reparar_secuencia_usuario.py",
+                detail="Error de secuencia PostgreSQL. Ejecuta: python reparar_secuencia_usuario.py"
             )
         else:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error creando usuario administrador: {error_msg}",
+                detail=f"Error creando usuario administrador: {error_msg}"
             )
 
 
 def get_client_info(request: Request) -> tuple[str, str]:
     """Extraer información del cliente para auditoría"""
-    ip_address = request.client.host
+    ip_address = request.client.host if request.client else "unknown"
     user_agent = request.headers.get("user-agent", "")
     return ip_address, user_agent
 

@@ -107,15 +107,8 @@ export const useAuth = () => {
     }
   };
 
-  // Logout con confirmación
-  const logoutWithConfirmation = async (showConfirm = true) => {
-    if (showConfirm) {
-      const confirmed = window.confirm('¿Estás seguro de que quieres cerrar sesión?');
-      if (!confirmed) {
-        return { cancelled: true };
-      }
-    }
-
+  // Logout sin confirmación (la confirmación se maneja en el componente)
+  const logoutWithoutConfirmation = async () => {
     try {
       await logout();
       return { 
@@ -144,7 +137,7 @@ export const useAuth = () => {
 
     // Funciones básicas
     login: loginWithFeedback,
-    logout: logoutWithConfirmation,
+    logout: logoutWithoutConfirmation,
     updateUser,
     clearError,
     setError,
