@@ -1,29 +1,28 @@
-# Requirements específicos para entorno de desarrollo local
-# Solo incluye las dependencias necesarias para Pylance/VS Code
-# Las dependencias completas están en requirements.txt para Docker
+# ===============================================
+# REQUIREMENTS PARA ENTORNO DE DESARROLLO (Python 3.13+)
+# ===============================================
 
-# FastAPI core (para análisis de código)
-fastapi==0.104.1
+# Core framework
+fastapi==0.115.0          # compatible con Pydantic 2.12 y Starlette 0.38+
+sqlalchemy==2.0.36        # última versión estable compatible con FastAPI
 
-# SQLAlchemy (para resolver imports)
-sqlalchemy==2.0.23
-
-# Authentication & Security (para análisis de código)
+# Seguridad y autenticación
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-bcrypt==4.0.1
+bcrypt==4.2.0             # soporte completo Python 3.13
 
-# Validation & Models (para análisis de código)
-pydantic[email]==2.5.0
-email-validator==2.0.0
+# Modelado y validación
+pydantic[email]==2.12.0   # soporta Python 3.13
+email-validator==2.2.0
 
-# Utilities (para análisis de código)
-python-dotenv==1.0.0
-python-multipart==0.0.6
+# Utilidades varias
+python-dotenv==1.0.1
+python-multipart==0.0.9
+debugpy==1.8.6
 
-# Development
-debugpy==1.8.0
-
-# NOTA: psycopg2 omitido intencionalmente
-# Causa problemas de compilacion en Windows pero no es necesario
-# para el analisis de codigo de VS Code/Pylance
+# ===============================================
+# Herramientas necesarias para compilar extensiones Rust
+# (se instalan ANTES que pydantic-core si no hay wheel)
+# ===============================================
+setuptools-rust>=1.10.0
+maturin>=1.7.0

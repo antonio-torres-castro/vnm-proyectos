@@ -1,6 +1,6 @@
 # FastAPI core - Versiones compatibles actualizadas
 fastapi==0.115.4
-uvicorn[standard]==0.32.0
+uvicorn[standard]==0.38.0
 
 # Database
 sqlalchemy==2.0.23
