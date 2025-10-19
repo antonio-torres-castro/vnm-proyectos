@@ -15,13 +15,13 @@
             "skipFiles": [
                 "<node_internals>/**",
                 "${workspaceFolder}/frontend/node_modules/**"
-            ]
+            ],
+            "preLaunchTask": "Start Frontend Dev Server"
         },
         {
             "name": "Backend Debug (Local)", 
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/backend/app/main.py",
             "module": "uvicorn",
             "args": [
                 "app.main:app",
@@ -46,8 +46,7 @@
                 "Backend Debug (Local)",
                 "Frontend Debug (Local)"
             ],
-            "stopAll": true,
-            "preLaunchTask": "Start Frontend Dev Server"
+            "stopAll": true
         }
     ]
 }
