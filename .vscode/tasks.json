@@ -112,6 +112,39 @@
         "panel": "shared"
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Start FullStack Dev Servers",
+      "dependsOrder": "parallel",
+      "dependsOn": [
+        "Start Backend Dev Server (Root .venv)",
+        "Start Frontend Dev Server"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Backend Dev Server (Root .venv)",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\activate && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload",
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "isBackground": true,
+      "problemMatcher": []
     }
   ]
 }
