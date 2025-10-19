@@ -132,7 +132,7 @@
     {
       "label": "Start Backend Dev Server (Root .venv)",
       "type": "shell",
-      "command": "${workspaceFolder}\\.venv\\Scripts\\activate && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload",
+      "command": "& '${workspaceFolder}\\.venv\\Scripts\\Activate.ps1'; python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload",
       "options": {
         "cwd": "${workspaceFolder}/backend"
       },
