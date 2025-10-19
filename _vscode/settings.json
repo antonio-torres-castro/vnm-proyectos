@@ -8,10 +8,32 @@
   "python.formatting.provider": "black",
   "python.linting.enabled": true,
   "python.linting.pylintEnabled": true,
+  "python.linting.flake8Enabled": true,
+  "python.linting.mypyEnabled": true,
   "typescript.preferences.includePackageJsonAutoImports": "auto",
   "javascript.preferences.includePackageJsonAutoImports": "auto",
   "debug.console.fontSize": 14,
   "debug.console.fontFamily": "Consolas, 'Courier New', monospace",
   "terminal.integrated.cwd": "${workspaceFolder}",
-  "python.envFile": "${workspaceFolder}/backend/.env"
+  "python.envFile": "${workspaceFolder}/backend/.env",
+  "eslint.workingDirectories": ["frontend"],
+  "prettier.configPath": "./frontend/.prettierrc",
+  "tailwindCSS.includeLanguages": {
+    "javascript": "javascript",
+    "html": "html"
+  },
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "sqltools.connections": [
+    {
+      "name": "VNM PostgreSQL",
+      "driver": "PostgreSQL",
+      "server": "localhost",
+      "port": 5432,
+      "database": "vnm",
+      "username": "user",
+      "password": "password"
+    }
+  ]
 }
