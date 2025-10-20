@@ -3,7 +3,7 @@
     "configurations": [
         {
             "name": "Backend Debug (Local)", 
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "uvicorn",
             "args": [
