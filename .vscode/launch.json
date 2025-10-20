@@ -22,7 +22,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "FullStack Debug (Local)",
+            "name": "Frontend Debug (Local)",
             "type": "chrome",
             "request": "launch",
             "url": "http://localhost:3000",
@@ -36,7 +36,17 @@
                 "<node_internals>/**",
                 "${workspaceFolder}/frontend/node_modules/**"
             ],
-            "preLaunchTask": "Start FullStack Dev Servers"
+            "preLaunchTask": "Start Frontend Dev Server"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "FullStack Debug (Local)",
+            "configurations": [
+                "Backend Debug (Local)",
+                "Frontend Debug (Local)"
+            ],
+            "stopAll": true
         }
     ]
 }
