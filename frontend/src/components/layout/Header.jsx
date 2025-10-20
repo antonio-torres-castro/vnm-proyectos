@@ -27,27 +27,20 @@ const Header = () => {
 
   // Manejar logout
   const handleLogout = async () => {
-    console.log('🔍 LOGOUT: handleLogout iniciado');
-    
     // Confirmación ANTES de mostrar loading state
+    debugger;
     if (!window.confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-      console.log('🔍 LOGOUT: Usuario canceló');
       return;
     }
 
-    console.log('🔍 LOGOUT: Usuario confirmó - iniciando proceso');
     setIsLoggingOut(true);
     
     try {
-      console.log('🔍 LOGOUT: Llamando logout()...');
       await logout();
-      console.log('🔍 LOGOUT: logout() completado - navegando');
       navigate('/login', { replace: true });
     } catch (error) {
-      console.error('🔍 LOGOUT: Error:', error);
       alert('Error inesperado al cerrar sesión');
     } finally {
-      console.log('🔍 LOGOUT: Limpiando estado');
       setIsLoggingOut(false);
       setShowUserMenu(false);
     }
@@ -195,17 +188,15 @@ const Header = () => {
                   <button
                     className="dropdown-item"
                     onClick={() => {
-                      console.log('🧪 Botón de prueba clickeado');
+                      debugger;
                       alert('Botón de prueba funciona!');
-                    }}
-                  >
+                    }}>
                     🧪 Prueba Click
                   </button>
                   
                   <button
                     className={`dropdown-item logout ${isLoggingOut ? 'loading' : ''}`}
                     onClick={() => {
-                      console.log('🔍 onClick del botón logout ejecutado');
                       handleLogout();
                     }}
                     disabled={isLoggingOut}
