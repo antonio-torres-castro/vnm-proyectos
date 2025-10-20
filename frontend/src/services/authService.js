@@ -52,18 +52,18 @@ apiClient.interceptors.response.use(
 /**
  * Realiza el login del usuario
  * @param {Object} credentials - Credenciales del usuario
- * @param {string} credentials.username - Nombre de usuario
- * @param {string} credentials.password - Contraseña
+ * @param {string} credentials.email - Email del usuario
+ * @param {string} credentials.clave - Contraseña
  * @returns {Promise<Object>} Datos del usuario y token
  */
 export const login = async (credentials) => {
   try {
-    console.log('Intentando login para:', credentials.username);
+    console.log('Intentando login para:', credentials.email);
     
-    // Preparar datos en formato JSON para el endpoint login-form
+    // Los datos ya vienen en el formato correcto del frontend
     const loginData = {
-      email: credentials.username, // El backend espera 'email', no 'username'
-      clave: credentials.password  // El backend espera 'clave', no 'password'
+      email: credentials.email,
+      clave: credentials.clave
     };
 
     const response = await apiClient.post('/auth/login-form', loginData);
@@ -77,13 +77,17 @@ export const login = async (credentials) => {
     // Guardar token
     saveToken(access_token);
     
-    console.log('Login exitoso para:', credentials.username);
+    console.log('Login exitoso para:', credentials.email);
+    
+    // Obtener inmediatamente los datos del usuario
+    const authStatus = await checkAuthStatus();
+    console.log('Usuario obtenido después del login:', authStatus.user);
     
     return {
       success: true,
       token: access_token,
       tokenType: token_type,
-      user: null, // El usuario se obtendrá después con checkAuthStatus
+      user: authStatus.user, // Retornar los datos reales del usuario
       message: 'Login exitoso'
     };
 

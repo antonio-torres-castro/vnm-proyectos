@@ -1,6 +1,6 @@
 # backend/app/schemas/usuario.py
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, EmailStr, validator
 
@@ -81,3 +81,37 @@ class UsuarioListResponse(BaseModel):
     pagina: int
     por_pagina: int
     total_paginas: int
+
+
+# Schema completo con rol y permisos para respuesta de autenticación
+class PermisoCompleto(BaseModel):
+    id: int
+    nombre: str
+    descripcion: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+class RolPermiso(BaseModel):
+    permiso: PermisoCompleto
+
+    class Config:
+        from_attributes = True
+
+
+class RolCompleto(BaseModel):
+    id: int
+    nombre: str
+    descripcion: Optional[str] = None
+    permisos: List[RolPermiso] = []
+
+    class Config:
+        from_attributes = True
+
+
+class UsuarioCompleto(UsuarioResponse):
+    rol: Optional[RolCompleto] = None
+
+    class Config:
+        from_attributes = True

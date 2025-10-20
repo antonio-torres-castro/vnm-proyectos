@@ -78,25 +78,23 @@ const Header = () => {
   const getUserInitials = () => {
     if (!user) return 'U';
     
-    if (user?.nombre_completo) {
-      return user.nombre_completo
+    if (user?.nombre_usuario) {
+      return user.nombre_usuario
         .split(' ')
         .map(word => word.charAt(0))
         .slice(0, 2)
         .join('')
         .toUpperCase();
     }
-    return user?.username?.charAt(0).toUpperCase() || 'U';
+    return 'U';
   };
 
   // Formatear roles para mostrar
   const formatRoles = () => {
     if (!user) return 'Cargando...';
     
-    const roles = getUserRoles();
-    if (roles.length === 0) return 'Sin roles asignados';
-    if (roles.length === 1) return roles[0].nombre;
-    return `${roles[0].nombre} (+${roles.length - 1})`;
+    if (!user.rol) return 'Sin rol asignado';
+    return user.rol.nombre;
   };
 
   return (
@@ -148,7 +146,7 @@ const Header = () => {
         <div className="header-user">
           <div className="user-info">
             <span className="user-name">
-              {user?.nombre_completo || user?.username || 'Cargando...'}
+              {user?.nombre_usuario || 'Cargando...'}
             </span>
             <span className="user-role">
               {formatRoles()}
@@ -176,7 +174,7 @@ const Header = () => {
                     {getUserInitials()}
                   </div>
                   <div className="user-details">
-                    <strong>{user?.nombre_completo || user?.username || 'Usuario'}</strong>
+                    <strong>{user?.nombre_usuario || 'Usuario'}</strong>
                     <span>{user?.email || 'Sin email'}</span>
                     <small>{formatRoles()}</small>
                   </div>

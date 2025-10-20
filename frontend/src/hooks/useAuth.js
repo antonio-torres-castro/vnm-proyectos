@@ -33,13 +33,13 @@ export const useAuth = () => {
 
   // Funciones de utilidad
   const hasRole = (roleName) => {
-    if (!isAuthenticated || !user?.roles) return false;
-    return user.roles.some(role => role.nombre === roleName);
+    if (!isAuthenticated || !user?.rol) return false;
+    return user.rol.nombre === roleName;
   };
 
   const hasPermission = (permissionName) => {
-    if (!isAuthenticated || !user?.permisos) return false;
-    return user.permisos.some(permiso => permiso.nombre === permissionName);
+    if (!isAuthenticated || !user?.rol?.permisos) return false;
+    return user.rol.permisos.some(rolPermiso => rolPermiso.permiso.nombre === permissionName);
   };
 
   const hasAnyRole = (roleNames) => {
@@ -53,11 +53,12 @@ export const useAuth = () => {
   };
 
   const getUserRoles = () => {
-    return user?.roles || [];
+    return user?.rol ? [user.rol] : [];
   };
 
   const getUserPermissions = () => {
-    return user?.permisos || [];
+    if (!user?.rol?.permisos) return [];
+    return user.rol.permisos.map(rolPermiso => rolPermiso.permiso);
   };
 
   const isAdmin = () => {
@@ -136,8 +137,8 @@ export const useAuth = () => {
     canAccessRoute,
 
     // Información del usuario
-    username: user?.username || '',
-    fullName: user?.nombre_completo || user?.username || '',
+    username: user?.nombre_usuario || '',
+    fullName: user?.nombre_usuario || '',
     email: user?.email || '',
     roles: getUserRoles(),
     permissions: getUserPermissions(),

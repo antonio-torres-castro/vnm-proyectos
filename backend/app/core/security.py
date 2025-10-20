@@ -8,7 +8,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer()
@@ -54,6 +54,8 @@ def get_current_user(
 ):
     """Obtener usuario actual desde el token JWT"""
     from app.models.usuario import Usuario
+    from app.models.rol import Rol
+    from app.models.rol_permiso import RolPermiso
 
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -73,7 +75,14 @@ def get_current_user(
     except JWTError:
         raise credentials_exception
 
-    user = db.query(Usuario).filter(Usuario.email == email).first()
+    user = (
+        db.query(Usuario)
+        .options(
+            joinedload(Usuario.rol).joinedload(Rol.permisos).joinedload(RolPermiso.permiso)
+        )
+        .filter(Usuario.email == email)
+        .first()
+    )
     if user is None:
         raise credentials_exception
 

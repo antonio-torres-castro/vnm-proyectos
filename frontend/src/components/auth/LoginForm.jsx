@@ -13,7 +13,7 @@ const LoginForm = () => {
 
   // Estado del formulario
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: ''
   });
 
@@ -61,10 +61,10 @@ const LoginForm = () => {
   const validateForm = () => {
     const errors = {};
 
-    if (!formData.username.trim()) {
-      errors.username = 'El nombre de usuario es requerido';
-    } else if (formData.username.length < 3) {
-      errors.username = 'El nombre de usuario debe tener al menos 3 caracteres';
+    if (!formData.email.trim()) {
+      errors.email = 'El email es requerido';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = 'Formato de email inválido';
     }
 
     if (!formData.password) {
@@ -88,8 +88,8 @@ const LoginForm = () => {
 
     try {
       const result = await login({
-        username: formData.username.trim(),
-        password: formData.password
+        email: formData.email.trim(),
+        clave: formData.password
       });
 
       if (result.success) {
@@ -135,26 +135,26 @@ const LoginForm = () => {
         )}
 
         <form onSubmit={handleSubmit} className="login-form">
-          {/* Campo Username */}
+          {/* Campo Email */}
           <div className="form-group">
-            <label htmlFor="username">
-              👤 Usuario
+            <label htmlFor="email">
+              ✉️ Email
             </label>
             <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
               onChange={handleInputChange}
               onKeyPress={handleKeyPress}
-              className={`form-input ${formErrors.username ? 'error' : ''}`}
-              placeholder="Ingresa tu nombre de usuario"
+              className={`form-input ${formErrors.email ? 'error' : ''}`}
+              placeholder="Ingresa tu email"
               disabled={isLoading}
-              autoComplete="username"
+              autoComplete="email"
               autoFocus
             />
-            {formErrors.username && (
-              <span className="error-message">{formErrors.username}</span>
+            {formErrors.email && (
+              <span className="error-message">{formErrors.email}</span>
             )}
           </div>
 
@@ -212,7 +212,7 @@ const LoginForm = () => {
         <div className="login-footer">
           <p>
             <small>
-              💡 Usa las credenciales proporcionadas por el administrador del sistema
+              💡 Usa el email y contraseña proporcionados por el administrador del sistema
             </small>
           </p>
         </div>

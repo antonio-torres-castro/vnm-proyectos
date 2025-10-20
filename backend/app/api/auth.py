@@ -11,7 +11,7 @@ from app.core.security import (
 )
 from app.models.usuario import Usuario
 from app.schemas.token import Token
-from app.schemas.usuario import UsuarioLogin, UsuarioResponse
+from app.schemas.usuario import UsuarioLogin, UsuarioResponse, UsuarioCompleto
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -85,7 +85,7 @@ async def verify_token_endpoint(token: str):
     return {"email": email, "valid": True}
 
 
-@router.get("/me", response_model=UsuarioResponse)
+@router.get("/me", response_model=UsuarioCompleto)
 async def get_current_user_info(current_user: Usuario = Depends(get_current_user)):
     """Obtiene la información del usuario autenticado actualmente"""
     return current_user

@@ -45,7 +45,7 @@ const Dashboard = () => {
         {/* Header de bienvenida */}
         <div className="welcome-section">
           <div className="welcome-content">
-            <h1>¡Bienvenido de vuelta, {user?.nombre_completo || user?.username}! 👋</h1>
+            <h1>¡Bienvenido de vuelta, {user?.nombre_usuario}! 👋</h1>
             <p>Sistema de Monitoreo de Red IP - Panel de Control</p>
             <div className="current-time">
               📅 {formatTime(currentTime)}
