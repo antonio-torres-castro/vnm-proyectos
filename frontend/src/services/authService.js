@@ -156,26 +156,32 @@ export const logout = async () => {
 export const checkAuthStatus = async () => {
   try {
     const token = getToken();
+    console.log('🔍 checkAuthStatus: token exists:', !!token);
+    
     if (!token) {
       return { isAuthenticated: false, user: null };
     }
 
     // Verificar con el servidor que el token sigue siendo válido
+    console.log('🔍 checkAuthStatus: Calling /auth/me...');
     const response = await apiClient.get('/auth/me');
+    console.log('🔍 checkAuthStatus: /auth/me response:', response.data);
     
     if (response.data) {
       // Actualizar datos del usuario
       saveUserData(response.data);
+      console.log('🔍 checkAuthStatus: Returning authenticated user:', response.data);
       return { 
         isAuthenticated: true, 
         user: response.data 
       };
     }
 
+    console.log('🔍 checkAuthStatus: No user data received');
     return { isAuthenticated: false, user: null };
     
   } catch (error) {
-    console.error('Error verificando autenticación:', error);
+    console.error('🔍 checkAuthStatus: Error verificando autenticación:', error);
     
     // Si hay error, limpiar tokens
     if (error.response?.status === 401) {

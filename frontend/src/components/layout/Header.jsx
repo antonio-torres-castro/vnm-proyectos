@@ -22,25 +22,47 @@ const Header = () => {
 
   // No mostrar header en la página de login
   if (!isAuthenticated || location.pathname === '/login') {
+    console.log('🔍 HEADER: No renderizando - isAuthenticated:', isAuthenticated, 'pathname:', location.pathname);
     return null;
   }
 
+  // Protección temporal: Si user es null, mostrar loading
+  if (!user) {
+    console.log('🔍 HEADER: User is null, showing loading...');
+    return (
+      <header className="header">
+        <div className="header-container">
+          <div>Cargando usuario...</div>
+        </div>
+      </header>
+    );
+  }
+
+  console.log('🔍 HEADER: Renderizando - user:', user, 'showUserMenu:', showUserMenu);
+
   // Manejar logout
   const handleLogout = async () => {
+    console.log('🔍 LOGOUT: handleLogout iniciado');
+    
     // Confirmación ANTES de mostrar loading state
-    debugger;
     if (!window.confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+      console.log('🔍 LOGOUT: Usuario canceló');
       return;
     }
 
+    console.log('🔍 LOGOUT: Usuario confirmó - iniciando proceso');
     setIsLoggingOut(true);
     
     try {
+      console.log('🔍 LOGOUT: Llamando logout()...');
       await logout();
+      console.log('🔍 LOGOUT: logout() completado - navegando');
       navigate('/login', { replace: true });
     } catch (error) {
+      console.error('🔍 LOGOUT: Error:', error);
       alert('Error inesperado al cerrar sesión');
     } finally {
+      console.log('🔍 LOGOUT: Limpiando estado');
       setIsLoggingOut(false);
       setShowUserMenu(false);
     }
@@ -54,6 +76,8 @@ const Header = () => {
 
   // Obtener iniciales del usuario
   const getUserInitials = () => {
+    if (!user) return 'U';
+    
     if (user?.nombre_completo) {
       return user.nombre_completo
         .split(' ')
@@ -67,6 +91,8 @@ const Header = () => {
 
   // Formatear roles para mostrar
   const formatRoles = () => {
+    if (!user) return 'Cargando...';
+    
     const roles = getUserRoles();
     if (roles.length === 0) return 'Sin roles asignados';
     if (roles.length === 1) return roles[0].nombre;
@@ -122,7 +148,7 @@ const Header = () => {
         <div className="header-user">
           <div className="user-info">
             <span className="user-name">
-              {user?.nombre_completo || user?.username || 'Usuario'}
+              {user?.nombre_completo || user?.username || 'Cargando...'}
             </span>
             <span className="user-role">
               {formatRoles()}
@@ -133,7 +159,10 @@ const Header = () => {
           <div className="user-menu-container">
             <button
               className="user-avatar"
-              onClick={() => setShowUserMenu(!showUserMenu)}
+              onClick={() => {
+                alert(`Avatar clickeado! showUserMenu actual: ${showUserMenu}`);
+                setShowUserMenu(!showUserMenu);
+              }}
               title="Menú de usuario"
             >
               {getUserInitials()}
@@ -141,13 +170,13 @@ const Header = () => {
 
             {/* Menú desplegable */}
             {showUserMenu && (
-              <div className="user-dropdown">
+              <div className="user-dropdown" style={{border: '3px solid red', backgroundColor: 'yellow'}}>
                 <div className="dropdown-header">
                   <div className="user-avatar-large">
                     {getUserInitials()}
                   </div>
                   <div className="user-details">
-                    <strong>{user?.nombre_completo || user?.username}</strong>
+                    <strong>{user?.nombre_completo || user?.username || 'Usuario'}</strong>
                     <span>{user?.email || 'Sin email'}</span>
                     <small>{formatRoles()}</small>
                   </div>
@@ -188,15 +217,18 @@ const Header = () => {
                   <button
                     className="dropdown-item"
                     onClick={() => {
-                      debugger;
+                      console.log('🧪 Botón de prueba clickeado');
                       alert('Botón de prueba funciona!');
-                    }}>
+                    }}
+                  >
                     🧪 Prueba Click
                   </button>
                   
                   <button
                     className={`dropdown-item logout ${isLoggingOut ? 'loading' : ''}`}
                     onClick={() => {
+                      alert('CLICK DETECTADO EN BOTON LOGOUT');
+                      debugger;
                       handleLogout();
                     }}
                     disabled={isLoggingOut}
@@ -223,7 +255,11 @@ const Header = () => {
       {showUserMenu && (
         <div 
           className="dropdown-overlay"
-          onClick={() => setShowUserMenu(false)}
+          onClick={() => {
+            alert('Overlay clickeado - cerrando menú');
+            setShowUserMenu(false);
+          }}
+          style={{backgroundColor: 'rgba(255,0,0,0.2)'}}
         ></div>
       )}
 
