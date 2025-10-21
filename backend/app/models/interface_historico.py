@@ -6,6 +6,7 @@ from sqlalchemy import (
     Column,
     DateTime,
     ForeignKey,
+    ForeignKeyConstraint,
     Index,
     Integer,
 )
@@ -16,19 +17,22 @@ from sqlalchemy.sql import func
 class InterfaceHistorico(Base):
     __tablename__ = "interface_historico"
     __table_args__ = (
+        ForeignKeyConstraint(
+            ["devid", "devif"],
+            ["monitoreo.interfaces.devid", "monitoreo.interfaces.devif"],
+            ondelete="CASCADE",
+        ),
+        Index("idx_interface_historico_devid", "devid"),
         Index("idx_interface_historico_devif", "devif"),
         Index("idx_interface_historico_timestamp", "timestamp"),
-        Index("idx_interface_historico_devif_timestamp", "devif", "timestamp"),
+        Index("idx_interface_historico_devid_devif_timestamp", "devid", "devif", "timestamp"),
         {"schema": "monitoreo"},
     )
 
     # Campos principales
     id = Column(Integer, primary_key=True, index=True)
-    devif = Column(
-        Integer,
-        ForeignKey("monitoreo.interfaces.devif", ondelete="CASCADE"),
-        nullable=False,
-    )
+    devid = Column(Integer, nullable=False)  # Parte de la composite FK
+    devif = Column(Integer, nullable=False)  # Parte de la composite FK
     timestamp = Column(TIMESTAMP(timezone=True), nullable=False)
 
     # Métricas históricas de la interface
@@ -48,4 +52,4 @@ class InterfaceHistorico(Base):
     interface = relationship("Interfaces", back_populates="historico")
 
     def __repr__(self):
-        return f"<InterfaceHistorico(id={self.id}, devif={self.devif}, timestamp={self.timestamp}, ifutil={self.ifutil})>"
+        return f"<InterfaceHistorico(id={self.id}, devid={self.devid}, devif={self.devif}, timestamp={self.timestamp}, ifutil={self.ifutil})>"
