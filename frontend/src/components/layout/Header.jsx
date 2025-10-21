@@ -9,26 +9,18 @@ import useAuth from '../../hooks/useAuth';
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { 
-    isAuthenticated, 
-    user, 
-    logout, 
-    isAdmin, 
-    getUserRoles 
-  } = useAuth();
+  const { isAuthenticated, user, logout, isAdmin, getUserRoles } = useAuth();
 
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // No mostrar header en la página de login
   if (!isAuthenticated || location.pathname === '/login') {
-    console.log('🔍 HEADER: No renderizando - isAuthenticated:', isAuthenticated, 'pathname:', location.pathname);
     return null;
   }
 
   // Protección temporal: Si user es null, mostrar loading
   if (!user) {
-    console.log('🔍 HEADER: User is null, showing loading...');
     return (
       <header className="header">
         <div className="header-container">
@@ -38,38 +30,28 @@ const Header = () => {
     );
   }
 
-  console.log('🔍 HEADER: Renderizando - user:', user, 'showUserMenu:', showUserMenu);
-
   // Manejar logout
   const handleLogout = async () => {
-    console.log('🔍 LOGOUT: handleLogout iniciado');
-    
     // Confirmación ANTES de mostrar loading state
     if (!window.confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-      console.log('🔍 LOGOUT: Usuario canceló');
       return;
     }
 
-    console.log('🔍 LOGOUT: Usuario confirmó - iniciando proceso');
     setIsLoggingOut(true);
-    
+
     try {
-      console.log('🔍 LOGOUT: Llamando logout()...');
       await logout();
-      console.log('🔍 LOGOUT: logout() completado - navegando');
       navigate('/login', { replace: true });
     } catch (error) {
-      console.error('🔍 LOGOUT: Error:', error);
       alert('Error inesperado al cerrar sesión');
     } finally {
-      console.log('🔍 LOGOUT: Limpiando estado');
       setIsLoggingOut(false);
       setShowUserMenu(false);
     }
   };
 
   // Navegación hacia diferentes secciones
-  const handleNavigation = (path) => {
+  const handleNavigation = path => {
     navigate(path);
     setShowUserMenu(false);
   };
@@ -77,7 +59,7 @@ const Header = () => {
   // Obtener iniciales del usuario
   const getUserInitials = () => {
     if (!user) return 'U';
-    
+
     if (user?.nombre_usuario) {
       return user.nombre_usuario
         .split(' ')
@@ -92,7 +74,7 @@ const Header = () => {
   // Formatear roles para mostrar
   const formatRoles = () => {
     if (!user) return 'Cargando...';
-    
+
     if (!user.rol) return 'Sin rol asignado';
     return user.rol.nombre;
   };
@@ -101,7 +83,10 @@ const Header = () => {
     <header className="header">
       <div className="header-container">
         {/* Logo y título */}
-        <div className="header-brand" onClick={() => handleNavigation('/dashboard')}>
+        <div
+          className="header-brand"
+          onClick={() => handleNavigation('/dashboard')}
+        >
           <div className="brand-icon">🚀</div>
           <div className="brand-text">
             <h1>VNM Monitor</h1>
@@ -112,30 +97,38 @@ const Header = () => {
         {/* Navegación principal */}
         <nav className="header-nav">
           <button
-            className={`nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}
+            className={`nav-item ${
+              location.pathname === '/dashboard' ? 'active' : ''
+            }`}
             onClick={() => handleNavigation('/dashboard')}
           >
             📊 Dashboard
           </button>
-          
+
           {isAdmin() && (
             <button
-              className={`nav-item ${location.pathname.startsWith('/admin') ? 'active' : ''}`}
+              className={`nav-item ${
+                location.pathname.startsWith('/admin') ? 'active' : ''
+              }`}
               onClick={() => handleNavigation('/admin')}
             >
               ⚙️ Administración
             </button>
           )}
-          
+
           <button
-            className={`nav-item ${location.pathname === '/monitoring' ? 'active' : ''}`}
+            className={`nav-item ${
+              location.pathname === '/monitoring' ? 'active' : ''
+            }`}
             onClick={() => handleNavigation('/monitoring')}
           >
             📡 Monitoreo
           </button>
-          
+
           <button
-            className={`nav-item ${location.pathname === '/reports' ? 'active' : ''}`}
+            className={`nav-item ${
+              location.pathname === '/reports' ? 'active' : ''
+            }`}
             onClick={() => handleNavigation('/reports')}
           >
             📈 Reportes
@@ -148,9 +141,7 @@ const Header = () => {
             <span className="user-name">
               {user?.nombre_usuario || 'Cargando...'}
             </span>
-            <span className="user-role">
-              {formatRoles()}
-            </span>
+            <span className="user-role">{formatRoles()}</span>
           </div>
 
           {/* Avatar con menú desplegable */}
@@ -158,7 +149,6 @@ const Header = () => {
             <button
               className="user-avatar"
               onClick={() => {
-                alert(`Avatar clickeado! showUserMenu actual: ${showUserMenu}`);
                 setShowUserMenu(!showUserMenu);
               }}
               title="Menú de usuario"
@@ -168,11 +158,9 @@ const Header = () => {
 
             {/* Menú desplegable */}
             {showUserMenu && (
-              <div className="user-dropdown" style={{border: '3px solid red', backgroundColor: 'yellow'}}>
+              <div className="user-dropdown">
                 <div className="dropdown-header">
-                  <div className="user-avatar-large">
-                    {getUserInitials()}
-                  </div>
+                  <div className="user-avatar-large">{getUserInitials()}</div>
                   <div className="user-details">
                     <strong>{user?.nombre_usuario || 'Usuario'}</strong>
                     <span>{user?.email || 'Sin email'}</span>
@@ -185,14 +173,20 @@ const Header = () => {
                 <div className="dropdown-menu">
                   <button
                     className="dropdown-item"
-                    onClick={() => handleNavigation('/profile')}
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleNavigation('/profile');
+                    }}
                   >
                     👤 Mi Perfil
                   </button>
-                  
+
                   <button
                     className="dropdown-item"
-                    onClick={() => handleNavigation('/settings')}
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleNavigation('/settings');
+                    }}
                   >
                     ⚙️ Configuración
                   </button>
@@ -202,7 +196,10 @@ const Header = () => {
                       <div className="dropdown-divider"></div>
                       <button
                         className="dropdown-item"
-                        onClick={() => handleNavigation('/admin/users')}
+                        onClick={e => {
+                          e.stopPropagation();
+                          handleNavigation('/admin/users');
+                        }}
                       >
                         👥 Gestión de Usuarios
                       </button>
@@ -210,23 +207,13 @@ const Header = () => {
                   )}
 
                   <div className="dropdown-divider"></div>
-                  
-                  {/* Botón de prueba */}
+
                   <button
-                    className="dropdown-item"
-                    onClick={() => {
-                      console.log('🧪 Botón de prueba clickeado');
-                      alert('Botón de prueba funciona!');
-                    }}
-                  >
-                    🧪 Prueba Click
-                  </button>
-                  
-                  <button
-                    className={`dropdown-item logout ${isLoggingOut ? 'loading' : ''}`}
-                    onClick={() => {
-                      alert('CLICK DETECTADO EN BOTON LOGOUT');
-                      debugger;
+                    className={`dropdown-item logout ${
+                      isLoggingOut ? 'loading' : ''
+                    }`}
+                    onClick={e => {
+                      e.stopPropagation();
                       handleLogout();
                     }}
                     disabled={isLoggingOut}
@@ -237,9 +224,7 @@ const Header = () => {
                         Cerrando sesión...
                       </>
                     ) : (
-                      <>
-                        🚪 Cerrar Sesión
-                      </>
+                      <>🚪 Cerrar Sesión</>
                     )}
                   </button>
                 </div>
@@ -251,13 +236,11 @@ const Header = () => {
 
       {/* Overlay para cerrar el menú */}
       {showUserMenu && (
-        <div 
+        <div
           className="dropdown-overlay"
           onClick={() => {
-            alert('Overlay clickeado - cerrando menú');
             setShowUserMenu(false);
           }}
-          style={{backgroundColor: 'rgba(255,0,0,0.2)'}}
         ></div>
       )}
 
@@ -408,6 +391,7 @@ const Header = () => {
           min-width: 280px;
           overflow: hidden;
           animation: slideDown 0.2s ease-out;
+          z-index: 1000;
         }
 
         @keyframes slideDown {

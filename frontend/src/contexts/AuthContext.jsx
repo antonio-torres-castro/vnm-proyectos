@@ -44,8 +44,6 @@ const initialState = {
 
 // Reducer para manejar las transiciones de estado
 const authReducer = (state, action) => {
-  console.log('🔍 AuthReducer: Action dispatched:', action.type, action.payload);
-  
   switch (action.type) {
     case AUTH_ACTIONS.LOADING:
       return {
@@ -132,21 +130,17 @@ export const AuthProvider = ({ children }) => {
 
         // Verificar con el servidor
         const authStatus = await checkAuthStatus();
-        console.log('🔍 AuthContext: checkAuthStatus result:', authStatus);
         
         if (authStatus.isAuthenticated && authStatus.user) {
-          console.log('🔍 AuthContext: Dispatching LOGIN_SUCCESS with user:', authStatus.user);
           dispatch({ 
             type: AUTH_ACTIONS.LOGIN_SUCCESS, 
             payload: { user: authStatus.user } 
           });
         } else {
-          console.log('🔍 AuthContext: authStatus failed, clearing auth');
           clearAuthData();
           dispatch({ type: AUTH_ACTIONS.LOGOUT });
         }
       } catch (error) {
-        console.error('Error inicializando autenticación:', error);
         clearAuthData();
         dispatch({ 
           type: AUTH_ACTIONS.LOGIN_ERROR, 
@@ -167,10 +161,8 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const result = await apiLogin(credentials);
-      console.log('🔍 AuthContext: apiLogin result:', result);
 
       if (result.success) {
-        console.log('🔍 AuthContext: Login successful, dispatching LOGIN_SUCCESS with user:', result.user);
         dispatch({ 
           type: AUTH_ACTIONS.LOGIN_SUCCESS, 
           payload: { user: result.user } 
@@ -197,17 +189,13 @@ export const AuthProvider = ({ children }) => {
    * Función de logout
    */
   const logout = useCallback(async () => {
-    console.log('🔍 CONTEXT: logout iniciado');
     dispatch({ type: AUTH_ACTIONS.LOADING });
 
     try {
-      console.log('🔍 CONTEXT: Llamando apiLogout...');
       await apiLogout();
-      console.log('🔍 CONTEXT: apiLogout completado');
     } catch (error) {
       console.error('🔍 CONTEXT: Error en apiLogout:', error);
     } finally {
-      console.log('🔍 CONTEXT: Limpiando datos y despachando LOGOUT');
       clearAuthData();
       dispatch({ type: AUTH_ACTIONS.LOGOUT });
     }

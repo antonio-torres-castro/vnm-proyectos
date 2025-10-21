@@ -58,8 +58,6 @@ apiClient.interceptors.response.use(
  */
 export const login = async (credentials) => {
   try {
-    console.log('Intentando login para:', credentials.email);
-    
     // Los datos ya vienen en el formato correcto del frontend
     const loginData = {
       email: credentials.email,
@@ -77,11 +75,8 @@ export const login = async (credentials) => {
     // Guardar token
     saveToken(access_token);
     
-    console.log('Login exitoso para:', credentials.email);
-    
     // Obtener inmediatamente los datos del usuario
     const authStatus = await checkAuthStatus();
-    console.log('Usuario obtenido después del login:', authStatus.user);
     
     return {
       success: true,
@@ -130,14 +125,12 @@ export const login = async (credentials) => {
  */
 export const logout = async () => {
   try {
-    console.log('🔍 SERVICE: logout iniciado');
     // Intentar hacer logout en el servidor
     await apiClient.post('/auth/logout');
     
     // Limpiar datos locales
     clearAuthData();
     
-    console.log('🔍 SERVICE: Logout exitoso');
     return { success: true, message: 'Sesión cerrada correctamente' };
     
   } catch (error) {
@@ -160,28 +153,23 @@ export const logout = async () => {
 export const checkAuthStatus = async () => {
   try {
     const token = getToken();
-    console.log('🔍 checkAuthStatus: token exists:', !!token);
     
     if (!token) {
       return { isAuthenticated: false, user: null };
     }
 
     // Verificar con el servidor que el token sigue siendo válido
-    console.log('🔍 checkAuthStatus: Calling /auth/me...');
     const response = await apiClient.get('/auth/me');
-    console.log('🔍 checkAuthStatus: /auth/me response:', response.data);
     
     if (response.data) {
       // Actualizar datos del usuario
       saveUserData(response.data);
-      console.log('🔍 checkAuthStatus: Returning authenticated user:', response.data);
       return { 
         isAuthenticated: true, 
         user: response.data 
       };
     }
 
-    console.log('🔍 checkAuthStatus: No user data received');
     return { isAuthenticated: false, user: null };
     
   } catch (error) {

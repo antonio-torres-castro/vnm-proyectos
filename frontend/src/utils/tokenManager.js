@@ -108,5 +108,4 @@ export const getAuthHeaders = () => {
  */
 export const clearAuthData = () => {
   removeToken();
-  console.log('Datos de autenticación limpiados');
 };

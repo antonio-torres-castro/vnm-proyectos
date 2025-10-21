@@ -14,7 +14,7 @@ const LoginForm = () => {
   // Estado del formulario
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -39,18 +39,18 @@ const LoginForm = () => {
   }, []); // Solo ejecutar al montar el componente
 
   // Manejar cambios en los inputs
-  const handleInputChange = (e) => {
+  const handleInputChange = e => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     // Limpiar error específico del campo cuando se empieza a escribir
     if (formErrors[name]) {
       setFormErrors(prev => ({
         ...prev,
-        [name]: ''
+        [name]: '',
       }));
     }
 
@@ -78,7 +78,7 @@ const LoginForm = () => {
   };
 
   // Manejar envío del formulario
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setSubmitAttempted(true);
 
@@ -89,12 +89,11 @@ const LoginForm = () => {
     try {
       const result = await login({
         email: formData.email.trim(),
-        clave: formData.password
+        clave: formData.password,
       });
 
       if (result.success) {
         // Login exitoso - la redirección se maneja en el useEffect
-        console.log('Login exitoso, redirigiendo a:', from);
       }
       // Si no es exitoso, el error se maneja automáticamente por el contexto
     } catch (err) {
@@ -103,7 +102,7 @@ const LoginForm = () => {
   };
 
   // Manejar Enter en los campos
-  const handleKeyPress = (e) => {
+  const handleKeyPress = e => {
     if (e.key === 'Enter') {
       handleSubmit(e);
     }
@@ -137,9 +136,7 @@ const LoginForm = () => {
         <form onSubmit={handleSubmit} className="login-form">
           {/* Campo Email */}
           <div className="form-group">
-            <label htmlFor="email">
-              ✉️ Email
-            </label>
+            <label htmlFor="email">✉️ Email</label>
             <input
               type="email"
               id="email"
@@ -160,9 +157,7 @@ const LoginForm = () => {
 
           {/* Campo Password */}
           <div className="form-group">
-            <label htmlFor="password">
-              🔐 Contraseña
-            </label>
+            <label htmlFor="password">🔐 Contraseña</label>
             <div className="password-input-wrapper">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -181,7 +176,9 @@ const LoginForm = () => {
                 className="password-toggle"
                 onClick={() => setShowPassword(!showPassword)}
                 disabled={isLoading}
-                title={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                title={
+                  showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
+                }
               >
                 {showPassword ? '👁️' : '👁️‍🗨️'}
               </button>
@@ -212,7 +209,8 @@ const LoginForm = () => {
         <div className="login-footer">
           <p>
             <small>
-              💡 Usa el email y contraseña proporcionados por el administrador del sistema
+              💡 Usa el email y contraseña proporcionados por el administrador
+              del sistema
             </small>
           </p>
         </div>
