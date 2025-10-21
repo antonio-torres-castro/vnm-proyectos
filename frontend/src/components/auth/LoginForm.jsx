@@ -53,8 +53,6 @@ const LoginForm = () => {
         [name]: '',
       }));
     }
-
-    // El error global se limpiará automáticamente al escribir
   };
 
   // Validar formulario
@@ -95,7 +93,6 @@ const LoginForm = () => {
       if (result.success) {
         // Login exitoso - la redirección se maneja en el useEffect
       }
-      // Si no es exitoso, el error se maneja automáticamente por el contexto
     } catch (err) {
       console.error('Error inesperado en login:', err);
     }
@@ -176,9 +173,7 @@ const LoginForm = () => {
                 className="password-toggle"
                 onClick={() => setShowPassword(!showPassword)}
                 disabled={isLoading}
-                title={
-                  showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
-                }
+                title={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
               >
                 {showPassword ? '👁️' : '👁️‍🗨️'}
               </button>
@@ -215,230 +210,6 @@ const LoginForm = () => {
           </p>
         </div>
       </div>
-
-      {/* Estilos CSS embebidos */}
-      <style>{`
-        .login-container {
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(135deg, #FF2315 0%, #B52217 100%);
-          padding: 1rem;
-        }
-
-        .login-form-wrapper {
-          background: white;
-          border-radius: 12px;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-          padding: 2.5rem;
-          width: 100%;
-          max-width: 400px;
-          animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .login-header {
-          text-align: center;
-          margin-bottom: 2rem;
-        }
-
-        .login-header h1 {
-          color: #333;
-          font-size: 1.8rem;
-          margin: 0 0 0.5rem 0;
-        }
-
-        .login-header h2 {
-          color: #555;
-          font-size: 1.3rem;
-          margin: 0 0 0.25rem 0;
-          font-weight: normal;
-        }
-
-        .login-header p {
-          color: #777;
-          font-size: 0.9rem;
-          margin: 0;
-        }
-
-        .alert {
-          padding: 0.75rem 1rem;
-          border-radius: 6px;
-          margin-bottom: 1rem;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 0.9rem;
-        }
-
-        .alert-info {
-          background-color: #e3f2fd;
-          color: #1976d2;
-          border: 1px solid #bbdefb;
-        }
-
-        .alert-error {
-          background-color: #ffebee;
-          color: #d32f2f;
-          border: 1px solid #ffcdd2;
-        }
-
-        .login-form {
-          margin-bottom: 1.5rem;
-        }
-
-        .form-group {
-          margin-bottom: 1.25rem;
-        }
-
-        .form-group label {
-          display: block;
-          margin-bottom: 0.5rem;
-          color: #333;
-          font-weight: 500;
-          font-size: 0.9rem;
-        }
-
-        .form-input {
-          width: 100%;
-          padding: 0.875rem 1rem;
-          border: 2px solid #e1e5e9;
-          border-radius: 6px;
-          font-size: 1rem;
-          transition: all 0.2s ease;
-          box-sizing: border-box;
-        }
-
-        .form-input:focus {
-          outline: none;
-          border-color: #FF2315;
-          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-input.error {
-          border-color: #f44336;
-        }
-
-        .form-input:disabled {
-          background-color: #f5f5f5;
-          cursor: not-allowed;
-        }
-
-        .password-input-wrapper {
-          position: relative;
-        }
-
-        .password-input-wrapper .form-input {
-          padding-right: 3rem;
-        }
-
-        .password-toggle {
-          position: absolute;
-          right: 0.75rem;
-          top: 50%;
-          transform: translateY(-50%);
-          background: none;
-          border: none;
-          cursor: pointer;
-          font-size: 1.1rem;
-          padding: 0.25rem;
-          border-radius: 4px;
-          transition: background-color 0.2s ease;
-        }
-
-        .password-toggle:hover:not(:disabled) {
-          background-color: #f0f0f0;
-        }
-
-        .password-toggle:disabled {
-          cursor: not-allowed;
-          opacity: 0.5;
-        }
-
-        .error-message {
-          color: #f44336;
-          font-size: 0.8rem;
-          margin-top: 0.25rem;
-          display: block;
-        }
-
-        .login-button {
-          width: 100%;
-          padding: 1rem;
-          background: linear-gradient(135deg, #FF2315 0%, #B52217 100%);
-          color: white;
-          border: none;
-          border-radius: 6px;
-          font-size: 1rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-        }
-
-        .login-button:hover:not(:disabled) {
-          transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-
-        .login-button:disabled {
-          cursor: not-allowed;
-          opacity: 0.7;
-          transform: none;
-        }
-
-        .login-button.loading {
-          position: relative;
-        }
-
-        .spinner {
-          width: 16px;
-          height: 16px;
-          border: 2px solid transparent;
-          border-top: 2px solid currentColor;
-          border-radius: 50%;
-          animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        .login-footer {
-          text-align: center;
-          padding-top: 1rem;
-          border-top: 1px solid #eee;
-        }
-
-        .login-footer small {
-          color: #666;
-          line-height: 1.4;
-        }
-
-        /* Responsive */
-        @media (max-width: 480px) {
-          .login-form-wrapper {
-            padding: 2rem 1.5rem;
-            margin: 1rem;
-          }
-        }
-      `}</style>
     </div>
   );
 };

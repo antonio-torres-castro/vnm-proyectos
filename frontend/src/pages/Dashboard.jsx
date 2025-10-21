@@ -4,7 +4,6 @@
  */
 import React, { useEffect, useState } from 'react';
 import useAuth from '../hooks/useAuth';
-import './Dashboard.css';
 
 const Dashboard = () => {
   const { user, getUserRoles, isAdmin } = useAuth();
@@ -172,8 +171,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
-
     </div>
   );
 };

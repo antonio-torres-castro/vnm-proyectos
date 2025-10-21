@@ -10,30 +10,11 @@ import useAuth from '../../hooks/useAuth';
  * Componente de carga mientras se verifica la autenticación
  */
 const LoadingSpinner = () => (
-  <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    flexDirection: 'column'
-  }}>
-    <div style={{
-      border: '4px solid #f3f3f3',
-      borderTop: '4px solid #007bff',
-      borderRadius: '50%',
-      width: '50px',
-      height: '50px',
-      animation: 'spin 1s linear infinite'
-    }}></div>
+  <div className="loading-container">
+    <div className="spinner"></div>
     <p style={{ marginTop: '1rem', color: '#666' }}>
       Verificando autenticación...
     </p>
-    <style jsx>{`
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    `}</style>
   </div>
 );
 
@@ -41,39 +22,17 @@ const LoadingSpinner = () => (
  * Componente de acceso denegado
  */
 const AccessDenied = ({ message = "No tienes permisos para acceder a esta página" }) => (
-  <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    flexDirection: 'column',
-    backgroundColor: '#f8f9fa'
-  }}>
-    <div style={{
-      textAlign: 'center',
-      padding: '2rem',
-      backgroundColor: 'white',
-      borderRadius: '8px',
-      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-      maxWidth: '500px'
-    }}>
-      <h2 style={{ color: '#dc3545', marginBottom: '1rem' }}>
+  <div className="error-container">
+    <div className="card">
+      <h2 className="text-danger">
         🚫 Acceso Denegado
       </h2>
-      <p style={{ color: '#666', marginBottom: '1.5rem' }}>
+      <p className="text-muted">
         {message}
       </p>
       <button
         onClick={() => window.history.back()}
-        style={{
-          backgroundColor: '#007bff',
-          color: 'white',
-          border: 'none',
-          padding: '0.75rem 1.5rem',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          fontSize: '1rem'
-        }}
+        className="btn btn-primary"
       >
         Volver
       </button>
@@ -156,8 +115,6 @@ const ProtectedRoute = ({
 
 /**
  * HOC para proteger componentes
- * @param {React.Component} Component - Componente a proteger
- * @param {Object} options - Opciones de protección
  */
 export const withProtectedRoute = (Component, options = {}) => {
   return (props) => (
