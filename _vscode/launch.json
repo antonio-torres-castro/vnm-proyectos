@@ -1,52 +1,51 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Backend Debug (Local)", 
-            "type": "python",
-            "request": "launch",
-            "module": "uvicorn",
-            "args": [
-                "app.main:app",
-                "--host", "0.0.0.0",
-                "--port", "8000",
-                "--reload"
-            ],
-            "cwd": "${workspaceFolder}/backend",
-            "python": "${workspaceFolder}/.venv/Scripts/python.exe",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}/backend",
-                "VIRTUAL_ENV": "${workspaceFolder}/.venv"
-            },
-            "justMyCode": false,
-            "console": "integratedTerminal"
-        },
-        {
-            "name": "Frontend Debug (Local)",
-            "type": "chrome",
-            "request": "launch",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/frontend/src",
-            "sourceMapPathOverrides": {
-                "/./*": "${webRoot}/*",
-                "/src/*": "${webRoot}/*",
-                "/./src/*": "${webRoot}/*"
-            },
-            "skipFiles": [
-                "<node_internals>/**",
-                "${workspaceFolder}/frontend/node_modules/**"
-            ],
-            "preLaunchTask": "Start Frontend Dev Server"
-        }
-    ],
-    "compounds": [
-        {
-            "name": "FullStack Debug (Local)",
-            "configurations": [
-                "Backend Debug (Local)",
-                "Frontend Debug (Local)"
-            ],
-            "stopAll": true
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Backend Debug",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "app.main:app",
+        "--host", "0.0.0.0",
+        "--port", "8000",
+        "--reload"
+      ],
+      "cwd": "${workspaceFolder}/backend",
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/backend"
+      },
+      "justMyCode": false,
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Frontend Debug",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/frontend/src",
+      "sourceMapPathOverrides": {
+        "/./*": "${webRoot}/*",
+        "/src/*": "${webRoot}/*",
+        "/./src/*": "${webRoot}/*"
+      },
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/frontend/node_modules/**"
+      ],
+      "preLaunchTask": "Start Frontend Dev Server"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "FullStack Debug",
+      "configurations": [
+        "Backend Debug",
+        "Frontend Debug"
+      ],
+      "stopAll": true
+    }
+  ]
 }

@@ -1,18 +1,16 @@
 {
   "recommendations": [
     "ms-python.python",
-    "ms-python.black-formatter", 
+    "ms-python.black-formatter",
     "ms-python.pylance",
     "ms-python.debugpy",
     "ms-vscode.vscode-typescript-next",
     "bradlc.vscode-tailwindcss",
     "esbenp.prettier-vscode",
     "burkeholland.simple-react-snippets",
-    "dsznajder.es7-react-js-snippets", 
+    "dsznajder.es7-react-js-snippets",
     "formulahendry.auto-rename-tag",
     "christian-kohler.npm-intellisense",
-    "cweijan.vscode-database-client2",
-    "ckolkman.vscode-postgres",
     "dbaeumer.vscode-eslint"
   ]
 }
